@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:hw_map/poi.dart';
-import 'package:hw_map/poi_list.dart';
-import 'package:hw_map/route.dart';
-import 'package:hw_map/route_list.dart';
-import 'package:hw_map/map.dart';
+import 'package:hw_map/poi/poi.dart';
+import 'package:hw_map/poi/poi_list.dart';
+import 'package:hw_map/route/route.dart';
+import 'package:hw_map/route/route_list.dart';
+import 'package:hw_map/map/map.dart';
 
 class App extends StatefulWidget {
   final List<Poi> poiList;

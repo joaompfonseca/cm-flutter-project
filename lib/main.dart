@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hw_map/app.dart';
-import 'package:hw_map/poi.dart';
-import 'package:hw_map/route.dart';
+import 'package:hw_map/poi/poi.dart';
+import 'package:hw_map/route/route.dart';
 
 void main() {
   runApp(MyApp());
