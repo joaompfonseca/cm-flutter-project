@@ -11,11 +11,13 @@ class RoutePoint {
 }
 
 class CreatedRoute {
+  String id;
   String origin;
   String destination;
   List<RoutePoint> points;
 
   CreatedRoute({
+    required this.id,
     required this.origin,
     required this.destination,
     required this.points,

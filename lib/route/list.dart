@@ -1,58 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hw_map/cubit/map.dart';
+import 'package:hw_map/cubit/route.dart';
+import 'package:hw_map/mock/route.dart';
 import 'package:hw_map/route/route.dart';
-import 'package:hw_map/route/route_details.dart';
+import 'package:hw_map/route/details.dart';
+import 'package:hw_map/util/message.dart';
 
 class RouteList extends StatelessWidget {
-  final List<CreatedRoute> routeList;
-  final void Function(BuildContext context, CreatedRoute route) addRoute;
-  final void Function(BuildContext context, CreatedRoute route) deleteRoute;
-  final void Function(BuildContext context, CreatedRoute route) showRoute;
-
-  const RouteList({
-    super.key,
-    required this.routeList,
-    required this.addRoute,
-    required this.deleteRoute,
-    required this.showRoute,
-  });
+  const RouteList({super.key});
 
   @override
   Widget build(BuildContext context) {
+    MapCubit mapCubit = context.read<MapCubit>();
+    RouteCubit routeCubit = context.read<RouteCubit>();
+
     return Scaffold(
-      body: ListView(
-        children: routeList
-            .map((route) => RouteItem(
-                  route: route,
-                  onDelete: (BuildContext context) =>
-                      deleteRoute(context, route),
-                  onShow: (BuildContext context) => showRoute(context, route),
-                ))
-            .toList(),
+      body: BlocBuilder<RouteCubit, List<CreatedRoute>>(
+        builder: (context, routeList) {
+          return ListView.builder(
+              itemCount: routeList.length,
+              itemBuilder: (context, index) {
+                CreatedRoute route = routeList[index];
+                return RouteItem(
+                    route: route,
+                    onDelete: (BuildContext context) {
+                      showSnackBar(context, "Deleted ${route.name}");
+                      routeCubit.deleteRoute(route);
+                    },
+                    onShow: (BuildContext context) {
+                      showSnackBar(context, "Showing ${route.name}");
+                      DefaultTabController.of(context).animateTo(0);
+                      RoutePoint start = route.points[0];
+                      mapCubit.flyTo(start.latitude, start.longitude, 18.0);
+                    });
+              });
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          int n = routeList.length + 1;
-          CreatedRoute route = CreatedRoute(
-            origin: "route$n origin",
-            destination: "route$n destination",
-            points: [
-              RoutePoint(
-                label: "route$n origin",
-                latitude: 0.0,
-                longitude: 0.0,
-              ),
-              RoutePoint(
-                label: "route$n destination",
-                latitude: 0.0,
-                longitude: 0.0,
-              ),
-            ],
-          );
-          addRoute(
-            context,
-            route,
-          );
+          int i = routeCubit.state.length + 1;
+          CreatedRoute route = mockRoute(i);
+          showSnackBar(context, "Created ${route.name}");
+          routeCubit.createRoute(route);
         },
         child: const Icon(Icons.add),
       ),

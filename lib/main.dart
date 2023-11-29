@@ -1,86 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/app.dart';
-import 'package:hw_map/poi/poi.dart';
-import 'package:hw_map/route/route.dart';
+import 'package:hw_map/cubit/map.dart';
+import 'package:hw_map/cubit/poi.dart';
+import 'package:hw_map/cubit/route.dart';
+import 'package:hw_map/map/config.dart';
+import 'package:hw_map/mock/poi.dart';
+import 'package:hw_map/mock/route.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  List<Poi> poiList = [
-    Poi(
-      id: "poi1",
-      name: "Public Bathroom",
-      type: "toilets",
-      description: "Free to use, in UA catacumbas.",
-      latitude: 40.63071,
-      longitude: -8.65875,
-      pictureUrl:
-          "https://www.jpn.up.pt/wp-content/uploads/2018/02/wc_p%C3%BAblica_3_06-de-fevereiro-de-2018.jpg",
-      ratingPositive: 2,
-      ratingNegative: 1,
-      addedBy: "user1",
-    ),
-    Poi(
-      id: "poi2",
-      name: "Bycicle Parking",
-      type: "bicycle-parking",
-      description: "Old yellow racks that require a lock.",
-      latitude: 40.63438,
-      longitude: -8.65754,
-      pictureUrl:
-          "https://stplattaprod.blob.core.windows.net/liikenneprod/styles/og_image/azure/pyorapysakointi-jenni-huovinen.jpg?h=c176692e&itok=4KvwzNO_",
-      ratingPositive: 3,
-      ratingNegative: 1,
-      addedBy: "user2",
-    )
-  ];
+  const MyApp({super.key});
 
-  List<CreatedRoute> routeList = [
-    CreatedRoute(
-      origin: "Aveiro",
-      destination: "Porto",
-      points: [
-        const RoutePoint(
-          label: "Aveiro",
-          latitude: 40.6405,
-          longitude: -8.6538,
-        ),
-        const RoutePoint(
-          label: "Espinho",
-          latitude: 41.0075,
-          longitude: -8.6427,
-        ),
-        const RoutePoint(
-          label: "Porto",
-          latitude: 41.1579,
-          longitude: -8.6291,
-        ),
-      ],
-    ),
-    CreatedRoute(
-      origin: "Aveiro",
-      destination: "Lisboa",
-      points: [
-        const RoutePoint(
-          label: "Aveiro",
-          latitude: 40.6405,
-          longitude: -8.6538,
-        ),
-        const RoutePoint(
-          label: "Lisboa",
-          latitude: 38.7223,
-          longitude: -9.1393,
-        ),
-      ],
-    ),
-  ];
-
-  MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -110,9 +44,24 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: App(
-        poiList: poiList,
-        routeList: routeList,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<MapCubit>(
+            create: (context) => MapCubit(
+              MapState(
+                mapController,
+                osmOption,
+              ),
+            ),
+          ),
+          BlocProvider<PoiCubit>(
+            create: (context) => PoiCubit(mockPoiList),
+          ),
+          BlocProvider<RouteCubit>(
+            create: (context) => RouteCubit(mockRouteList),
+          ),
+        ],
+        child: const App(),
       ),
     );
   }
