@@ -5,11 +5,7 @@ import 'package:hw_map/poi_details.dart';
 
 class PoiList extends StatelessWidget {
   final List<Poi> poiList;
-  final void Function(
-    BuildContext context,
-    String poiName,
-    String poiDescription,
-  ) addPoi;
+  final void Function(BuildContext context, Poi poi) addPoi;
   final void Function(BuildContext context, Poi poi) deletePoi;
   final void Function(BuildContext context, Poi poi) showPoi;
 
@@ -35,11 +31,21 @@ class PoiList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addPoi(
-            context,
-            "My POI ${poiList.length + 1} name",
-            "My POI ${poiList.length + 1} description",
+          int n = poiList.length + 1;
+          Poi poi = Poi(
+            id: "poi$n",
+            name: "poi$n name",
+            type: "poi$n type",
+            description: "poi$n description",
+            latitude: 0.0, // choose current location when adding
+            longitude: 0.0,
+            pictureUrl:
+                "https://www.jpn.up.pt/wp-content/uploads/2018/02/wc_p%C3%BAblica_3_06-de-fevereiro-de-2018.jpg",
+            ratingPositive: 0,
+            ratingNegative: 0,
+            addedBy: "testUser",
           );
+          addPoi(context, poi);
         },
         child: const Icon(Icons.add),
       ),

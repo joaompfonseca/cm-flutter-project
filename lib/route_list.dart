@@ -4,10 +4,10 @@ import 'package:hw_map/route.dart';
 import 'package:hw_map/route_details.dart';
 
 class RouteList extends StatelessWidget {
-  final List<RecordedRoute> routeList;
-  final void Function(BuildContext context, RecordedRoute route) addRoute;
-  final void Function(BuildContext context, RecordedRoute route) deleteRoute;
-  final void Function(BuildContext context, RecordedRoute route) showRoute;
+  final List<CreatedRoute> routeList;
+  final void Function(BuildContext context, CreatedRoute route) addRoute;
+  final void Function(BuildContext context, CreatedRoute route) deleteRoute;
+  final void Function(BuildContext context, CreatedRoute route) showRoute;
 
   const RouteList({
     super.key,
@@ -32,12 +32,26 @@ class RouteList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          int n = routeList.length + 1;
+          CreatedRoute route = CreatedRoute(
+            origin: "route$n origin",
+            destination: "route$n destination",
+            points: [
+              RoutePoint(
+                label: "route$n origin",
+                latitude: 0.0,
+                longitude: 0.0,
+              ),
+              RoutePoint(
+                label: "route$n destination",
+                latitude: 0.0,
+                longitude: 0.0,
+              ),
+            ],
+          );
           addRoute(
             context,
-            RecordedRoute(
-              origin: "My Route ${routeList.length + 1} origin",
-              destination: "My Route ${routeList.length + 1} destination",
-            ),
+            route,
           );
         },
         child: const Icon(Icons.add),
@@ -47,7 +61,7 @@ class RouteList extends StatelessWidget {
 }
 
 class RouteItem extends StatelessWidget {
-  final RecordedRoute route;
+  final CreatedRoute route;
   final void Function(BuildContext context) onDelete;
   final void Function(BuildContext context) onShow;
 

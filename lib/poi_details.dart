@@ -28,17 +28,32 @@ class PoiDetails extends StatelessWidget {
               Text(poi.name),
               const SizedBox(height: 20),
               const Text(
+                "Type",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(poi.type),
+              const SizedBox(height: 20),
+              const Text(
                 "Description",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(poi.description),
               const SizedBox(height: 20),
               const Text(
-                "Geographic Coordinates",
+                "Added by",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(poi.addedBy),
+              const SizedBox(height: 20),
+              const Text(
+                "Ratings",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
-                "Latitude: ${poi.latitude}, Longitude: ${poi.longitude}",
+                  "Positive: ${poi.ratingPositive}, Negative: ${poi.ratingNegative}"),
+              const SizedBox(height: 20),
+              Image(
+                image: NetworkImage(poi.pictureUrl),
               ),
             ],
           ),

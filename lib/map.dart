@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:hw_map/poi.dart';
@@ -88,11 +91,31 @@ class _MapState extends State<Map>
         var poi = poiList.firstWhere((poi) =>
             poi.latitude == geoPoint.latitude &&
             poi.longitude == geoPoint.longitude);
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => PoiDetails(
-            poi: poi,
-          ),
-        ));
+        mapController
+            .goToLocation(
+              GeoPoint(
+                  latitude: poi.latitude - 0.0005, longitude: poi.longitude),
+            )
+            .then(
+              (_) => {
+                Future.delayed(
+                  const Duration(seconds: 2),
+                  () => mapController.setZoom(zoomLevel: 18.0),
+                ),
+              },
+            );
+        showModalBottomSheet<void>(
+          context: context,
+          builder: (BuildContext context) {
+            // ignore: sized_box_for_whitespace
+            return Container(
+              height: 400,
+              child: PoiDetails(
+                poi: poi,
+              ),
+            );
+          },
+        );
       },
     );
   }

@@ -8,7 +8,7 @@ import 'package:hw_map/map.dart';
 
 class App extends StatefulWidget {
   final List<Poi> poiList;
-  final List<RecordedRoute> routeList;
+  final List<CreatedRoute> routeList;
 
   const App({
     super.key,
@@ -22,7 +22,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   late List<Poi> poiList;
-  late List<RecordedRoute> routeList;
+  late List<CreatedRoute> routeList;
   late MapController mapController;
   late OSMOption osmOption;
 
@@ -82,22 +82,17 @@ class _AppState extends State<App> {
 
   /* POI */
 
-  void addPoi(BuildContext context, String poiName, String poiDescription) {
-    Poi poi;
+  void addPoi(BuildContext context, Poi poi) {
     mapController.myLocation().then(
           (userLocation) => {
-            poi = Poi(
-              name: poiName,
-              description: poiDescription,
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
-            ),
+            poi.latitude = userLocation.latitude,
+            poi.longitude = userLocation.longitude,
             showSnackBar(context, "Added ${poi.name}"),
             setState(() {
               poiList.add(poi);
             }),
           },
-          onError: (e) => showSnackBar(context, "Error adding $poiName"),
+          onError: (e) => showSnackBar(context, "Error adding ${poi.name}"),
         );
   }
 
@@ -118,21 +113,21 @@ class _AppState extends State<App> {
 
   /* Route */
 
-  void addRoute(BuildContext context, RecordedRoute route) {
+  void addRoute(BuildContext context, CreatedRoute route) {
     showSnackBar(context, "Added ${route.name}");
     setState(() {
       routeList.add(route);
     });
   }
 
-  void deleteRoute(BuildContext context, RecordedRoute route) {
+  void deleteRoute(BuildContext context, CreatedRoute route) {
     showSnackBar(context, "Deleted ${route.name}");
     setState(() {
       routeList.remove(route);
     });
   }
 
-  void showRoute(BuildContext context, RecordedRoute route) {
+  void showRoute(BuildContext context, CreatedRoute route) {
     showSnackBar(context, "Showing ${route.name}");
   }
 
