@@ -1,16 +1,21 @@
-# hw_map
+# CM Project - Flutter
 
-A new Flutter project.
+## Description
 
-## Getting Started
+TODO
 
-This project is a starting point for a Flutter application.
+## Installation
 
-A few resources to get you started if this is your first Flutter project:
+- Run `flutter pub get` in root to install project dependencies.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Running the Applicaiton
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Run `flutter run` in root to run the project.
+
+**Course:** Mobile Computing (2023/2024).
+
+## Authors
+
+- Diogo Paiva, 103183
+
+- João Fonseca, 103154
