@@ -68,27 +68,28 @@ class RouteItem extends StatelessWidget {
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
       startActionPane: ActionPane(
-        motion: const ScrollMotion(),
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
         children: [
           SlidableAction(
             onPressed: onDelete,
-            backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Theme.of(context).colorScheme.onError,
             icon: Icons.delete,
             label: 'Delete',
           )
         ],
       ),
       endActionPane: ActionPane(
-        motion: const ScrollMotion(),
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
         children: [
           SlidableAction(
-            flex: 2,
             onPressed: onShow,
-            backgroundColor: const Color(0xFF7BC043),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             icon: Icons.map,
-            label: 'Show on Map',
+            label: 'Show',
           ),
         ],
       ),
