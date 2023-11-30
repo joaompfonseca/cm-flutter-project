@@ -8,6 +8,7 @@ import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/poi/details.dart';
+import 'package:hw_map/util/assets.dart';
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -51,6 +52,10 @@ class _MapState extends State<Map>
       if (!oldPoiList.contains(poi)) {
         mapCubit.state.mapController.addMarker(
           GeoPoint(latitude: poi.latitude, longitude: poi.longitude),
+          markerIcon: markerIcons[poi.type] ?? markerIcons['default']!,
+          iconAnchor: IconAnchor(
+            anchor: Anchor.top,
+          ),
         );
       }
     }

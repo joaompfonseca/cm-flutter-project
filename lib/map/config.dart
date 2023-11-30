@@ -19,27 +19,20 @@ OSMOption osmOption = OSMOption(
   userLocationMarker: UserLocationMaker(
     personMarker: const MarkerIcon(
       icon: Icon(
-        Icons.location_history_rounded,
-        color: Colors.red,
+        Icons.circle,
+        color: Colors.blueAccent,
         size: 100,
       ),
     ),
     directionArrowMarker: const MarkerIcon(
       icon: Icon(
-        Icons.double_arrow,
-        size: 50,
+        Icons.arrow_circle_right_outlined,
+        color: Colors.blueAccent,
+        size: 100,
       ),
     ),
   ),
   roadConfiguration: const RoadOption(
     roadColor: Colors.yellowAccent,
   ),
-  markerOption: MarkerOption(
-      defaultMarker: const MarkerIcon(
-    icon: Icon(
-      Icons.person_pin_circle,
-      color: Colors.blue,
-      size: 50,
-    ),
-  )),
 );
