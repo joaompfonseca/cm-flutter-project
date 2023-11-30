@@ -95,7 +95,6 @@ class RouteItem extends StatelessWidget {
       child: ListTile(
           title: Text("From: ${route.origin}"),
           subtitle: Text("To: ${route.destination}"),
-          tileColor: Colors.orange[50],
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => RouteDetails(

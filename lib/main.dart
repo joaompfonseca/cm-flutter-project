@@ -19,31 +19,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Project X App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.orange,
-        ),
-        appBarTheme: const AppBarTheme(
-          color: Colors.orangeAccent,
-          foregroundColor: Colors.black,
-        ),
-        tabBarTheme: const TabBarTheme(
-          labelColor: Colors.black,
-          indicatorColor: Colors.black,
-          unselectedLabelColor: Colors.black45,
-        ),
-        listTileTheme: const ListTileThemeData(
-          tileColor: Color.fromRGBO(255, 243, 224, 1),
-          selectedTileColor: Colors.orange,
-          iconColor: Colors.black,
-          textColor: Colors.black,
-        ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.orangeAccent,
-          foregroundColor: Colors.black,
-        ),
-        useMaterial3: true,
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
       home: MultiBlocProvider(
         providers: [
           BlocProvider<MapCubit>(
