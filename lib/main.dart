@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hw_map/Data/AWS/aws_cognito.dart';
 import 'package:hw_map/app.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/cubit/route.dart';
+import 'package:hw_map/login/login.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/mock/poi.dart';
 import 'package:hw_map/mock/route.dart';
 
-void main() {
-  runApp(const MyApp());
+Future main() async {
+  await dotenv.load(fileName: ".env");
+  var aws = AWSServices();
+  runApp(MyApp(
+    loogedIn: false,
+    aws: aws,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool loogedIn;
+  final AWSServices aws;
+  const MyApp({super.key, required this.loogedIn, required this.aws});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +71,7 @@ class MyApp extends StatelessWidget {
             create: (context) => RouteCubit(mockRouteList),
           ),
         ],
-        child: const App(),
+        child: loogedIn ? const App() : LoginPage(aws: aws),
       ),
     );
   }
