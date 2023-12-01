@@ -216,7 +216,7 @@ class InformationMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
-        if (mapState.userLocation != null) {
+        if (mapState.userLocation == null) {
           return const InformationLocationUnavailable();
         }
         return const SizedBox.shrink();
