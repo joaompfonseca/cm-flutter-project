@@ -33,7 +33,11 @@ class RouteList extends StatelessWidget {
                       showSnackBar(context, "Showing ${route.name}");
                       DefaultTabController.of(context).animateTo(0);
                       RoutePoint start = route.points[0];
-                      mapCubit.flyTo(start.latitude, start.longitude, 18.0);
+                      mapCubit.flyTo(
+                        latitude: start.latitude,
+                        longitude: start.longitude,
+                        zoom: 18.0,
+                      );
                     });
               });
         },
@@ -68,34 +72,34 @@ class RouteItem extends StatelessWidget {
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
       startActionPane: ActionPane(
-        motion: const ScrollMotion(),
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
         children: [
           SlidableAction(
             onPressed: onDelete,
-            backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Theme.of(context).colorScheme.onError,
             icon: Icons.delete,
             label: 'Delete',
           )
         ],
       ),
       endActionPane: ActionPane(
-        motion: const ScrollMotion(),
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
         children: [
           SlidableAction(
-            flex: 2,
             onPressed: onShow,
-            backgroundColor: const Color(0xFF7BC043),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             icon: Icons.map,
-            label: 'Show on Map',
+            label: 'Show',
           ),
         ],
       ),
       child: ListTile(
           title: Text("From: ${route.origin}"),
           subtitle: Text("To: ${route.destination}"),
-          tileColor: Colors.orange[50],
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => RouteDetails(

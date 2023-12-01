@@ -32,7 +32,11 @@ class PoiList extends StatelessWidget {
                     onShow: (BuildContext context) {
                       showSnackBar(context, "Showing ${poi.name}");
                       DefaultTabController.of(context).animateTo(0);
-                      mapCubit.flyTo(poi.latitude, poi.longitude, 18.0);
+                      mapCubit.flyTo(
+                        latitude: poi.latitude,
+                        longitude: poi.longitude,
+                        zoom: 18.0,
+                      );
                     });
               });
         },
@@ -40,19 +44,21 @@ class PoiList extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           int i = poiCubit.state.length + 1;
-          Poi poi;
-          mapCubit.state.mapController.myLocation().then(
-                (userLocation) => {
-                  poi = mockPoi(
-                    i,
-                    userLocation.latitude,
-                    userLocation.longitude,
-                  ),
-                  showSnackBar(context, "Created ${poi.name}"),
-                  poiCubit.createPoi(poi),
-                },
-                onError: (e) => showSnackBar(context, "Error creating POI"),
-              );
+          if (mapCubit.state.userLocation == null) {
+            showSnackBar(
+              context,
+              "Error creating POI: user location unavailable",
+            );
+            return;
+          } else {
+            Poi poi = mockPoi(
+              i,
+              mapCubit.state.userLocation!.latitude,
+              mapCubit.state.userLocation!.longitude,
+            );
+            showSnackBar(context, "Created ${poi.name}");
+            poiCubit.createPoi(poi);
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -77,27 +83,28 @@ class PoiItem extends StatelessWidget {
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
       startActionPane: ActionPane(
-        motion: const ScrollMotion(),
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
         children: [
           SlidableAction(
             onPressed: onDelete,
-            backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Theme.of(context).colorScheme.onError,
             icon: Icons.delete,
             label: 'Delete',
           )
         ],
       ),
       endActionPane: ActionPane(
-        motion: const ScrollMotion(),
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
         children: [
           SlidableAction(
-            flex: 2,
             onPressed: onShow,
-            backgroundColor: const Color(0xFF7BC043),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             icon: Icons.map,
-            label: 'Show on Map',
+            label: 'Show',
           ),
         ],
       ),
