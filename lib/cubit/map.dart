@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hw_map/util/location.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapState {
@@ -14,6 +15,10 @@ class MapState {
 
 class MapCubit extends Cubit<MapState> {
   MapCubit(mapState) : super(mapState) {
+    _trackUserPosition();
+  }
+
+  void _trackUserPosition() {
     Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
@@ -23,7 +28,7 @@ class MapCubit extends Cubit<MapState> {
       if (position != null) {
         _updateUserPosition(position.latitude, position.longitude);
       }
-    }).onError((error, stackTrace) {
+    }).onError((error) {
       _clearUserPosition();
     });
   }

@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
-import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/util/assets.dart';
-import 'package:hw_map/util/message.dart';
 import 'package:latlong2/latlong.dart';
 
 class Map extends StatelessWidget {
@@ -17,8 +15,6 @@ class Map extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late MapCubit mapCubit = context.read<MapCubit>();
-    late PoiCubit poiCubit = context.read<PoiCubit>();
-    late RouteCubit routeCubit = context.read<RouteCubit>();
 
     return FlutterMap(
       mapController: mapCubit.state.mapController,
@@ -34,11 +30,7 @@ class Map extends StatelessWidget {
               if (mapState.userLocation != null)
                 Marker(
                   point: mapState.userLocation!,
-                  child: const Icon(
-                    Icons.location_history_rounded,
-                    size: 50.0,
-                    color: Colors.red,
-                  ),
+                  child: getMarkerImage('user-location'),
                 ),
             ],
           ),

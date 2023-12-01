@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-Image getMarkerImage(String poiType) {
+Image getMarkerImage(String type) {
   const markerPath = 'assets/markers';
-  switch (poiType) {
+  switch (type) {
     case 'bench':
       return Image.asset('$markerPath/m_bench.png');
     case 'bicycle-parking':
@@ -13,6 +13,8 @@ Image getMarkerImage(String poiType) {
       return Image.asset('$markerPath/m_drinking_water.png');
     case 'toilets':
       return Image.asset('$markerPath/m_toilets.png');
+    case 'user-location':
+      return Image.asset('$markerPath/m_user_location.png');
     default:
       return Image.asset('$markerPath/m_default.png');
   }
