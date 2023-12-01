@@ -20,6 +20,7 @@ class App extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: TabBar(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
           tabs: [
             Tab(
               icon: Icon(

@@ -17,6 +17,9 @@ class PoiList extends StatelessWidget {
     PoiCubit poiCubit = context.read<PoiCubit>();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Points of Interest'),
+      ),
       body: BlocBuilder<PoiCubit, List<Poi>>(
         builder: (context, poiList) {
           return ListView.builder(

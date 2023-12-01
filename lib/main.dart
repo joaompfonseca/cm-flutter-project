@@ -15,7 +15,7 @@ Future main() async {
   await dotenv.load(fileName: ".env");
   var aws = AWSServices();
   runApp(MyApp(
-    loogedIn: false,
+    loogedIn: true, // TODO change to false
     aws: aws,
   ));
 }

@@ -17,6 +17,9 @@ class RouteList extends StatelessWidget {
     RouteCubit routeCubit = context.read<RouteCubit>();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Routes'),
+      ),
       body: BlocBuilder<RouteCubit, List<CreatedRoute>>(
         builder: (context, routeList) {
           return ListView.builder(

@@ -87,16 +87,17 @@ class Map extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SearchLocationBar(),
-                SizedBox(height: 16),
+                SizedBox(height: 32),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(),
+                    ProfileButton(),
                     Column(
                       children: [
                         ZoomInButton(),
                         ZoomOutButton(),
-                        SizedBox(height: 16),
+                        SizedBox(height: 32),
                         LocateUserButton(),
                       ],
                     ),
@@ -107,6 +108,7 @@ class Map extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: const CreateRouteButton(),
       bottomSheet: const InformationMessage(),
     );
   }
@@ -132,6 +134,26 @@ class SearchLocationBar extends StatelessWidget {
   }
 }
 
+class ProfileButton extends StatelessWidget {
+  const ProfileButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+      onPressed: () {},
+      child: const Icon(Icons.person),
+    );
+  }
+}
+
 class ZoomInButton extends StatelessWidget {
   const ZoomInButton({super.key});
 
@@ -142,7 +164,8 @@ class ZoomInButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
-        padding: const EdgeInsets.all(16),
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       onPressed: () {
         mapCubit.zoomIn();
@@ -162,7 +185,8 @@ class ZoomOutButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
-        padding: const EdgeInsets.all(16),
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       onPressed: () {
         mapCubit.zoomOut();
@@ -184,9 +208,7 @@ class LocateUserButton extends StatelessWidget {
         return ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
-            padding: const EdgeInsets.all(16),
-            foregroundColor: Theme.of(context).colorScheme.onSecondary,
-            backgroundColor: Theme.of(context).colorScheme.secondary,
+            padding: const EdgeInsets.all(20),
           ),
           onPressed: () {
             mapCubit.flyToUserLocation();
@@ -197,7 +219,7 @@ class LocateUserButton extends StatelessWidget {
         return ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
           ),
           onPressed: () {
             mapCubit.trackUserPosition(flyTo: true);
@@ -206,6 +228,26 @@ class LocateUserButton extends StatelessWidget {
         );
       }
     });
+  }
+}
+
+class CreateRouteButton extends StatelessWidget {
+  const CreateRouteButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+        foregroundColor: Theme.of(context).colorScheme.onTertiary,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+      ),
+      onPressed: () {},
+      child: const Icon(Icons.directions),
+    );
   }
 }
 
