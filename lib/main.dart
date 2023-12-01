@@ -78,7 +78,8 @@ class MyApp extends StatelessWidget {
             create: (context) => MapCubit(
               MapState(
                 mapController,
-                osmOption,
+                mapOptions,
+                null,
               ),
             ),
           ),

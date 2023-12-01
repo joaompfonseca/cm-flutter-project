@@ -1,38 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
-MapController mapController = MapController.cyclOSMLayer(
-  initMapWithUserPosition: const UserTrackingOption(
-    enableTracking: true,
-    unFollowUser: true,
-  ),
-);
+String tileLayerUrl =
+    'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png';
 
-OSMOption osmOption = OSMOption(
-  zoomOption: const ZoomOption(
-    initZoom: 15,
-    minZoomLevel: 3,
-    maxZoomLevel: 19,
-    stepZoom: 1.0,
-  ),
-  enableRotationByGesture: false,
-  userLocationMarker: UserLocationMaker(
-    personMarker: const MarkerIcon(
-      icon: Icon(
-        Icons.circle,
-        color: Colors.blueAccent,
-        size: 100,
-      ),
-    ),
-    directionArrowMarker: const MarkerIcon(
-      icon: Icon(
-        Icons.arrow_circle_right_outlined,
-        color: Colors.blueAccent,
-        size: 100,
-      ),
-    ),
-  ),
-  roadConfiguration: const RoadOption(
-    roadColor: Colors.yellowAccent,
-  ),
+MapController mapController = MapController();
+
+MapOptions mapOptions = const MapOptions(
+  initialCenter: LatLng(40.6405, -8.6538), // Aveiro, Portugal
+  initialZoom: 14.0,
+  minZoom: 3.0,
+  maxZoom: 18.0,
+  interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+  keepAlive: true,
 );

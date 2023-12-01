@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-const markerPath = 'assets/markers';
-Map<String, MarkerIcon> markerIcons = {
-  'bench': MarkerIcon(
-    assetMarker: AssetMarker(
-      image: const AssetImage('$markerPath/m_bench.png'),
-    ),
-  ),
-  'bicycle-parking': MarkerIcon(
-    assetMarker: AssetMarker(
-      image: const AssetImage('$markerPath/m_bicycle_parking.png'),
-    ),
-  ),
-  'bicycle-shop': MarkerIcon(
-    assetMarker: AssetMarker(
-      image: const AssetImage('$markerPath/m_bicycle_shop.png'),
-    ),
-  ),
-  'drinking-water': MarkerIcon(
-    assetMarker: AssetMarker(
-      image: const AssetImage('$markerPath/m_drinking_water.png'),
-    ),
-  ),
-  'toilets': MarkerIcon(
-    assetMarker: AssetMarker(
-      image: const AssetImage('$markerPath/m_toilets.png'),
-    ),
-  ),
-  'default': MarkerIcon(
-    assetMarker: AssetMarker(
-      image: const AssetImage('$markerPath/m_default.png'),
-    ),
-  ),
-};
+Image getMarkerImage(String poiType) {
+  const markerPath = 'assets/markers';
+  switch (poiType) {
+    case 'bench':
+      return Image.asset('$markerPath/m_bench.png');
+    case 'bicycle-parking':
+      return Image.asset('$markerPath/m_bicycle_parking.png');
+    case 'bicycle-shop':
+      return Image.asset('$markerPath/m_bicycle_shop.png');
+    case 'drinking-water':
+      return Image.asset('$markerPath/m_drinking_water.png');
+    case 'toilets':
+      return Image.asset('$markerPath/m_toilets.png');
+    default:
+      return Image.asset('$markerPath/m_default.png');
+  }
+}

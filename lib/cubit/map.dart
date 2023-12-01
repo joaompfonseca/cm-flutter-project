@@ -1,26 +1,55 @@
+import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 
 class MapState {
   final MapController mapController;
-  final OSMOption osmOption;
+  final MapOptions mapOptions;
+  final LatLng? userLocation;
 
-  MapState(this.mapController, this.osmOption);
+  MapState(this.mapController, this.mapOptions, this.userLocation);
 }
 
 class MapCubit extends Cubit<MapState> {
-  MapCubit(mapState) : super(mapState);
+  MapCubit(mapState) : super(mapState) {
+    Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 0,
+      ),
+    ).listen((Position? position) {
+      if (position != null) {
+        _updateUserPosition(position.latitude, position.longitude);
+      }
+    }).onError((error, stackTrace) {
+      _clearUserPosition();
+    });
+  }
 
-  void flyTo(double latitude, double longitude, double zoomLevel) {
-    state.mapController
-        .goToLocation(GeoPoint(latitude: latitude, longitude: longitude))
-        .then(
-      (_) {
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => state.mapController.setZoom(zoomLevel: zoomLevel),
-        );
-      },
-    );
+  void _updateUserPosition(double latitude, double longitude) {
+    emit(MapState(
+      state.mapController,
+      state.mapOptions,
+      LatLng(latitude, longitude),
+    ));
+  }
+
+  void _clearUserPosition() {
+    emit(MapState(
+      state.mapController,
+      state.mapOptions,
+      null,
+    ));
+  }
+
+  void flyTo({
+    required double latitude,
+    required double longitude,
+    required double zoom,
+    Offset offset = Offset.zero,
+  }) {
+    state.mapController.move(LatLng(latitude, longitude), zoom, offset: offset);
   }
 }

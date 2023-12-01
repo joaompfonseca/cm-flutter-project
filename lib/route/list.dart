@@ -33,7 +33,11 @@ class RouteList extends StatelessWidget {
                       showSnackBar(context, "Showing ${route.name}");
                       DefaultTabController.of(context).animateTo(0);
                       RoutePoint start = route.points[0];
-                      mapCubit.flyTo(start.latitude, start.longitude, 18.0);
+                      mapCubit.flyTo(
+                        latitude: start.latitude,
+                        longitude: start.longitude,
+                        zoom: 18.0,
+                      );
                     });
               });
         },
