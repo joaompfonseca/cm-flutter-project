@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MyApp(loogedIn: true, aws: widget.aws)));
+              builder: (context) => MyApp(loggedIn: true, aws: widget.aws)));
     } else {
       //clean email and password
       emailController.clear();

@@ -1,9 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:hw_map/util/message.dart';
 
-class PoiDetails extends StatelessWidget {
+class PoiDetails extends StatefulWidget {
   final Poi poi;
 
   const PoiDetails({
@@ -12,7 +16,28 @@ class PoiDetails extends StatelessWidget {
   });
 
   @override
+  State<PoiDetails> createState() => _PoiDetailsState();
+}
+
+class _PoiDetailsState extends State<PoiDetails> {
+  late Poi poi;
+
+  @override
+  void initState() {
+    super.initState();
+    poi = widget.poi;
+  }
+
+  void _updatePoi(Poi poi) {
+    setState(() {
+      this.poi = poi;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    PoiCubit poiCubit = context.read<PoiCubit>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(poi.name),
@@ -48,22 +73,62 @@ class PoiDetails extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 8),
-                  PositiveRatingButton(value: poi.ratingPositive),
+                  PositiveRatingButton(
+                    value: poi.ratingPositive,
+                    onPressed: () {
+                      if (poiCubit.ratePoi(poi, true)) {
+                        showSnackBar(context, "You like this POI!");
+                      } else {
+                        showSnackBar(context, "You cannot do that, sorry!");
+                      }
+                      _updatePoi(poi);
+                    },
+                  ),
                   const SizedBox(width: 8),
-                  NegativeRatingButton(value: poi.ratingNegative),
+                  NegativeRatingButton(
+                    value: poi.ratingNegative,
+                    onPressed: () {
+                      if (poiCubit.ratePoi(poi, false)) {
+                        showSnackBar(context, "You disliked this POI!");
+                      } else {
+                        showSnackBar(context, "You cannot do that, sorry!");
+                      }
+                      _updatePoi(poi);
+                    },
+                  ),
                 ],
               ),
-              const Row(
+              Row(
                 children: [
-                  SizedBox(width: 8),
-                  Text(
+                  const SizedBox(width: 8),
+                  const Text(
                     "Is it available?",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 8),
-                  PositiveStatusButton(),
-                  SizedBox(width: 8),
-                  NegativeStatusButton(),
+                  const SizedBox(width: 8),
+                  PositiveStatusButton(
+                    onPressed: () {
+                      if (poiCubit.setStatus(poi, true)) {
+                        showSnackBar(
+                            context, "You marked this POI as available!");
+                      } else {
+                        showSnackBar(context, "You cannot do that, sorry!");
+                      }
+                      _updatePoi(poi);
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  NegativeStatusButton(
+                    onPressed: () {
+                      if (poiCubit.setStatus(poi, false)) {
+                        showSnackBar(
+                            context, "You marked this POI as unavailable!");
+                      } else {
+                        showSnackBar(context, "You cannot do that, sorry!");
+                      }
+                      _updatePoi(poi);
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -120,7 +185,13 @@ class PoiDetails extends StatelessWidget {
 
 class PositiveRatingButton extends StatelessWidget {
   final int value;
-  const PositiveRatingButton({super.key, required this.value});
+  final VoidCallback onPressed;
+
+  const PositiveRatingButton({
+    super.key,
+    required this.value,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +201,7 @@ class PositiveRatingButton extends StatelessWidget {
         foregroundColor: const Color(0xFFFFFFFF),
         backgroundColor: const Color(0xAA4CAF4F),
       ),
-      onPressed: () {
-        showSnackBar(context, "Rating: Positive");
-      },
+      onPressed: onPressed,
       child: Row(
         children: [
           const Icon(Icons.thumb_up_rounded),
@@ -146,7 +215,13 @@ class PositiveRatingButton extends StatelessWidget {
 
 class NegativeRatingButton extends StatelessWidget {
   final int value;
-  const NegativeRatingButton({super.key, required this.value});
+  final VoidCallback onPressed;
+
+  const NegativeRatingButton({
+    super.key,
+    required this.value,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -156,9 +231,7 @@ class NegativeRatingButton extends StatelessWidget {
         foregroundColor: const Color(0xFFFFFFFF),
         backgroundColor: const Color(0xAAEF4444),
       ),
-      onPressed: () {
-        showSnackBar(context, "Rating: Negative");
-      },
+      onPressed: onPressed,
       child: Row(
         children: [
           const Icon(Icons.thumb_down_rounded),
@@ -171,7 +244,12 @@ class NegativeRatingButton extends StatelessWidget {
 }
 
 class PositiveStatusButton extends StatelessWidget {
-  const PositiveStatusButton({super.key});
+  final VoidCallback onPressed;
+
+  const PositiveStatusButton({
+    super.key,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -179,9 +257,7 @@ class PositiveStatusButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(8),
       ),
-      onPressed: () {
-        showSnackBar(context, "Status: Yes");
-      },
+      onPressed: onPressed,
       child: const Row(
         children: [
           Icon(Icons.check_rounded),
@@ -195,7 +271,12 @@ class PositiveStatusButton extends StatelessWidget {
 }
 
 class NegativeStatusButton extends StatelessWidget {
-  const NegativeStatusButton({super.key});
+  final VoidCallback onPressed;
+
+  const NegativeStatusButton({
+    super.key,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -203,9 +284,7 @@ class NegativeStatusButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(8),
       ),
-      onPressed: () {
-        showSnackBar(context, "Status: No");
-      },
+      onPressed: onPressed,
       child: const Row(
         children: [
           Icon(Icons.close_rounded),

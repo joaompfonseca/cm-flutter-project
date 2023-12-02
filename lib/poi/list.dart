@@ -23,25 +23,27 @@ class PoiList extends StatelessWidget {
       body: BlocBuilder<PoiCubit, List<Poi>>(
         builder: (context, poiList) {
           return ListView.builder(
-              itemCount: poiList.length,
-              itemBuilder: (context, index) {
-                Poi poi = poiList[index];
-                return PoiItem(
-                    poi: poi,
-                    onDelete: (BuildContext context) {
-                      showSnackBar(context, "Deleted ${poi.name}");
-                      poiCubit.deletePoi(poi);
-                    },
-                    onShow: (BuildContext context) {
-                      showSnackBar(context, "Showing ${poi.name}");
-                      DefaultTabController.of(context).animateTo(0);
-                      mapCubit.flyTo(
-                        latitude: poi.latitude,
-                        longitude: poi.longitude,
-                        zoom: 18.0,
-                      );
-                    });
-              });
+            itemCount: poiList.length,
+            itemBuilder: (context, index) {
+              Poi poi = poiList[index];
+              return PoiItem(
+                poi: poi,
+                onDelete: (BuildContext context) {
+                  showSnackBar(context, "Deleted ${poi.name}");
+                  poiCubit.deletePoi(poi);
+                },
+                onShow: (BuildContext context) {
+                  showSnackBar(context, "Showing ${poi.name}");
+                  DefaultTabController.of(context).animateTo(0);
+                  mapCubit.flyTo(
+                    latitude: poi.latitude,
+                    longitude: poi.longitude,
+                    zoom: 18.0,
+                  );
+                },
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -112,15 +114,16 @@ class PoiItem extends StatelessWidget {
         ],
       ),
       child: ListTile(
-          title: Text(poi.name),
-          subtitle: Text(poi.description),
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => PoiDetails(
-                poi: poi,
-              ),
-            ));
-          }),
+        title: Text(poi.name),
+        subtitle: Text(poi.description),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => PoiDetails(poi: poi),
+            ),
+          );
+        },
+      ),
     );
   }
 }

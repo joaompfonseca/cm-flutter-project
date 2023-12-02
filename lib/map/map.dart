@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -66,9 +63,7 @@ class Map extends StatelessWidget {
                                   builder: (BuildContext context) {
                                     return SizedBox(
                                       height: 400,
-                                      child: PoiDetails(
-                                        poi: poi,
-                                      ),
+                                      child: PoiDetails(poi: poi),
                                     );
                                   },
                                 );
