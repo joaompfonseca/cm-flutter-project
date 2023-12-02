@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/cubit/map.dart';
@@ -5,6 +7,7 @@ import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:hw_map/util/message.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreatePoiForm extends StatefulWidget {
   final double latitude;
@@ -23,9 +26,10 @@ class CreatePoiForm extends StatefulWidget {
 class _CreatePoiFormState extends State<CreatePoiForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController typeController = TextEditingController();
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final typeController = TextEditingController();
+  final picker = ImagePicker();
 
   final poiTypes = [
     {"label": "Bench", "value": "bench"},
@@ -37,12 +41,26 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
 
   late double latitude;
   late double longitude;
+  File? image;
 
   @override
   void initState() {
     super.initState();
     latitude = widget.latitude;
     longitude = widget.longitude;
+  }
+
+  Future getImageFromCamera() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      }
+    });
+  }
+
+  bool isFormValid() {
+    return _formKey.currentState!.validate() && image != null;
   }
 
   @override
@@ -154,38 +172,121 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                   },
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                const Text(
+                  "Picture",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: image == null
+                      ? Column(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
+                                ),
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 20, 16, 20),
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.onTertiary,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.tertiary,
+                              ),
+                              onPressed: getImageFromCamera,
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.camera_alt_rounded),
+                                  SizedBox(width: 8),
+                                  Text("Take a picture"),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "You must take a picture",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                            )
+                          ],
+                        )
+                      : Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: Image.file(image!),
+                            ),
+                            Positioned.fromRelativeRect(
+                              rect: RelativeRect.fill,
+                              child: Center(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(16)),
+                                    ),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        32, 20, 32, 20),
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.tertiary,
+                                  ),
+                                  onPressed: getImageFromCamera,
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.camera_alt_rounded),
+                                      SizedBox(width: 8),
+                                      Text("Change picture"),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    padding: const EdgeInsets.fromLTRB(32, 20, 32, 20),
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Poi poi = Poi(
-                        id: "poi${DateTime.timestamp()}", // TODO: remove
-                        name: nameController.text,
-                        type: typeController.text,
-                        description: descriptionController.text,
-                        latitude: latitude,
-                        longitude: longitude,
-                        pictureUrl:
-                            "https://www.jpn.up.pt/wp-content/uploads/2018/02/wc_p%C3%BAblica_3_06-de-fevereiro-de-2018.jpg", // TODO: change to S3 url
-                        ratingPositive: 0, // TODO: remove
-                        ratingNegative: 0, // TODO: remove
-                        addedBy: "testUser", // TODO: change to user
-                      );
-                      poiCubit.createPoi(poi);
-                      showSnackBar(context, "Created ${poi.name}");
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text(
-                    'Create',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    onPressed: () {
+                      if (isFormValid()) {
+                        Poi poi = Poi(
+                          id: "poi${DateTime.timestamp()}", // TODO: remove
+                          name: nameController.text,
+                          type: typeController.text,
+                          description: descriptionController.text,
+                          latitude: latitude,
+                          longitude: longitude,
+                          pictureUrl:
+                              image!.path.toString(), // TODO: change to S3
+                          ratingPositive: 0, // TODO: remove
+                          ratingNegative: 0, // TODO: remove
+                          addedBy: "testUser", // TODO: change to user
+                        );
+                        poiCubit.createPoi(poi);
+                        showSnackBar(context, "Created ${poi.name}");
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: const Text(
+                      'Create',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],

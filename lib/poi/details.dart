@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hw_map/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,9 +66,10 @@ class _PoiDetailsState extends State<PoiDetails> {
                 blendMode: BlendMode.dstIn,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.0),
-                  child: Image(
-                    image: NetworkImage(poi.pictureUrl),
-                  ),
+                  child: poi.pictureUrl.startsWith(
+                          "/data") // TODO: maybe it's not the best way to check if picture is offline
+                      ? Image.file(File(poi.pictureUrl))
+                      : Image.network(poi.pictureUrl),
                 ),
               ),
               Row(
