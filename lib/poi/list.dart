@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/mock/poi.dart';
+import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/util/assets.dart';
@@ -54,27 +55,7 @@ class PoiList extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          int i = poiCubit.state.length + 1;
-          if (mapCubit.state.userLocation == null) {
-            showSnackBar(
-              context,
-              "Error creating POI: user location unavailable",
-            );
-            return;
-          } else {
-            Poi poi = mockPoi(
-              i,
-              mapCubit.state.userLocation!.latitude,
-              mapCubit.state.userLocation!.longitude,
-            );
-            showSnackBar(context, "Created ${poi.name}");
-            poiCubit.createPoi(poi);
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: const OpenCreatePoiFormButton(),
     );
   }
 }

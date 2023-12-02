@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/map/config.dart';
+import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/util/assets.dart';
@@ -56,13 +57,13 @@ class Map extends StatelessWidget {
                                   latitude: poi.latitude,
                                   longitude: poi.longitude,
                                   zoom: 18.0,
-                                  offset: const Offset(0, -100),
+                                  offset: const Offset(0, -150),
                                 );
                                 showModalBottomSheet(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return SizedBox(
-                                      height: 400,
+                                      height: 500,
                                       child: PoiDetails(poi: poi),
                                     );
                                   },
@@ -87,7 +88,11 @@ class Map extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ProfileButton(),
+                    Column(
+                      children: [
+                        ProfileButton(),
+                      ],
+                    ),
                     Column(
                       children: [
                         ZoomInButton(),
@@ -103,7 +108,23 @@ class Map extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: const CreateRouteButton(),
+      floatingActionButton: const Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 24),
+        child: Row(
+          children: [
+            SizedBox(width: 32),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OpenCreatePoiFormButton(),
+                  CreateRouteButton(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomSheet: const InformationMessage(),
     );
   }
@@ -198,31 +219,33 @@ class LocateUserButton extends StatelessWidget {
   Widget build(BuildContext context) {
     MapCubit mapCubit = context.read<MapCubit>();
 
-    return BlocBuilder<MapCubit, MapState>(builder: (context, mapState) {
-      if (mapState.userLocation != null) {
-        return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(20),
-          ),
-          onPressed: () {
-            mapCubit.flyToUserLocation();
-          },
-          child: const Icon(Icons.my_location),
-        );
-      } else {
-        return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(20),
-          ),
-          onPressed: () {
-            mapCubit.trackUserPosition(flyTo: true);
-          },
-          child: const Icon(Icons.location_disabled_rounded),
-        );
-      }
-    });
+    return BlocBuilder<MapCubit, MapState>(
+      builder: (context, mapState) {
+        if (mapState.userLocation != null) {
+          return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(20),
+            ),
+            onPressed: () {
+              mapCubit.flyToUserLocation();
+            },
+            child: const Icon(Icons.my_location),
+          );
+        } else {
+          return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(20),
+            ),
+            onPressed: () {
+              mapCubit.trackUserPosition(flyTo: true);
+            },
+            child: const Icon(Icons.location_disabled_rounded),
+          );
+        }
+      },
+    );
   }
 }
 
@@ -270,7 +293,7 @@ class InformationLocationUnavailable extends StatelessWidget {
     MapCubit mapCubit = context.read<MapCubit>();
 
     return SizedBox(
-      height: 64,
+      height: 72,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
