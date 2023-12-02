@@ -7,11 +7,27 @@ import 'package:hw_map/map/config.dart';
 import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
+import 'package:hw_map/route/create.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 
-class Map extends StatelessWidget {
-  const Map({super.key});
+class Map extends StatefulWidget {
+  const Map({
+    super.key,
+  });
+
+  @override
+  State<Map> createState() => _MapState();
+}
+
+class _MapState extends State<Map> {
+  bool isCreatingRoute = false;
+
+  void toggleCreatingRoute() {
+    setState(() {
+      isCreatingRoute = !isCreatingRoute;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +95,16 @@ class Map extends StatelessWidget {
           /* Buttons */
           Container(
             padding: const EdgeInsets.fromLTRB(16, 64, 16, 64),
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SearchLocationBar(),
-                SizedBox(height: 32),
-                Row(
+                const SearchLocationBar(),
+                Visibility(
+                  visible: isCreatingRoute,
+                  child: CreateRouteForm(onClose: toggleCreatingRoute),
+                ),
+                const SizedBox(height: 32),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -108,17 +128,19 @@ class Map extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: const Padding(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 24),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 24),
         child: Row(
           children: [
-            SizedBox(width: 32),
+            const SizedBox(width: 32),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OpenCreatePoiFormButton(),
-                  CreateRouteButton(),
+                  const OpenCreatePoiFormButton(),
+                  CreateRouteButton(
+                    onPressed: toggleCreatingRoute,
+                  ),
                 ],
               ),
             ),
@@ -250,7 +272,8 @@ class LocateUserButton extends StatelessWidget {
 }
 
 class CreateRouteButton extends StatelessWidget {
-  const CreateRouteButton({super.key});
+  final VoidCallback onPressed;
+  const CreateRouteButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +286,7 @@ class CreateRouteButton extends StatelessWidget {
         foregroundColor: Theme.of(context).colorScheme.onTertiary,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       child: const Icon(Icons.directions),
     );
   }
