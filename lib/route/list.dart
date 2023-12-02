@@ -82,7 +82,7 @@ class RouteItem extends StatelessWidget {
             onPressed: onDelete,
             backgroundColor: Theme.of(context).colorScheme.error,
             foregroundColor: Theme.of(context).colorScheme.onError,
-            icon: Icons.delete,
+            icon: Icons.delete_rounded,
             label: 'Delete',
           )
         ],
@@ -95,7 +95,7 @@ class RouteItem extends StatelessWidget {
             onPressed: onShow,
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            icon: Icons.map,
+            icon: Icons.map_rounded,
             label: 'Show',
           ),
         ],
