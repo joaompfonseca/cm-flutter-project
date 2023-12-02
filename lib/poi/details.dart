@@ -40,7 +40,10 @@ class _PoiDetailsState extends State<PoiDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(poi.name),
+        title: Text(
+          poi.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
