@@ -30,7 +30,7 @@ class PoiDetails extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [Colors.black, Colors.transparent],
                 ).createShader(
-                  Rect.fromLTRB(0, 0, rect.width, rect.height),
+                  Rect.fromLTRB(0, 0, rect.width, rect.height - 16),
                 ),
                 blendMode: BlendMode.dstIn,
                 child: ClipRRect(
@@ -81,6 +81,7 @@ class PoiDetails extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(Icons.description_rounded, size: 32),
                   const SizedBox(width: 16),
@@ -89,7 +90,11 @@ class PoiDetails extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 8),
-                  Text(poi.description),
+                  Expanded(
+                    child: Text(
+                      poi.description,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -182,6 +187,7 @@ class PositiveStatusButton extends StatelessWidget {
           Icon(Icons.check_rounded),
           SizedBox(width: 8),
           Text("Yes"),
+          SizedBox(width: 8),
         ],
       ),
     );
@@ -205,6 +211,7 @@ class NegativeStatusButton extends StatelessWidget {
           Icon(Icons.close_rounded),
           SizedBox(width: 8),
           Text("No"),
+          SizedBox(width: 8),
         ],
       ),
     );
