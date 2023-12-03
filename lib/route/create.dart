@@ -79,7 +79,9 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                           key: Key(index.toString()),
                           index: index,
                           controller: locations[index],
-                          onDelete: () => onDelete(index),
+                          onDelete: (locations.length > 2)
+                              ? () => onDelete(index)
+                              : null,
                         ),
                       ),
                   ],
@@ -161,7 +163,7 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
 class LocationBar extends StatelessWidget {
   final int index;
   final TextEditingController controller;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
   const LocationBar(
       {super.key,
       required this.index,
@@ -189,15 +191,16 @@ class LocationBar extends StatelessWidget {
         ),
         hintText: "Insert Location",
         trailing: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              foregroundColor: Theme.of(context).colorScheme.onError,
-              backgroundColor: Theme.of(context).colorScheme.error,
+          if (onDelete != null)
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                foregroundColor: Theme.of(context).colorScheme.onError,
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+              onPressed: onDelete,
+              child: const Icon(Icons.delete_rounded),
             ),
-            onPressed: onDelete,
-            child: const Icon(Icons.delete_rounded),
-          ),
         ],
       ),
       suggestionsBuilder: (context, controller) => [],
