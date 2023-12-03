@@ -3,36 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
+import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/route/create.dart';
-import 'package:hw_map/route/route.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 
-class Map extends StatefulWidget {
-  const Map({
-    super.key,
-  });
-
-  @override
-  State<Map> createState() => _MapState();
-}
-
-class _MapState extends State<Map> {
-  bool isCreatingRoute = false;
-
-  void toggleCreatingRoute() {
-    setState(() {
-      isCreatingRoute = !isCreatingRoute;
-    });
-  }
+class Map extends StatelessWidget {
+  const Map({super.key});
 
   @override
   Widget build(BuildContext context) {
     MapCubit mapCubit = context.read<MapCubit>();
+    RouteCubit routeCubit = context.read<RouteCubit>();
 
     return Scaffold(
       body: Stack(
@@ -100,10 +86,10 @@ class _MapState extends State<Map> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SearchLocationBar(),
-                Visibility(
-                  visible: isCreatingRoute,
-                  child: CreateRouteForm(
-                    onClose: toggleCreatingRoute,
+                BlocBuilder<RouteCubit, RouteState>(
+                  builder: (context, routeState) => Visibility(
+                    visible: routeState.isCreatingRoute,
+                    child: const CreateRouteForm(),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -141,8 +127,8 @@ class _MapState extends State<Map> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const OpenCreatePoiFormButton(),
-                  CreateRouteButton(
-                    onPressed: toggleCreatingRoute,
+                  CreateRouteFormButton(
+                    onPressed: routeCubit.toggleIsCreatingRoute,
                   ),
                 ],
               ),
@@ -270,27 +256,6 @@ class LocateUserButton extends StatelessWidget {
           );
         }
       },
-    );
-  }
-}
-
-class CreateRouteButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  const CreateRouteButton({super.key, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-        foregroundColor: Theme.of(context).colorScheme.onTertiary,
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-      ),
-      onPressed: onPressed,
-      child: const Icon(Icons.directions),
     );
   }
 }

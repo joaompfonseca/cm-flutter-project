@@ -5,30 +5,17 @@ import 'package:hw_map/route/route.dart';
 import 'package:hw_map/util/message.dart';
 
 class CreateRouteForm extends StatefulWidget {
-  final VoidCallback onClose;
-
-  const CreateRouteForm({
-    super.key,
-    required this.onClose,
-  });
+  const CreateRouteForm({super.key});
 
   @override
   State<CreateRouteForm> createState() => _CreateRouteFormState();
 }
 
 class _CreateRouteFormState extends State<CreateRouteForm> {
-  late VoidCallback onClose;
-
   List<TextEditingController> locations = List.from([
     TextEditingController(),
     TextEditingController(),
   ]);
-
-  @override
-  void initState() {
-    super.initState();
-    onClose = widget.onClose;
-  }
 
   void onAdd() {
     setState(() {
@@ -109,7 +96,7 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                           Theme.of(context).colorScheme.onSecondary,
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                     ),
-                    onPressed: onClose,
+                    onPressed: () => routeCubit.setIsCreatingRoute(false),
                     child: const Text("Close"),
                   ),
                   ElevatedButton(
@@ -121,11 +108,9 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                       if (isFormValid()) {
                         CreatedRoute route = CreatedRoute(
                           id: "poi${DateTime.timestamp()}", // TODO: remove
-                          origin: locations.first.text,
-                          destination: locations.last.text,
                           points: locations
                               .map(
-                                (location) => RoutePoint(
+                                (location) => CreatedRoutePoint(
                                   label: location.text,
                                   longitude:
                                       0, // TODO: get from map/reverse geocoding
@@ -135,9 +120,9 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                               )
                               .toList(),
                         );
-                        routeCubit.createRoute(route);
+                        routeCubit.createCreatedRoute(route);
                         showSnackBar(context, "Created ${route.name}");
-                        onClose();
+                        routeCubit.setIsCreatingRoute(false);
                       } else {
                         showSnackBar(context, "Please fill all the fields");
                       }
@@ -197,6 +182,33 @@ class LocationBar extends StatelessWidget {
         ],
       ),
       suggestionsBuilder: (context, controller) => [],
+    );
+  }
+}
+
+class CreateRouteFormButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const CreateRouteFormButton({
+    super.key,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    RouteCubit routeCubit = context.read<RouteCubit>();
+
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+        foregroundColor: Theme.of(context).colorScheme.onTertiary,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+      ),
+      onPressed: onPressed,
+      child: const Icon(Icons.directions),
     );
   }
 }

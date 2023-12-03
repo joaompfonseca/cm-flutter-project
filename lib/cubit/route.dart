@@ -1,11 +1,56 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/route/route.dart';
 
-class RouteCubit extends Cubit<List<CreatedRoute>> {
-  RouteCubit(routeList) : super(routeList);
+class RouteState {
+  final List<CreatedRoute> createdRouteList;
+  final List<TrackedRoute> trackedRouteList;
+  final bool isCreatingRoute;
+  final bool isTrackingRoute;
 
-  void createRoute(CreatedRoute route) => emit([...state, route]);
+  RouteState(
+    this.createdRouteList,
+    this.trackedRouteList,
+    this.isCreatingRoute,
+    this.isTrackingRoute,
+  );
+}
 
-  void deleteRoute(CreatedRoute route) =>
-      emit(state.where((element) => element.id != route.id).toList());
+class RouteCubit extends Cubit<RouteState> {
+  RouteCubit(routeState) : super(routeState);
+
+  void setIsCreatingRoute(bool value) => emit(
+        RouteState(
+          state.createdRouteList,
+          state.trackedRouteList,
+          value,
+          state.isTrackingRoute,
+        ),
+      );
+
+  void toggleIsCreatingRoute() => emit(
+        RouteState(
+          state.createdRouteList,
+          state.trackedRouteList,
+          !state.isCreatingRoute,
+          state.isTrackingRoute,
+        ),
+      );
+
+  void createCreatedRoute(CreatedRoute route) => emit(
+        RouteState(
+          [...state.createdRouteList, route],
+          state.trackedRouteList,
+          state.isCreatingRoute,
+          state.isTrackingRoute,
+        ),
+      );
+
+  void deleteCreatedRoute(CreatedRoute route) => emit(
+        RouteState(
+          state.createdRouteList..remove(route),
+          state.trackedRouteList,
+          state.isCreatingRoute,
+          state.isTrackingRoute,
+        ),
+      );
 }

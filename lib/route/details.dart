@@ -22,13 +22,13 @@ class RouteDetails extends StatelessWidget {
                 "Origin",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text(route.origin),
+              Text(route.points.first.label),
               const SizedBox(height: 20),
               const Text(
                 "Destination",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text(route.destination),
+              Text(route.points.last.label),
               const SizedBox(height: 20),
               const Text(
                 "Points",

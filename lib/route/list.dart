@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/route.dart';
+import 'package:hw_map/route/create.dart';
 import 'package:hw_map/route/route.dart';
 import 'package:hw_map/route/details.dart';
 import 'package:hw_map/util/button.dart';
@@ -19,12 +20,12 @@ class RouteList extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Routes'),
       ),
-      body: BlocBuilder<RouteCubit, List<CreatedRoute>>(
-        builder: (context, routeList) {
+      body: BlocBuilder<RouteCubit, RouteState>(
+        builder: (context, routeState) {
           return ListView.builder(
-            itemCount: routeList.length,
+            itemCount: routeState.createdRouteList.length,
             itemBuilder: (context, index) {
-              CreatedRoute route = routeList[index];
+              CreatedRoute route = routeState.createdRouteList[index];
               return RouteItem(
                 route: route,
                 onDetails: () {
@@ -36,12 +37,12 @@ class RouteList extends StatelessWidget {
                 },
                 onDelete: () {
                   showSnackBar(context, "Deleted ${route.name}");
-                  routeCubit.deleteRoute(route);
+                  routeCubit.deleteCreatedRoute(route);
                 },
                 onShow: () {
                   showSnackBar(context, "Showing ${route.name}");
                   DefaultTabController.of(context).animateTo(0);
-                  RoutePoint start = route.points[0];
+                  CreatedRoutePoint start = route.points[0];
                   mapCubit.flyTo(
                     latitude: start.latitude,
                     longitude: start.longitude,
@@ -51,6 +52,12 @@ class RouteList extends StatelessWidget {
               );
             },
           );
+        },
+      ),
+      floatingActionButton: CreateRouteFormButton(
+        onPressed: () {
+          DefaultTabController.of(context).animateTo(0);
+          routeCubit.setIsCreatingRoute(true);
         },
       ),
     );

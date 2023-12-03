@@ -42,7 +42,14 @@ class MyApp extends StatelessWidget {
           create: (context) => PoiCubit(mockPoiList),
         ),
         BlocProvider<RouteCubit>(
-          create: (context) => RouteCubit(mockRouteList),
+          create: (context) => RouteCubit(
+            RouteState(
+              mockCreatedRouteList,
+              [],
+              false,
+              false,
+            ),
+          ),
         ),
       ],
       child: MaterialApp(
