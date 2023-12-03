@@ -35,7 +35,7 @@ class ProfileDetails extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -45,10 +45,42 @@ class ProfileDetails extends StatelessWidget {
                             fontWeight: FontWeight.bold, fontSize: 24),
                       ),
                       Text(
-                        "${profileCubit.state.username}",
+                        profileCubit.state.username,
                       ),
                       Text(
-                        "${profileCubit.state.email}",
+                        profileCubit.state.email,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+                        ),
+                        onPressed: () {},
+                        child: const Row(children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 8),
+                          Text("Edit Profile"),
+                        ]),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                          foregroundColor: const Color(0xFFFFFFFF),
+                          backgroundColor: const Color(0xFFEF4444),
+                          padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+                        ),
+                        onPressed: () {},
+                        child: const Row(children: [
+                          Icon(Icons.logout),
+                          SizedBox(width: 8),
+                          Text("Logout"),
+                        ]),
                       ),
                     ],
                   )
