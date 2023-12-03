@@ -8,11 +8,14 @@ import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/cubit/position.dart';
+import 'package:hw_map/cubit/profile.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/login/login.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/mock/poi.dart';
+import 'package:hw_map/mock/profile.dart';
 import 'package:hw_map/mock/route.dart';
+import 'package:hw_map/profile/profile.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -33,6 +36,7 @@ class MyApp extends StatelessWidget {
     final positionCubit = PositionCubit(null);
     final graphhopperCubit = GraphhopperCubit([]);
     final geocodingCubit = GeocodingCubit(GeocodingState(null, null));
+    final profileCubit = ProfileCubit(mockProfile);
     final mapCubit = MapCubit(
       MapState(mapController, mapOptions, null, false, positionCubit),
     );
@@ -61,6 +65,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<GeocodingCubit>(
           create: (context) => geocodingCubit,
+        ),
+        BlocProvider<ProfileCubit>(
+          create: (context) => profileCubit,
         ),
         BlocProvider<MapCubit>(
           create: (context) => mapCubit,

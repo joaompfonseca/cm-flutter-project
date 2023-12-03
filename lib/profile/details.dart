@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/profile.dart';
 
 class ProfileDetails extends StatelessWidget {
   const ProfileDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ProfileCubit profileCubit = context.read<ProfileCubit>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -21,23 +25,30 @@ class ProfileDetails extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(
-                    width: 128,
+                    height: 256,
+                    width: 192,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network("https://picsum.photos/seed/1/600"),
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
+                        child: Image.network(profileCubit.state.pictureUrl),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  const Column(
+                  SizedBox(width: 16),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "John Doe",
-                        style: TextStyle(
+                        "${profileCubit.state.firstName} ${profileCubit.state.lastName}",
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 24),
                       ),
                       Text(
-                        "Username",
+                        "${profileCubit.state.username}",
+                      ),
+                      Text(
+                        "${profileCubit.state.email}",
                       ),
                     ],
                   )
@@ -49,7 +60,7 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Total XP",
-                      value: "1337",
+                      value: profileCubit.state.totalXp.toString(),
                       foregroundColor:
                           Theme.of(context).colorScheme.onSecondary,
                       backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -63,7 +74,7 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Created POIs",
-                      value: "5",
+                      value: profileCubit.state.addedPoisCount.toString(),
                       foregroundColor: Theme.of(context).colorScheme.onTertiary,
                       backgroundColor: Theme.of(context).colorScheme.tertiary,
                     ),
@@ -76,7 +87,7 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Given Ratings",
-                      value: "15",
+                      value: profileCubit.state.givenRatingsCount.toString(),
                       foregroundColor: Theme.of(context).colorScheme.onTertiary,
                       backgroundColor:
                           Theme.of(context).colorScheme.tertiary.withAlpha(192),
@@ -90,7 +101,7 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Received Ratings",
-                      value: "3",
+                      value: profileCubit.state.receivedRatingsCount.toString(),
                       foregroundColor: Theme.of(context).colorScheme.onTertiary,
                       backgroundColor:
                           Theme.of(context).colorScheme.tertiary.withAlpha(128),
