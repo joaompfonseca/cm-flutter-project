@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final positionCubit = PositionCubit(null);
     final mapCubit = MapCubit(
-      MapState(mapController, mapOptions, null, positionCubit),
+      MapState(mapController, mapOptions, null, false, positionCubit),
     );
     final poiCubit = PoiCubit(mockPoiList);
     final routeCubit = RouteCubit(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
+import 'package:hw_map/cubit/position.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/poi/create.dart';
@@ -260,6 +261,7 @@ class LocateUserButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PositionCubit positionCubit = context.read<PositionCubit>();
     MapCubit mapCubit = context.read<MapCubit>();
 
     return BlocBuilder<MapCubit, MapState>(
@@ -281,7 +283,7 @@ class LocateUserButton extends StatelessWidget {
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(20),
             ),
-            onPressed: mapCubit.trackUserPosition,
+            onPressed: positionCubit.trackUserPosition,
             child: const Icon(Icons.location_disabled_rounded),
           );
         }
@@ -346,6 +348,7 @@ class InformationLocationUnavailable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PositionCubit positionCubit = context.read<PositionCubit>();
     MapCubit mapCubit = context.read<MapCubit>();
 
     return SizedBox(
@@ -358,7 +361,7 @@ class InformationLocationUnavailable extends StatelessWidget {
           children: [
             const Text("Location Services Unavailable"),
             TextButton(
-              onPressed: mapCubit.trackUserPosition,
+              onPressed: positionCubit.trackUserPosition,
               child: const Text("Retry"),
             ),
           ],
