@@ -8,6 +8,7 @@ import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/route/create.dart';
+import 'package:hw_map/route/route.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -101,7 +102,9 @@ class _MapState extends State<Map> {
                 const SearchLocationBar(),
                 Visibility(
                   visible: isCreatingRoute,
-                  child: CreateRouteForm(onClose: toggleCreatingRoute),
+                  child: CreateRouteForm(
+                    onClose: toggleCreatingRoute,
+                  ),
                 ),
                 const SizedBox(height: 32),
                 const Row(

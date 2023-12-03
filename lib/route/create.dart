@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/route.dart';
+import 'package:hw_map/route/route.dart';
 import 'package:hw_map/util/message.dart';
 
 class CreateRouteForm extends StatefulWidget {
   final VoidCallback onClose;
+
   const CreateRouteForm({
     super.key,
     required this.onClose,
@@ -14,6 +18,7 @@ class CreateRouteForm extends StatefulWidget {
 
 class _CreateRouteFormState extends State<CreateRouteForm> {
   late VoidCallback onClose;
+
   List<TextEditingController> locations = List.from([
     TextEditingController(),
     TextEditingController(),
@@ -39,14 +44,6 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
     });
   }
 
-  void onSubmit() {
-    if (isFormValid()) {
-      showSnackBar(context, "Created route: ${locations.map((e) => e.text)}");
-    } else {
-      showSnackBar(context, "Please fill all the fields");
-    }
-  }
-
   bool isFormValid() {
     for (final location in locations) {
       if (location.text.isEmpty) {
@@ -58,6 +55,8 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
 
   @override
   Widget build(BuildContext context) {
+    RouteCubit routeCubit = context.read<RouteCubit>();
+
     return Card(
       child: Form(
         child: Padding(
@@ -118,7 +117,31 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    onPressed: onSubmit,
+                    onPressed: () {
+                      if (isFormValid()) {
+                        CreatedRoute route = CreatedRoute(
+                          id: "poi${DateTime.timestamp()}", // TODO: remove
+                          origin: locations.first.text,
+                          destination: locations.last.text,
+                          points: locations
+                              .map(
+                                (location) => RoutePoint(
+                                  label: location.text,
+                                  longitude:
+                                      0, // TODO: get from map/reverse geocoding
+                                  latitude:
+                                      0, // TODO: get from map/reverse geocoding
+                                ),
+                              )
+                              .toList(),
+                        );
+                        routeCubit.createRoute(route);
+                        showSnackBar(context, "Created ${route.name}");
+                        onClose();
+                      } else {
+                        showSnackBar(context, "Please fill all the fields");
+                      }
+                    },
                     child: const Text('Submit'),
                   ),
                 ],

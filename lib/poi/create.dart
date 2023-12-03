@@ -12,11 +12,13 @@ import 'package:image_picker/image_picker.dart';
 class CreatePoiForm extends StatefulWidget {
   final double latitude;
   final double longitude;
+  final VoidCallback onClose;
 
   const CreatePoiForm({
     super.key,
     required this.latitude,
     required this.longitude,
+    required this.onClose,
   });
 
   @override
@@ -24,6 +26,10 @@ class CreatePoiForm extends StatefulWidget {
 }
 
 class _CreatePoiFormState extends State<CreatePoiForm> {
+  late double latitude;
+  late double longitude;
+  late VoidCallback onClose;
+
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
@@ -39,8 +45,6 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
     {"label": "Toilets", "value": "toilets"},
   ];
 
-  late double latitude;
-  late double longitude;
   File? image;
 
   @override
@@ -280,7 +284,7 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                         );
                         poiCubit.createPoi(poi);
                         showSnackBar(context, "Created ${poi.name}");
-                        Navigator.of(context).pop();
+                        onClose();
                       }
                     },
                     child: const Text(
@@ -323,6 +327,9 @@ class OpenCreatePoiFormButton extends StatelessWidget {
                   builder: (context) => CreatePoiForm(
                     latitude: mapState.userLocation!.latitude,
                     longitude: mapState.userLocation!.longitude,
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
               );
