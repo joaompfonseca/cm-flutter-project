@@ -7,14 +7,11 @@ import 'dart:convert';
 class GraphhopperCubit extends Cubit<List<Point>> {
   GraphhopperCubit(List<Point> points) : super(points);
 
-  final coord = RegExp(r"(-?\d+\.?\d*),(-?\d+\.?\d*)");
-  static String URL_GEO =
-      "https://geocode.search.hereapi.com/v1/geocode?apiKey=${dotenv.env['PUBLIC_KEY_HERE']!}&in=countryCode:PRT";
-  static String URL_ROUTE = dotenv.env['ROUTER_URL']!;
+  final String routerUrl = dotenv.env['ROUTER_URL']!;
 
   void fetchPoints(CustomRoute route) async {
     // Build URL
-    String url = URL_ROUTE;
+    String url = routerUrl;
     for (var point in route.points) {
       url += "&point=${point.latitude},${point.longitude}";
     }
@@ -33,16 +30,5 @@ class GraphhopperCubit extends Cubit<List<Point>> {
 
   void clearPoints() {
     emit([]);
-  }
-
-  Future<String> getCoordinates(String location) async {
-    var response = await get(Uri.parse("$URL_GEO&q=$location"));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final coordinates = data['items'][0]['position'];
-      return "${coordinates['lat']},${coordinates['lng']}";
-    } else {
-      throw Exception("Failed to load coordinates");
-    }
   }
 }

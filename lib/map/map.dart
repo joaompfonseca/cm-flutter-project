@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:hw_map/cubit/geocoding.dart';
 import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
@@ -269,6 +270,9 @@ class SearchLocationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GeocodingCubit geocodingCubit = context.read<GeocodingCubit>();
+    MapCubit mapCubit = context.read<MapCubit>();
+
     return SearchAnchor(
       builder: (context, controller) => SearchBar(
         controller: controller,
@@ -277,7 +281,30 @@ class SearchLocationBar extends StatelessWidget {
         ),
         leading: const Icon(Icons.search),
         hintText: "Search Location",
-        trailing: const [Icon(Icons.clear)],
+        trailing: [
+          GestureDetector(
+            child: Icon(Icons.clear),
+            onTap: () {
+              controller.clear();
+            },
+          ),
+        ],
+        onSubmitted: (value) {
+          if (value.isNotEmpty) {
+            geocodingCubit
+                .coordinatesFromLocation(value)
+                .then((coordinates) => {
+                      if (coordinates != null)
+                        {
+                          mapCubit.flyTo(
+                            latitude: coordinates.latitude,
+                            longitude: coordinates.longitude,
+                            zoom: 18.0,
+                          ),
+                        }
+                    });
+          }
+        },
       ),
       suggestionsBuilder: (context, controller) => [],
     );

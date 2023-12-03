@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hw_map/Data/AWS/aws_cognito.dart';
 import 'package:hw_map/app.dart';
+import 'package:hw_map/cubit/geocoding.dart';
 import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final positionCubit = PositionCubit(null);
     final graphhopperCubit = GraphhopperCubit([]);
+    final geocodingCubit = GeocodingCubit(GeocodingState(null, null));
     final mapCubit = MapCubit(
       MapState(mapController, mapOptions, null, false, positionCubit),
     );
@@ -56,6 +58,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<GraphhopperCubit>(
           create: (context) => graphhopperCubit,
+        ),
+        BlocProvider<GeocodingCubit>(
+          create: (context) => geocodingCubit,
         ),
         BlocProvider<MapCubit>(
           create: (context) => mapCubit,
