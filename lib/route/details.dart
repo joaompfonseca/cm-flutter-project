@@ -43,7 +43,7 @@ class RouteDetails extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 9),
                   const Icon(Icons.arrow_downward_rounded),
                   const SizedBox(width: 16),
                   Text(
@@ -69,7 +69,7 @@ class RouteDetails extends StatelessWidget {
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 9),
                           const Icon(Icons.arrow_downward_rounded),
                           const SizedBox(width: 16),
                           Text(
