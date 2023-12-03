@@ -52,6 +52,7 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
     super.initState();
     latitude = widget.latitude;
     longitude = widget.longitude;
+    onClose = widget.onClose;
   }
 
   Future getImageFromCamera() async {

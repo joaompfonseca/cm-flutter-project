@@ -29,6 +29,7 @@ class RouteList extends StatelessWidget {
               title: const Text('Created Routes'),
               subtitle: const Text(
                   'Routes that you created by specifying the points on the map'),
+              initiallyExpanded: true,
               children: routeState.createdRouteList
                   .map(
                     (route) => RouteItem(
@@ -64,6 +65,7 @@ class RouteList extends StatelessWidget {
               title: const Text('Tracked Routes'),
               subtitle: const Text(
                   'Routes that you tracked using your device position'),
+              initiallyExpanded: true,
               children: routeState.trackedRouteList
                   .map(
                     (route) => RouteItem(
@@ -82,7 +84,6 @@ class RouteList extends StatelessWidget {
                       onShow: () {
                         showSnackBar(context, "Showing ${route.name}");
                         routeCubit.setDisplayedRoute(route);
-                        graphhopperCubit.fetchPoints(route);
                         DefaultTabController.of(context).animateTo(0);
                         RoutePoint start = route.points[0];
                         mapCubit.flyTo(

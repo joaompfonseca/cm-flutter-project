@@ -27,7 +27,7 @@ class TrackRouteButton extends StatelessWidget {
             onPressed: () {
               routeCubit.stopTrackingRoute();
               mapCubit.setTrackingUserPosition(false);
-              if (routeState.trackedRoutePointList.length >= 2) {
+              if (routeState.trackedRoutePointList.length > 2) {
                 showSnackBar(context, "Saved route");
                 CustomRoute route = CustomRoute(
                   id: "poi${DateTime.timestamp()}", // TODO: remove
