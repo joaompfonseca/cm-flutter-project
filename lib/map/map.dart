@@ -77,6 +77,28 @@ class Map extends StatelessWidget {
                       .toList(),
                 ),
               ),
+              /* Displayed Route */
+              BlocBuilder<RouteCubit, RouteState>(
+                builder: (context, routeState) {
+                  if (routeState.displayedRoute != null) {
+                    return PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: routeState.displayedRoute!.points
+                              .map((point) =>
+                                  LatLng(point.latitude, point.longitude))
+                              .toList(),
+                          useStrokeWidthInMeter: true,
+                          strokeWidth: 5,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
             ],
           ),
           /* Buttons */
@@ -127,6 +149,15 @@ class Map extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const OpenCreatePoiFormButton(),
+                  BlocBuilder<RouteCubit, RouteState>(
+                    builder: (context, routeState) {
+                      if (routeState.displayedRoute != null) {
+                        return const ClearDisplayedRouteButton();
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
                   CreateRouteFormButton(
                     onPressed: routeCubit.toggleIsCreatingRoute,
                   ),
@@ -256,6 +287,33 @@ class LocateUserButton extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class ClearDisplayedRouteButton extends StatelessWidget {
+  const ClearDisplayedRouteButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    RouteCubit routeCubit = context.read<RouteCubit>();
+
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+        foregroundColor: Theme.of(context).colorScheme.onError,
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+      onPressed: routeCubit.clearDisplayedRoute,
+      child: const SizedBox(
+        height: 24,
+        child: Center(
+          child: Text("Clear Displayed Route"),
+        ),
+      ),
     );
   }
 }

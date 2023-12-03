@@ -108,4 +108,24 @@ class RouteCubit extends Cubit<RouteState> {
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
       ));
+
+  // Displayed Route Functions
+
+  void setDisplayedRoute(CustomRoute route) => emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: route,
+      ));
+
+  void clearDisplayedRoute() => emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: null,
+      ));
 }
