@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/geocoding.dart';
 import 'package:hw_map/cubit/graphhopper.dart';
+import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/route/route.dart';
 import 'package:hw_map/util/message.dart';
+import 'package:latlong2/latlong.dart';
 
 class CreateRouteForm extends StatefulWidget {
   const CreateRouteForm({super.key});
@@ -43,8 +46,10 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
 
   @override
   Widget build(BuildContext context) {
+    MapCubit mapCubit = context.read<MapCubit>();
     RouteCubit routeCubit = context.read<RouteCubit>();
     GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
+    GeocodingCubit geocodingCubit = context.read<GeocodingCubit>();
 
     return Card(
       child: Form(
@@ -106,25 +111,36 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (isFormValid()) {
+                        List<RoutePoint> points = [];
+                        for (final location in locations) {
+                          GeocodingState? geocoding = await geocodingCubit
+                              .coordinatesFromLocation(location.text);
+                          if (geocoding != null) {
+                            points.add(RoutePoint(
+                              label: geocoding.location!,
+                              latitude: geocoding.coordinates!.latitude,
+                              longitude: geocoding.coordinates!.longitude,
+                            ));
+                          }
+                        }
                         CustomRoute route = CustomRoute(
                           id: "poi${DateTime.timestamp()}", // TODO: remove
-                          points: locations
-                              .map(
-                                (location) => RoutePoint(
-                                  label: location.text,
-                                  longitude:
-                                      0, // TODO: get from map/reverse geocoding
-                                  latitude:
-                                      0, // TODO: get from map/reverse geocoding
-                                ),
-                              )
-                              .toList(),
+                          points: points,
                         );
                         routeCubit.createCreatedRoute(route);
                         showSnackBar(context, "Created ${route.name}");
                         routeCubit.setIsCreatingRoute(false);
+                        // Display the route on the map
+                        routeCubit.setDisplayedRoute(route);
+                        graphhopperCubit.fetchPoints(route);
+                        RoutePoint start = route.points[0];
+                        mapCubit.flyTo(
+                          latitude: start.latitude,
+                          longitude: start.longitude,
+                          zoom: 18.0,
+                        );
                       } else {
                         showSnackBar(context, "Please fill all the fields");
                       }

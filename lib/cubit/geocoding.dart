@@ -18,35 +18,37 @@ class GeocodingState {
 class GeocodingCubit extends Cubit<GeocodingState> {
   GeocodingCubit(geocodingState) : super(geocodingState);
 
-  final coord = RegExp(r"(-?\d+\.?\d*),(-?\d+\.?\d*)");
   static String geocodingUrl =
       "https://geocode.search.hereapi.com/v1/geocode?in=countryCode:PRT&apiKey=${dotenv.env['PUBLIC_KEY_HERE']!}";
   final String revGeocodingUrl =
       "https://revgeocode.search.hereapi.com/v1/revgeocode?apiKey=${dotenv.env['PUBLIC_KEY_HERE']!}";
 
-  Future<LatLng?> coordinatesFromLocation(String location) async {
+  Future<GeocodingState?> coordinatesFromLocation(String location) async {
     var response = await get(Uri.parse("$geocodingUrl&q=$location"));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      location = data['items'][0]['address']['label'];
       final coordinates = LatLng(
         data['items'][0]['position']['lat'],
         data['items'][0]['position']['lng'],
       );
-      emit(GeocodingState(location, coordinates));
-      return coordinates;
+      final newState = GeocodingState(location, coordinates);
+      emit(newState);
+      return newState;
     } else {
       return null;
     }
   }
 
-  Future<String?> locationFromCoordinates(LatLng coordinates) async {
+  Future<GeocodingState?> locationFromCoordinates(LatLng coordinates) async {
     var response = await get(Uri.parse(
         "$revGeocodingUrl&at=${coordinates.latitude},${coordinates.longitude}"));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final location = data['items'][0]['address']['label'];
-      emit(GeocodingState(location, coordinates));
-      return location;
+      final newState = GeocodingState(location, coordinates);
+      emit(newState);
+      return newState;
     } else {
       return null;
     }
