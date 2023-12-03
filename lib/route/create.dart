@@ -130,6 +130,7 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                           points: points,
                         );
                         routeCubit.createCreatedRoute(route);
+                        // ignore: use_build_context_synchronously
                         showSnackBar(context, "Created ${route.name}");
                         routeCubit.setIsCreatingRoute(false);
                         // Display the route on the map

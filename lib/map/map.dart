@@ -11,6 +11,7 @@ import 'package:hw_map/map/config.dart';
 import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
+import 'package:hw_map/profile/details.dart';
 import 'package:hw_map/route/create.dart';
 import 'package:hw_map/route/route.dart';
 import 'package:hw_map/route/track.dart';
@@ -323,7 +324,13 @@ class ProfileButton extends StatelessWidget {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ProfileDetails(),
+          ),
+        );
+      },
       child: const Icon(Icons.person),
     );
   }
