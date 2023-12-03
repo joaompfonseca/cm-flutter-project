@@ -23,40 +23,80 @@ class RouteList extends StatelessWidget {
         title: const Text('Routes'),
       ),
       body: BlocBuilder<RouteCubit, RouteState>(
-        builder: (context, routeState) {
-          return ListView.builder(
-            itemCount: routeState.createdRouteList.length,
-            itemBuilder: (context, index) {
-              CustomRoute route = routeState.createdRouteList[index];
-              return RouteItem(
-                route: route,
-                onDetails: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => RouteDetails(route: route),
+        builder: (context, routeState) => ListView(
+          children: [
+            ExpansionTile(
+              title: const Text('Created Routes'),
+              subtitle: const Text(
+                  'Routes that you created by specifying the points on the map'),
+              children: routeState.createdRouteList
+                  .map(
+                    (route) => RouteItem(
+                      route: route,
+                      onDetails: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RouteDetails(route: route),
+                          ),
+                        );
+                      },
+                      onDelete: () {
+                        showSnackBar(context, "Deleted ${route.name}");
+                        routeCubit.deleteCreatedRoute(route);
+                      },
+                      onShow: () {
+                        showSnackBar(context, "Showing ${route.name}");
+                        routeCubit.setDisplayedRoute(route);
+                        graphhopperCubit.fetchPoints(route);
+                        DefaultTabController.of(context).animateTo(0);
+                        RoutePoint start = route.points[0];
+                        mapCubit.flyTo(
+                          latitude: start.latitude,
+                          longitude: start.longitude,
+                          zoom: 18.0,
+                        );
+                      },
                     ),
-                  );
-                },
-                onDelete: () {
-                  showSnackBar(context, "Deleted ${route.name}");
-                  routeCubit.deleteCreatedRoute(route);
-                },
-                onShow: () {
-                  showSnackBar(context, "Showing ${route.name}");
-                  routeCubit.setDisplayedRoute(route);
-                  graphhopperCubit.fetchPoints(route);
-                  DefaultTabController.of(context).animateTo(0);
-                  RoutePoint start = route.points[0];
-                  mapCubit.flyTo(
-                    latitude: start.latitude,
-                    longitude: start.longitude,
-                    zoom: 18.0,
-                  );
-                },
-              );
-            },
-          );
-        },
+                  )
+                  .toList(),
+            ),
+            ExpansionTile(
+              title: const Text('Tracked Routes'),
+              subtitle: const Text(
+                  'Routes that you tracked using your device position'),
+              children: routeState.trackedRouteList
+                  .map(
+                    (route) => RouteItem(
+                      route: route,
+                      onDetails: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RouteDetails(route: route),
+                          ),
+                        );
+                      },
+                      onDelete: () {
+                        showSnackBar(context, "Deleted ${route.name}");
+                        routeCubit.deleteCreatedRoute(route);
+                      },
+                      onShow: () {
+                        showSnackBar(context, "Showing ${route.name}");
+                        routeCubit.setDisplayedRoute(route);
+                        graphhopperCubit.fetchPoints(route);
+                        DefaultTabController.of(context).animateTo(0);
+                        RoutePoint start = route.points[0];
+                        mapCubit.flyTo(
+                          latitude: start.latitude,
+                          longitude: start.longitude,
+                          zoom: 18.0,
+                        );
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: CreateRouteFormButton(
         onPressed: () {
@@ -87,7 +127,7 @@ class RouteItem extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: onDetails,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: Container(
           decoration: BoxDecoration(
             border: Border(
