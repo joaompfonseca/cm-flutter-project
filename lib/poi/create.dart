@@ -310,7 +310,7 @@ class OpenCreatePoiFormButton extends StatelessWidget {
 
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
-        if (mapState.userLocation != null) {
+        if (mapState.userPosition != null) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(
@@ -324,8 +324,8 @@ class OpenCreatePoiFormButton extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => CreatePoiForm(
-                    latitude: mapState.userLocation!.latitude,
-                    longitude: mapState.userLocation!.longitude,
+                    latitude: mapState.userPosition!.latitude,
+                    longitude: mapState.userPosition!.longitude,
                     onClose: () {
                       Navigator.of(context).pop();
                     },

@@ -1,68 +1,40 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:hw_map/util/location.dart';
+import 'package:hw_map/cubit/position.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapState {
   final MapController mapController;
   final MapOptions mapOptions;
-  final LatLng? userLocation;
+  final LatLng? userPosition;
+  final PositionCubit locationCubit;
 
-  MapState(this.mapController, this.mapOptions, this.userLocation);
+  MapState(
+    this.mapController,
+    this.mapOptions,
+    this.userPosition,
+    this.locationCubit,
+  );
 }
 
 class MapCubit extends Cubit<MapState> {
-  StreamSubscription<Position>? _userPositionStream;
-
   MapCubit(mapState) : super(mapState) {
-    trackUserPosition();
-  }
-
-  void trackUserPosition({bool flyTo = false}) {
-    if (_userPositionStream != null) {
-      _userPositionStream!.cancel();
-    }
-    userPositionAvailable().then(
-      (position) {
-        _updateUserPosition(position.latitude, position.longitude);
-        if (flyTo) {
-          flyToUserLocation();
-        }
-        _userPositionStream = Geolocator.getPositionStream(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 0,
-          ),
-        ).listen((Position? position) {
-          if (position != null) {
-            _updateUserPosition(position.latitude, position.longitude);
-          }
-        });
-        _userPositionStream!.onError((error, stackTrace) {
-          _clearUserPosition();
-        });
-      },
-    ).onError((error, stackTrace) {
-      _clearUserPosition();
+    mapState.locationCubit.stream.listen((position) {
+      updateUserPosition(position);
     });
   }
 
-  void _updateUserPosition(double latitude, double longitude) {
-    emit(MapState(
-      state.mapController,
-      state.mapOptions,
-      LatLng(latitude, longitude),
-    ));
+  void trackUserPosition() {
+    state.locationCubit.trackUserPosition();
   }
 
-  void _clearUserPosition() {
+  void updateUserPosition(LatLng? position) {
     emit(MapState(
       state.mapController,
       state.mapOptions,
-      null,
+      position,
+      state.locationCubit,
     ));
   }
 
@@ -89,11 +61,11 @@ class MapCubit extends Cubit<MapState> {
     state.mapController.move(LatLng(latitude, longitude), zoom, offset: offset);
   }
 
-  void flyToUserLocation() {
-    if (state.userLocation != null) {
+  void flyToUserPosition() {
+    if (state.userPosition != null) {
       flyTo(
-        latitude: state.userLocation!.latitude,
-        longitude: state.userLocation!.longitude,
+        latitude: state.userPosition!.latitude,
+        longitude: state.userPosition!.longitude,
         zoom: 18.0,
       );
     }

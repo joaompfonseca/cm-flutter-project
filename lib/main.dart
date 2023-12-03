@@ -5,6 +5,7 @@ import 'package:hw_map/Data/AWS/aws_cognito.dart';
 import 'package:hw_map/app.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
+import 'package:hw_map/cubit/position.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/login/login.dart';
 import 'package:hw_map/map/config.dart';
@@ -27,31 +28,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final positionCubit = PositionCubit(null);
+    final mapCubit = MapCubit(
+      MapState(mapController, mapOptions, null, positionCubit),
+    );
+    final poiCubit = PoiCubit(mockPoiList);
+    final routeCubit = RouteCubit(
+      RouteState(
+        createdRouteList: mockRouteList,
+        trackedRouteList: [],
+        isCreatingRoute: false,
+        isTrackingRoute: false,
+        trackedRoutePointList: [],
+        displayedRoute: null,
+      ),
+    );
+
     return MultiBlocProvider(
       providers: [
+        BlocProvider<PositionCubit>(
+          create: (context) => positionCubit,
+        ),
         BlocProvider<MapCubit>(
-          create: (context) => MapCubit(
-            MapState(
-              mapController,
-              mapOptions,
-              null,
-            ),
-          ),
+          create: (context) => mapCubit,
         ),
         BlocProvider<PoiCubit>(
-          create: (context) => PoiCubit(mockPoiList),
+          create: (context) => poiCubit,
         ),
         BlocProvider<RouteCubit>(
-          create: (context) => RouteCubit(
-            RouteState(
-              createdRouteList: mockRouteList,
-              trackedRouteList: [],
-              isCreatingRoute: false,
-              isTrackingRoute: false,
-              trackedRoutePointList: [],
-              displayedRoute: null,
-            ),
-          ),
+          create: (context) => routeCubit,
         ),
       ],
       child: MaterialApp(

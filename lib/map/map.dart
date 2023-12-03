@@ -36,9 +36,9 @@ class Map extends StatelessWidget {
                 builder: (context, mapState) => MarkerLayer(
                   alignment: Alignment.topCenter,
                   markers: [
-                    if (mapState.userLocation != null)
+                    if (mapState.userPosition != null)
                       Marker(
-                        point: mapState.userLocation!,
+                        point: mapState.userPosition!,
                         child: getMarkerImage('user-location'),
                       ),
                   ],
@@ -263,14 +263,14 @@ class LocateUserButton extends StatelessWidget {
 
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
-        if (mapState.userLocation != null) {
+        if (mapState.userPosition != null) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(20),
             ),
             onPressed: () {
-              mapCubit.flyToUserLocation();
+              mapCubit.flyToUserPosition();
             },
             child: const Icon(Icons.my_location),
           );
@@ -280,9 +280,7 @@ class LocateUserButton extends StatelessWidget {
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(20),
             ),
-            onPressed: () {
-              mapCubit.trackUserPosition(flyTo: true);
-            },
+            onPressed: mapCubit.trackUserPosition,
             child: const Icon(Icons.location_disabled_rounded),
           );
         }
@@ -304,8 +302,8 @@ class ClearDisplayedRouteButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-        foregroundColor: Theme.of(context).colorScheme.onError,
-        backgroundColor: Theme.of(context).colorScheme.error,
+        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFFEF4444),
       ),
       onPressed: routeCubit.clearDisplayedRoute,
       child: const SizedBox(
@@ -325,7 +323,7 @@ class InformationMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
-        if (mapState.userLocation == null) {
+        if (mapState.userPosition == null) {
           return const InformationLocationUnavailable();
         }
         return const SizedBox.shrink();
@@ -351,9 +349,7 @@ class InformationLocationUnavailable extends StatelessWidget {
           children: [
             const Text("Location Services Unavailable"),
             TextButton(
-              onPressed: () {
-                mapCubit.trackUserPosition(flyTo: true);
-              },
+              onPressed: mapCubit.trackUserPosition,
               child: const Text("Retry"),
             ),
           ],
