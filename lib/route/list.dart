@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/route.dart';
-import 'package:hw_map/mock/route.dart';
 import 'package:hw_map/route/route.dart';
 import 'package:hw_map/route/details.dart';
+import 'package:hw_map/util/button.dart';
 import 'package:hw_map/util/message.dart';
 
 class RouteList extends StatelessWidget {
@@ -23,36 +22,36 @@ class RouteList extends StatelessWidget {
       body: BlocBuilder<RouteCubit, List<CreatedRoute>>(
         builder: (context, routeList) {
           return ListView.builder(
-              itemCount: routeList.length,
-              itemBuilder: (context, index) {
-                CreatedRoute route = routeList[index];
-                return RouteItem(
-                    route: route,
-                    onDelete: (BuildContext context) {
-                      showSnackBar(context, "Deleted ${route.name}");
-                      routeCubit.deleteRoute(route);
-                    },
-                    onShow: (BuildContext context) {
-                      showSnackBar(context, "Showing ${route.name}");
-                      DefaultTabController.of(context).animateTo(0);
-                      RoutePoint start = route.points[0];
-                      mapCubit.flyTo(
-                        latitude: start.latitude,
-                        longitude: start.longitude,
-                        zoom: 18.0,
-                      );
-                    });
-              });
+            itemCount: routeList.length,
+            itemBuilder: (context, index) {
+              CreatedRoute route = routeList[index];
+              return RouteItem(
+                route: route,
+                onDetails: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => RouteDetails(route: route),
+                    ),
+                  );
+                },
+                onDelete: () {
+                  showSnackBar(context, "Deleted ${route.name}");
+                  routeCubit.deleteRoute(route);
+                },
+                onShow: () {
+                  showSnackBar(context, "Showing ${route.name}");
+                  DefaultTabController.of(context).animateTo(0);
+                  RoutePoint start = route.points[0];
+                  mapCubit.flyTo(
+                    latitude: start.latitude,
+                    longitude: start.longitude,
+                    zoom: 18.0,
+                  );
+                },
+              );
+            },
+          );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          int i = routeCubit.state.length + 1;
-          CreatedRoute route = mockRoute(i);
-          showSnackBar(context, "Created ${route.name}");
-          routeCubit.createRoute(route);
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }
@@ -60,56 +59,79 @@ class RouteList extends StatelessWidget {
 
 class RouteItem extends StatelessWidget {
   final CreatedRoute route;
-  final void Function(BuildContext context) onDelete;
-  final void Function(BuildContext context) onShow;
+  final VoidCallback onDetails;
+  final VoidCallback onDelete;
+  final VoidCallback onShow;
 
   const RouteItem(
       {super.key,
       required this.route,
+      required this.onDetails,
       required this.onDelete,
       required this.onShow});
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      // Specify a key if the Slidable is dismissible.
-      key: const ValueKey(0),
-      startActionPane: ActionPane(
-        motion: const StretchMotion(),
-        extentRatio: 0.3,
-        children: [
-          SlidableAction(
-            onPressed: onDelete,
-            backgroundColor: Theme.of(context).colorScheme.error,
-            foregroundColor: Theme.of(context).colorScheme.onError,
-            icon: Icons.delete_rounded,
-            label: 'Delete',
-          )
-        ],
-      ),
-      endActionPane: ActionPane(
-        motion: const StretchMotion(),
-        extentRatio: 0.3,
-        children: [
-          SlidableAction(
-            onPressed: onShow,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            icon: Icons.map_rounded,
-            label: 'Show',
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: onDetails,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top:
+                  BorderSide(color: Theme.of(context).colorScheme.onBackground),
+              left:
+                  BorderSide(color: Theme.of(context).colorScheme.onBackground),
+              right:
+                  BorderSide(color: Theme.of(context).colorScheme.onBackground),
+              bottom:
+                  BorderSide(color: Theme.of(context).colorScheme.onBackground),
+            ),
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.directions_rounded),
+                    const SizedBox(width: 16),
+                    Text(
+                      route.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        route.points.map((p) => p.label).join(" - "),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DeleteButton(onPressed: onDelete),
+                    const SizedBox(width: 8),
+                    MapButton(onPressed: onShow),
+                    const SizedBox(width: 8),
+                    DetailsButton(onPressed: onDetails),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      child: ListTile(
-          title: Text("From: ${route.origin}"),
-          subtitle: Text("To: ${route.destination}"),
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => RouteDetails(
-                route: route,
-              ),
-            ));
-          }),
     );
   }
 }
