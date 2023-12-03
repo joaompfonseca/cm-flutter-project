@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:geolocator/geolocator.dart';
+import 'package:hw_map/route/route.dart';
 
 /// Determine the current position of the device.
 ///
@@ -43,4 +46,13 @@ Future<Position> userPositionAvailable() async {
   } catch (e) {
     return Future.error('Could not get user position');
   }
+}
+
+double distanceBetween(Point a, Point b) {
+  return Geolocator.distanceBetween(
+    a.latitude,
+    a.longitude,
+    b.latitude,
+    b.longitude,
+  );
 }

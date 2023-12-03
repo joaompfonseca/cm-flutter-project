@@ -34,10 +34,14 @@ class RouteList extends StatelessWidget {
                   .map(
                     (route) => RouteItem(
                       route: route,
+                      isCondensed: false,
                       onDetails: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => RouteDetails(route: route),
+                            builder: (context) => RouteDetails(
+                              route: route,
+                              isCondensed: false,
+                            ),
                           ),
                         );
                       },
@@ -70,10 +74,14 @@ class RouteList extends StatelessWidget {
                   .map(
                     (route) => RouteItem(
                       route: route,
+                      isCondensed: true,
                       onDetails: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => RouteDetails(route: route),
+                            builder: (context) => RouteDetails(
+                              route: route,
+                              isCondensed: true,
+                            ),
                           ),
                         );
                       },
@@ -84,6 +92,7 @@ class RouteList extends StatelessWidget {
                       onShow: () {
                         showSnackBar(context, "Showing ${route.name}");
                         routeCubit.setDisplayedRoute(route);
+                        routeCubit.setDisplayedRoutePoints(route.points);
                         DefaultTabController.of(context).animateTo(0);
                         RoutePoint start = route.points[0];
                         mapCubit.flyTo(
@@ -111,6 +120,7 @@ class RouteList extends StatelessWidget {
 
 class RouteItem extends StatelessWidget {
   final CustomRoute route;
+  final bool isCondensed;
   final VoidCallback onDetails;
   final VoidCallback onDelete;
   final VoidCallback onShow;
@@ -118,6 +128,7 @@ class RouteItem extends StatelessWidget {
   const RouteItem(
       {super.key,
       required this.route,
+      required this.isCondensed,
       required this.onDetails,
       required this.onDelete,
       required this.onShow});
@@ -162,7 +173,9 @@ class RouteItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        route.points.map((p) => p.label).join(" - "),
+                        (isCondensed)
+                            ? "${route.points.first.label} - ${route.points.last.label}"
+                            : route.points.map((p) => p.label).join(" - "),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

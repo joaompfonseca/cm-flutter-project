@@ -35,19 +35,6 @@ class Map extends StatelessWidget {
               TileLayer(
                 urlTemplate: tileLayerUrl,
               ),
-              /* User Marker */
-              BlocBuilder<MapCubit, MapState>(
-                builder: (context, mapState) => MarkerLayer(
-                  alignment: Alignment.topCenter,
-                  markers: [
-                    if (mapState.userPosition != null)
-                      Marker(
-                        point: mapState.userPosition!,
-                        child: getMarkerImage('user-location'),
-                      ),
-                  ],
-                ),
-              ),
               /* POI Markers */
               BlocBuilder<PoiCubit, List<Poi>>(
                 builder: (context, poiList) => MarkerLayer(
@@ -190,6 +177,19 @@ class Map extends StatelessWidget {
                     return const SizedBox.shrink();
                   }
                 },
+              ),
+              /* User Marker */
+              BlocBuilder<MapCubit, MapState>(
+                builder: (context, mapState) => MarkerLayer(
+                  alignment: Alignment.topCenter,
+                  markers: [
+                    if (mapState.userPosition != null)
+                      Marker(
+                        point: mapState.userPosition!,
+                        child: getMarkerImage('user-location'),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),

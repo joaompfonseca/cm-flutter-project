@@ -12,7 +12,6 @@ import 'package:hw_map/login/login.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/mock/poi.dart';
 import 'package:hw_map/mock/route.dart';
-import 'package:hw_map/route/route.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");

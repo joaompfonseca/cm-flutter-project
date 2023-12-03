@@ -53,7 +53,6 @@ class _PoiDetailsState extends State<PoiDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
               ShaderMask(
                 shaderCallback: (rect) => const LinearGradient(
                   begin: Alignment.topCenter,
