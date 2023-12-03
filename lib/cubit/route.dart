@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/position.dart';
 import 'package:hw_map/route/route.dart';
 
@@ -11,7 +12,9 @@ class RouteState {
   final List<RoutePoint> trackedRoutePointList;
   // Currently displayed route
   final CustomRoute? displayedRoute;
+  final List<Point> displayedRoutePoints;
   final PositionCubit positionCubit;
+  final GraphhopperCubit graphhopperCubit;
 
   RouteState({
     required this.createdRouteList,
@@ -20,7 +23,9 @@ class RouteState {
     required this.isTrackingRoute,
     required this.trackedRoutePointList,
     required this.displayedRoute,
+    required this.displayedRoutePoints,
     required this.positionCubit,
+    required this.graphhopperCubit,
   });
 }
 
@@ -35,6 +40,9 @@ class RouteCubit extends Cubit<RouteState> {
         ));
       }
     });
+    routeState.graphhopperCubit.stream.listen((points) {
+      setDisplayedRoutePoints(points);
+    });
   }
 
   // Created Route Functions
@@ -46,7 +54,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void deleteCreatedRoute(CustomRoute route) => emit(RouteState(
@@ -56,7 +66,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void setIsCreatingRoute(bool value) => emit(RouteState(
@@ -66,7 +78,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void toggleIsCreatingRoute() => emit(RouteState(
@@ -76,7 +90,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   // Tracked Route Functions
@@ -88,7 +104,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: true,
         trackedRoutePointList: [],
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void addTrackedRoutePoint(RoutePoint point) => emit(RouteState(
@@ -98,7 +116,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: [...state.trackedRoutePointList, point],
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void stopTrackingRoute() => emit(RouteState(
@@ -108,7 +128,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: false,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void saveTrackedRoute(CustomRoute route) => emit(RouteState(
@@ -118,7 +140,9 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   // Displayed Route Functions
@@ -130,7 +154,21 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: route,
+        displayedRoutePoints: state.displayedRoutePoints,
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
+      ));
+
+  void setDisplayedRoutePoints(List<Point> points) => emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
+        displayedRoutePoints: points,
+        positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 
   void clearDisplayedRoute() => emit(RouteState(
@@ -140,6 +178,8 @@ class RouteCubit extends Cubit<RouteState> {
         isTrackingRoute: state.isTrackingRoute,
         trackedRoutePointList: state.trackedRoutePointList,
         displayedRoute: null,
+        displayedRoutePoints: [],
         positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
       ));
 }

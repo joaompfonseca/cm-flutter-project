@@ -5,29 +5,21 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 class GraphhopperCubit extends Cubit<List<Point>> {
-  GraphhopperCubit(Points) : super(Points);
+  GraphhopperCubit(List<Point> points) : super(points);
 
   final coord = RegExp(r"(-?\d+\.?\d*),(-?\d+\.?\d*)");
   static String URL_GEO =
       "https://geocode.search.hereapi.com/v1/geocode?apiKey=${dotenv.env['PUBLIC_KEY_HERE']!}&in=countryCode:PRT";
   static String URL_ROUTE = dotenv.env['ROUTER_URL']!;
 
-  void fetchPoints(List<String> locations) async {
-    List<Point> points = [];
+  void fetchPoints(CustomRoute route) async {
+    // Build URL
     String url = URL_ROUTE;
-
-    // Get coordinates for each location
-    for (var location in locations) {
-      var coordinates;
-      if (coord.hasMatch(location)) {
-        coordinates = location;
-      } else {
-        coordinates = await getCoordinates(location);
-      }
-      url += "&point=$coordinates";
+    for (var point in route.points) {
+      url += "&point=${point.latitude},${point.longitude}";
     }
-
-    // Get route
+    // Fetch Points
+    List<Point> points = [];
     var response = await get(Uri.parse(url));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -35,15 +27,12 @@ class GraphhopperCubit extends Cubit<List<Point>> {
       for (var point in route) {
         points.add(Point(latitude: point[1], longitude: point[0]));
       }
-    } else {
-      throw Exception("Failed to load route");
+      emit(points);
     }
-    print(points);
-    emit(points);
   }
 
   void clearPoints() {
-    emit(<Point>[]);
+    emit([]);
   }
 
   Future<String> getCoordinates(String location) async {

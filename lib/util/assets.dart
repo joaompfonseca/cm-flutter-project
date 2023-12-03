@@ -13,6 +13,12 @@ Image getMarkerImage(String type) {
       return Image.asset('$markerPath/m_drinking_water.png');
     case 'toilets':
       return Image.asset('$markerPath/m_toilets.png');
+    case 'route-start':
+      return Image.asset('$markerPath/m_route_start.png');
+    case 'route-intermediate':
+      return Image.asset('$markerPath/m_route_intermediate.png');
+    case 'route-end':
+      return Image.asset('$markerPath/m_route_end.png');
     case 'user-location':
       return Image.asset('$markerPath/m_user_location.png');
     default:

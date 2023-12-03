@@ -125,9 +125,6 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                         routeCubit.createCreatedRoute(route);
                         showSnackBar(context, "Created ${route.name}");
                         routeCubit.setIsCreatingRoute(false);
-                        graphhopperCubit.fetchPoints(
-                          locations.map((location) => location.text).toList(),
-                        );
                       } else {
                         showSnackBar(context, "Please fill all the fields");
                       }

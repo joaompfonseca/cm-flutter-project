@@ -1,15 +1,3 @@
-class RoutePoint {
-  final String label;
-  final double longitude;
-  final double latitude;
-
-  const RoutePoint({
-    required this.label,
-    required this.longitude,
-    required this.latitude,
-  });
-}
-
 class Point {
   final double longitude;
   final double latitude;
@@ -18,6 +6,16 @@ class Point {
     required this.longitude,
     required this.latitude,
   });
+}
+
+class RoutePoint extends Point {
+  final String label;
+
+  const RoutePoint({
+    required this.label,
+    required double longitude,
+    required double latitude,
+  }) : super(longitude: longitude, latitude: latitude);
 }
 
 class CustomRoute {

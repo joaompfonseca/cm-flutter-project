@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/cubit/position.dart';
@@ -10,6 +11,7 @@ import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/route/create.dart';
+import 'package:hw_map/route/route.dart';
 import 'package:hw_map/route/track.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:latlong2/latlong.dart';
@@ -79,23 +81,90 @@ class Map extends StatelessWidget {
                       .toList(),
                 ),
               ),
-              /* Displayed Route */
+              /* Displayed Route Lines */
               BlocBuilder<RouteCubit, RouteState>(
                 builder: (context, routeState) {
-                  if (routeState.displayedRoute != null) {
+                  if (routeState.displayedRoutePoints.isNotEmpty) {
                     return PolylineLayer(
                       polylines: [
                         Polyline(
-                          points: routeState.displayedRoute!.points
+                          points: routeState.displayedRoutePoints
                               .map((point) =>
                                   LatLng(point.latitude, point.longitude))
                               .toList(),
-                          useStrokeWidthInMeter: true,
-                          strokeWidth: 5,
+                          strokeWidth: 5.0,
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ],
                     );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+              /* Displayed Route Markers */
+              BlocBuilder<RouteCubit, RouteState>(
+                builder: (context, routeState) {
+                  if (routeState.displayedRoute != null &&
+                      routeState.displayedRoutePoints.isNotEmpty) {
+                    if (routeState.displayedRoute!.points.length ==
+                        routeState.displayedRoutePoints.length) {
+                      // Route with tracked points, display only the start and end markers
+                      Point start = routeState.displayedRoute!.points.first;
+                      Point end = routeState.displayedRoute!.points.last;
+                      return MarkerLayer(
+                        alignment: Alignment.topCenter,
+                        markers: [
+                          Marker(
+                            point: LatLng(start.latitude, start.longitude),
+                            width: 50.0,
+                            height: 50.0,
+                            child: getMarkerImage('route-start'),
+                          ),
+                          Marker(
+                            point: LatLng(end.latitude, end.longitude),
+                            width: 50.0,
+                            height: 50.0,
+                            child: getMarkerImage('route-end'),
+                          ),
+                        ],
+                      );
+                    } else {
+                      // Route with points from Graphhopper, display only the start, intermidiate and end markers
+                      Point start = routeState.displayedRoute!.points.first;
+                      List<Point> intermediate =
+                          routeState.displayedRoute!.points.sublist(
+                        1,
+                        routeState.displayedRoute!.points.length - 1,
+                      );
+                      Point end = routeState.displayedRoute!.points.last;
+                      return MarkerLayer(
+                        alignment: Alignment.topCenter,
+                        markers: [
+                          Marker(
+                            point: LatLng(start.latitude, start.longitude),
+                            width: 50.0,
+                            height: 50.0,
+                            child: getMarkerImage('route-start'),
+                          ),
+                          ...intermediate
+                              .map((point) => Marker(
+                                    point:
+                                        LatLng(point.latitude, point.longitude),
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: getMarkerImage('route-intermediate'),
+                                  ))
+                              .toList(),
+                          Marker(
+                            point: LatLng(end.latitude, end.longitude),
+                            width: 50.0,
+                            height: 50.0,
+                            child: getMarkerImage('route-end'),
+                          ),
+                        ],
+                      );
+                    }
                   } else {
                     return const SizedBox.shrink();
                   }
@@ -298,6 +367,7 @@ class ClearDisplayedRouteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RouteCubit routeCubit = context.read<RouteCubit>();
+    GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
 
     return BlocBuilder<RouteCubit, RouteState>(
       builder: (context, routeState) {
@@ -311,7 +381,10 @@ class ClearDisplayedRouteButton extends StatelessWidget {
               foregroundColor: const Color(0xFFFFFFFF),
               backgroundColor: const Color(0xFFEF4444),
             ),
-            onPressed: routeCubit.clearDisplayedRoute,
+            onPressed: () {
+              routeCubit.clearDisplayedRoute();
+              graphhopperCubit.clearPoints();
+            },
             child: const SizedBox(
               height: 24,
               child: Center(

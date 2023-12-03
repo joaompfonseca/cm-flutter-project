@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final positionCubit = PositionCubit(null);
+    final graphhopperCubit = GraphhopperCubit([]);
     final mapCubit = MapCubit(
       MapState(mapController, mapOptions, null, false, positionCubit),
     );
@@ -43,7 +44,9 @@ class MyApp extends StatelessWidget {
         isTrackingRoute: false,
         trackedRoutePointList: [],
         displayedRoute: null,
+        displayedRoutePoints: [],
         positionCubit: positionCubit,
+        graphhopperCubit: graphhopperCubit,
       ),
     );
 
@@ -51,6 +54,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<PositionCubit>(
           create: (context) => positionCubit,
+        ),
+        BlocProvider<GraphhopperCubit>(
+          create: (context) => graphhopperCubit,
         ),
         BlocProvider<MapCubit>(
           create: (context) => mapCubit,
@@ -60,9 +66,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<RouteCubit>(
           create: (context) => routeCubit,
-        ),
-        BlocProvider<GraphhopperCubit>(
-          create: (context) => GraphhopperCubit(<Point>[]),
         ),
       ],
       child: MaterialApp(

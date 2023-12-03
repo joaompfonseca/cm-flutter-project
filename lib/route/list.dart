@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/route/create.dart';
@@ -15,6 +16,7 @@ class RouteList extends StatelessWidget {
   Widget build(BuildContext context) {
     MapCubit mapCubit = context.read<MapCubit>();
     RouteCubit routeCubit = context.read<RouteCubit>();
+    GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
 
     return Scaffold(
       appBar: AppBar(
@@ -42,6 +44,7 @@ class RouteList extends StatelessWidget {
                 onShow: () {
                   showSnackBar(context, "Showing ${route.name}");
                   routeCubit.setDisplayedRoute(route);
+                  graphhopperCubit.fetchPoints(route);
                   DefaultTabController.of(context).animateTo(0);
                   RoutePoint start = route.points[0];
                   mapCubit.flyTo(
