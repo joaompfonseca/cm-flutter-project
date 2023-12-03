@@ -41,6 +41,7 @@ class RouteList extends StatelessWidget {
                 },
                 onShow: () {
                   showSnackBar(context, "Showing ${route.name}");
+                  routeCubit.setDisplayedRoute(route);
                   DefaultTabController.of(context).animateTo(0);
                   RoutePoint start = route.points[0];
                   mapCubit.flyTo(

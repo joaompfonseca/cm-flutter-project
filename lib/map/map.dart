@@ -9,6 +9,7 @@ import 'package:hw_map/poi/create.dart';
 import 'package:hw_map/poi/details.dart';
 import 'package:hw_map/poi/poi.dart';
 import 'package:hw_map/route/create.dart';
+import 'package:hw_map/route/track.dart';
 import 'package:hw_map/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -36,9 +37,9 @@ class Map extends StatelessWidget {
                 builder: (context, mapState) => MarkerLayer(
                   alignment: Alignment.topCenter,
                   markers: [
-                    if (mapState.userLocation != null)
+                    if (mapState.userPosition != null)
                       Marker(
-                        point: mapState.userLocation!,
+                        point: mapState.userPosition!,
                         child: getMarkerImage('user-location'),
                       ),
                   ],
@@ -76,6 +77,28 @@ class Map extends StatelessWidget {
                           ))
                       .toList(),
                 ),
+              ),
+              /* Displayed Route */
+              BlocBuilder<RouteCubit, RouteState>(
+                builder: (context, routeState) {
+                  if (routeState.displayedRoute != null) {
+                    return PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: routeState.displayedRoute!.points
+                              .map((point) =>
+                                  LatLng(point.latitude, point.longitude))
+                              .toList(),
+                          useStrokeWidthInMeter: true,
+                          strokeWidth: 5,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
             ],
           ),
@@ -125,8 +148,17 @@ class Map extends StatelessWidget {
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const OpenCreatePoiFormButton(),
+                  const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClearDisplayedRouteButton(),
+                      SizedBox(height: 16),
+                      TrackRouteButton(),
+                    ],
+                  ),
                   CreateRouteFormButton(
                     onPressed: routeCubit.toggleIsCreatingRoute,
                   ),
@@ -232,14 +264,14 @@ class LocateUserButton extends StatelessWidget {
 
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
-        if (mapState.userLocation != null) {
+        if (mapState.userPosition != null) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(20),
             ),
             onPressed: () {
-              mapCubit.flyToUserLocation();
+              mapCubit.flyToUserPosition();
             },
             child: const Icon(Icons.my_location),
           );
@@ -249,11 +281,44 @@ class LocateUserButton extends StatelessWidget {
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(20),
             ),
-            onPressed: () {
-              mapCubit.trackUserPosition(flyTo: true);
-            },
+            onPressed: mapCubit.trackUserPosition,
             child: const Icon(Icons.location_disabled_rounded),
           );
+        }
+      },
+    );
+  }
+}
+
+class ClearDisplayedRouteButton extends StatelessWidget {
+  const ClearDisplayedRouteButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    RouteCubit routeCubit = context.read<RouteCubit>();
+
+    return BlocBuilder<RouteCubit, RouteState>(
+      builder: (context, routeState) {
+        if (routeState.displayedRoute != null) {
+          return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+              foregroundColor: const Color(0xFFFFFFFF),
+              backgroundColor: const Color(0xFFEF4444),
+            ),
+            onPressed: routeCubit.clearDisplayedRoute,
+            child: const SizedBox(
+              height: 24,
+              child: Center(
+                child: Text("Clear Displayed Route"),
+              ),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
         }
       },
     );
@@ -267,7 +332,7 @@ class InformationMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
-        if (mapState.userLocation == null) {
+        if (mapState.userPosition == null) {
           return const InformationLocationUnavailable();
         }
         return const SizedBox.shrink();
@@ -293,9 +358,7 @@ class InformationLocationUnavailable extends StatelessWidget {
           children: [
             const Text("Location Services Unavailable"),
             TextButton(
-              onPressed: () {
-                mapCubit.trackUserPosition(flyTo: true);
-              },
+              onPressed: mapCubit.trackUserPosition,
               child: const Text("Retry"),
             ),
           ],
