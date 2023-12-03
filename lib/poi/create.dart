@@ -73,10 +73,7 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Creating a POI",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Creating a POI"),
       ),
       body: Form(
         key: _formKey,
@@ -176,9 +173,11 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  "Picture",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                const Center(
+                  child: Text(
+                    "Picture",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Center(
