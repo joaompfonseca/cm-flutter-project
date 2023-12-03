@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/route/route.dart';
 import 'package:hw_map/util/message.dart';
@@ -43,6 +44,7 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
   @override
   Widget build(BuildContext context) {
     RouteCubit routeCubit = context.read<RouteCubit>();
+    GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
 
     return Card(
       child: Form(
@@ -123,6 +125,9 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                         routeCubit.createCreatedRoute(route);
                         showSnackBar(context, "Created ${route.name}");
                         routeCubit.setIsCreatingRoute(false);
+                        graphhopperCubit.fetchPoints(
+                          locations.map((location) => location.text).toList(),
+                        );
                       } else {
                         showSnackBar(context, "Please fill all the fields");
                       }

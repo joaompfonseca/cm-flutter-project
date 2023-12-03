@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hw_map/Data/AWS/aws_cognito.dart';
 import 'package:hw_map/app.dart';
+import 'package:hw_map/cubit/graphhopper.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/poi.dart';
 import 'package:hw_map/cubit/position.dart';
@@ -11,6 +12,7 @@ import 'package:hw_map/login/login.dart';
 import 'package:hw_map/map/config.dart';
 import 'package:hw_map/mock/poi.dart';
 import 'package:hw_map/mock/route.dart';
+import 'package:hw_map/route/route.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -58,6 +60,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<RouteCubit>(
           create: (context) => routeCubit,
+        ),
+        BlocProvider<GraphhopperCubit>(
+          create: (context) => GraphhopperCubit(<Point>[]),
         ),
       ],
       child: MaterialApp(
