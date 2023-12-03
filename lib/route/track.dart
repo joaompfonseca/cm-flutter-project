@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/cubit/map.dart';
 import 'package:hw_map/cubit/route.dart';
 import 'package:hw_map/route/route.dart';
+import 'package:hw_map/util/message.dart';
 
 class TrackRouteButton extends StatelessWidget {
   const TrackRouteButton({super.key});
@@ -27,12 +28,14 @@ class TrackRouteButton extends StatelessWidget {
               routeCubit.stopTrackingRoute();
               mapCubit.setTrackingUserPosition(false);
               if (routeState.trackedRoutePointList.length >= 2) {
+                showSnackBar(context, "Saved route");
                 CustomRoute route = CustomRoute(
                   id: "poi${DateTime.timestamp()}", // TODO: remove
                   points: routeState.trackedRoutePointList,
                 );
                 routeCubit.saveTrackedRoute(route);
               }
+              routeCubit.clearTrackedRoute();
             },
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -52,8 +55,9 @@ class TrackRouteButton extends StatelessWidget {
               fixedSize: const Size(96, 96),
             ),
             onPressed: () {
-              routeCubit.startTrackingRoute();
+              mapCubit.flyToUserPosition();
               mapCubit.setTrackingUserPosition(true);
+              routeCubit.startTrackingRoute();
             },
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,

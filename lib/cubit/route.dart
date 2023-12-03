@@ -145,6 +145,18 @@ class RouteCubit extends Cubit<RouteState> {
         graphhopperCubit: state.graphhopperCubit,
       ));
 
+  void clearTrackedRoute() => emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: [],
+        displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
+        positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
+      ));
+
   // Displayed Route Functions
 
   void setDisplayedRoute(CustomRoute route) => emit(RouteState(

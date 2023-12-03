@@ -38,5 +38,9 @@ Future<Position> userPositionAvailable() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition();
+  try {
+    return await Geolocator.getCurrentPosition();
+  } catch (e) {
+    return Future.error('Could not get user position');
+  }
 }

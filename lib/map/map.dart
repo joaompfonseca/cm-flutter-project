@@ -93,7 +93,28 @@ class Map extends StatelessWidget {
                                   LatLng(point.latitude, point.longitude))
                               .toList(),
                           strokeWidth: 5.0,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: const Color(0xFF4CAF50),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+              /* Tracked Route Lines */
+              BlocBuilder<RouteCubit, RouteState>(
+                builder: (context, routeState) {
+                  if (routeState.trackedRoutePointList.isNotEmpty) {
+                    return PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: routeState.trackedRoutePointList
+                              .map((point) =>
+                                  LatLng(point.latitude, point.longitude))
+                              .toList(),
+                          strokeWidth: 5.0,
+                          color: const Color(0xFFEF4444),
                         ),
                       ],
                     );
@@ -211,7 +232,7 @@ class Map extends StatelessWidget {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 24),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
         child: Row(
           children: [
             const SizedBox(width: 32),
