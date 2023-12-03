@@ -1,35 +1,35 @@
 import 'package:hw_map/route/route.dart';
 
-List<CreatedRoute> mockCreatedRouteList = [
-  CreatedRoute(
+List<CustomRoute> mockRouteList = [
+  CustomRoute(
     id: "route1",
     points: [
-      const CreatedRoutePoint(
+      const RoutePoint(
         label: "Aveiro",
         latitude: 40.6405,
         longitude: -8.6538,
       ),
-      const CreatedRoutePoint(
+      const RoutePoint(
         label: "Espinho",
         latitude: 41.0075,
         longitude: -8.6427,
       ),
-      const CreatedRoutePoint(
+      const RoutePoint(
         label: "Porto",
         latitude: 41.1579,
         longitude: -8.6291,
       ),
     ],
   ),
-  CreatedRoute(
+  CustomRoute(
     id: "route2",
     points: [
-      const CreatedRoutePoint(
+      const RoutePoint(
         label: "Aveiro",
         latitude: 40.6405,
         longitude: -8.6538,
       ),
-      const CreatedRoutePoint(
+      const RoutePoint(
         label: "Lisboa",
         latitude: 38.7223,
         longitude: -9.1393,
@@ -38,15 +38,15 @@ List<CreatedRoute> mockCreatedRouteList = [
   ),
 ];
 
-CreatedRoute mockCreatedRoute(int i) => CreatedRoute(
+CustomRoute mockRoute(int i) => CustomRoute(
       id: "route$i",
       points: [
-        CreatedRoutePoint(
+        RoutePoint(
           label: "route$i origin",
           latitude: 40.63398,
           longitude: -8.65812,
         ),
-        CreatedRoutePoint(
+        RoutePoint(
           label: "route$i destination",
           latitude: 40.63511,
           longitude: -8.65658,

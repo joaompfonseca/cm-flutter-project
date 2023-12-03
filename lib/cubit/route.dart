@@ -2,20 +2,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/route/route.dart';
 
 class RouteState {
-  final List<CreatedRoute> createdRouteList;
-  final List<TrackedRoute> trackedRouteList;
+  final List<CustomRoute> createdRouteList;
+  final List<CustomRoute> trackedRouteList;
   final bool isCreatingRoute;
   final bool isTrackingRoute;
   // Points of the currently tracked route
-  final List<TrackedRoutePoint> trackedRoutePointList;
+  final List<RoutePoint> trackedRoutePointList;
+  // Currently displayed route
+  final CustomRoute? displayedRoute;
 
-  RouteState(
-    this.createdRouteList,
-    this.trackedRouteList,
-    this.isCreatingRoute,
-    this.isTrackingRoute,
-    this.trackedRoutePointList,
-  );
+  RouteState({
+    required this.createdRouteList,
+    required this.trackedRouteList,
+    required this.isCreatingRoute,
+    required this.isTrackingRoute,
+    required this.trackedRoutePointList,
+    required this.displayedRoute,
+  });
 }
 
 class RouteCubit extends Cubit<RouteState> {
@@ -23,77 +26,86 @@ class RouteCubit extends Cubit<RouteState> {
 
   // Created Route Functions
 
-  void createCreatedRoute(CreatedRoute route) => emit(RouteState(
-        [...state.createdRouteList, route],
-        state.trackedRouteList,
-        state.isCreatingRoute,
-        state.isTrackingRoute,
-        state.trackedRoutePointList,
+  void createCreatedRoute(CustomRoute route) => emit(RouteState(
+        createdRouteList: [...state.createdRouteList, route],
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
       ));
 
-  void deleteCreatedRoute(CreatedRoute route) => emit(RouteState(
-        state.createdRouteList..remove(route),
-        state.trackedRouteList,
-        state.isCreatingRoute,
-        state.isTrackingRoute,
-        state.trackedRoutePointList,
+  void deleteCreatedRoute(CustomRoute route) => emit(RouteState(
+        createdRouteList: state.createdRouteList..remove(route),
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
       ));
 
   void setIsCreatingRoute(bool value) => emit(RouteState(
-        state.createdRouteList,
-        state.trackedRouteList,
-        value,
-        state.isTrackingRoute,
-        state.trackedRoutePointList,
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: value,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
       ));
 
   void toggleIsCreatingRoute() => emit(RouteState(
-        state.createdRouteList,
-        state.trackedRouteList,
-        !state.isCreatingRoute,
-        state.isTrackingRoute,
-        state.trackedRoutePointList,
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: !state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
       ));
 
   // Tracked Route Functions
 
   void startTrackingRoute() => emit(RouteState(
-        state.createdRouteList,
-        state.trackedRouteList,
-        state.isCreatingRoute,
-        true,
-        [],
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: true,
+        trackedRoutePointList: [],
+        displayedRoute: state.displayedRoute,
       ));
 
-  void addTrackedRoutePoint(TrackedRoutePoint point) => emit(RouteState(
-        state.createdRouteList,
-        state.trackedRouteList,
-        state.isCreatingRoute,
-        state.isTrackingRoute,
-        [...state.trackedRoutePointList, point],
+  void addTrackedRoutePoint(RoutePoint point) => emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: [...state.trackedRoutePointList, point],
+        displayedRoute: state.displayedRoute,
       ));
 
   void clearTrackedRoutePointList() => emit(RouteState(
-        state.createdRouteList,
-        state.trackedRouteList,
-        state.isCreatingRoute,
-        state.isTrackingRoute,
-        [],
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: [],
+        displayedRoute: state.displayedRoute,
       ));
 
   void stopTrackingRoute() => emit(RouteState(
-        state.createdRouteList,
-        state.trackedRouteList,
-        state.isCreatingRoute,
-        false,
-        state.trackedRoutePointList,
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: false,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
       ));
 
-  void saveTrackedRoute(TrackedRoute route) => emit(RouteState(
-        state.createdRouteList,
-        [...state.trackedRouteList, route],
-        state.isCreatingRoute,
-        state.isTrackingRoute,
-        state.trackedRoutePointList,
+  void saveTrackedRoute(CustomRoute route) => emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: [...state.trackedRouteList, route],
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
       ));
 }

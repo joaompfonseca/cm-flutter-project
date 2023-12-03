@@ -106,11 +106,11 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                     ),
                     onPressed: () {
                       if (isFormValid()) {
-                        CreatedRoute route = CreatedRoute(
+                        CustomRoute route = CustomRoute(
                           id: "poi${DateTime.timestamp()}", // TODO: remove
                           points: locations
                               .map(
-                                (location) => CreatedRoutePoint(
+                                (location) => RoutePoint(
                                   label: location.text,
                                   longitude:
                                       0, // TODO: get from map/reverse geocoding

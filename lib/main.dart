@@ -44,11 +44,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<RouteCubit>(
           create: (context) => RouteCubit(
             RouteState(
-              mockCreatedRouteList,
-              [],
-              false,
-              false,
-              [],
+              createdRouteList: mockRouteList,
+              trackedRouteList: [],
+              isCreatingRoute: false,
+              isTrackingRoute: false,
+              trackedRoutePointList: [],
+              displayedRoute: null,
             ),
           ),
         ),

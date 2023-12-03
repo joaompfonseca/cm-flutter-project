@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hw_map/route/route.dart';
 
 class RouteDetails extends StatelessWidget {
-  final CreatedRoute route;
+  final CustomRoute route;
 
   const RouteDetails({super.key, required this.route});
 

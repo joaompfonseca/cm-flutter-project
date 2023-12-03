@@ -25,7 +25,7 @@ class RouteList extends StatelessWidget {
           return ListView.builder(
             itemCount: routeState.createdRouteList.length,
             itemBuilder: (context, index) {
-              CreatedRoute route = routeState.createdRouteList[index];
+              CustomRoute route = routeState.createdRouteList[index];
               return RouteItem(
                 route: route,
                 onDetails: () {
@@ -42,7 +42,7 @@ class RouteList extends StatelessWidget {
                 onShow: () {
                   showSnackBar(context, "Showing ${route.name}");
                   DefaultTabController.of(context).animateTo(0);
-                  CreatedRoutePoint start = route.points[0];
+                  RoutePoint start = route.points[0];
                   mapCubit.flyTo(
                     latitude: start.latitude,
                     longitude: start.longitude,
@@ -65,7 +65,7 @@ class RouteList extends StatelessWidget {
 }
 
 class RouteItem extends StatelessWidget {
-  final CreatedRoute route;
+  final CustomRoute route;
   final VoidCallback onDetails;
   final VoidCallback onDelete;
   final VoidCallback onShow;
