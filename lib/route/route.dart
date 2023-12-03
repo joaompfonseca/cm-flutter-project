@@ -10,6 +10,16 @@ class RoutePoint {
   });
 }
 
+class Point {
+  final double longitude;
+  final double latitude;
+
+  const Point({
+    required this.longitude,
+    required this.latitude,
+  });
+}
+
 class CustomRoute {
   String id;
   List<RoutePoint> points;
