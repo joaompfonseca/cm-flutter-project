@@ -8,25 +8,25 @@ class MapState {
   final MapController mapController;
   final MapOptions mapOptions;
   final LatLng? userPosition;
-  final PositionCubit locationCubit;
+  final PositionCubit positionCubit;
 
   MapState(
     this.mapController,
     this.mapOptions,
     this.userPosition,
-    this.locationCubit,
+    this.positionCubit,
   );
 }
 
 class MapCubit extends Cubit<MapState> {
   MapCubit(mapState) : super(mapState) {
-    mapState.locationCubit.stream.listen((position) {
+    mapState.positionCubit.stream.listen((position) {
       updateUserPosition(position);
     });
   }
 
   void trackUserPosition() {
-    state.locationCubit.trackUserPosition();
+    state.positionCubit.trackUserPosition();
   }
 
   void updateUserPosition(LatLng? position) {
@@ -34,7 +34,7 @@ class MapCubit extends Cubit<MapState> {
       state.mapController,
       state.mapOptions,
       position,
-      state.locationCubit,
+      state.positionCubit,
     ));
   }
 

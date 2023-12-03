@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hw_map/cubit/route.dart';
+import 'package:hw_map/route/route.dart';
 
 class TrackRouteButton extends StatelessWidget {
   const TrackRouteButton({super.key});
@@ -21,7 +22,16 @@ class TrackRouteButton extends StatelessWidget {
               foregroundColor: const Color(0xFFFFFFFF),
               backgroundColor: const Color(0xFFEF4444),
             ),
-            onPressed: routeCubit.stopTrackingRoute,
+            onPressed: () {
+              routeCubit.stopTrackingRoute();
+              if (routeState.trackedRoutePointList.length >= 2) {
+                CustomRoute route = CustomRoute(
+                  id: "poi${DateTime.timestamp()}", // TODO: remove
+                  points: routeState.trackedRoutePointList,
+                );
+                routeCubit.saveTrackedRoute(route);
+              }
+            },
             child: const Icon(Icons.directions),
           );
         } else {

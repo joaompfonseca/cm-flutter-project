@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         isTrackingRoute: false,
         trackedRoutePointList: [],
         displayedRoute: null,
+        positionCubit: positionCubit,
       ),
     );
 
