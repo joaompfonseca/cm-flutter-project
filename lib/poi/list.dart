@@ -99,7 +99,11 @@ class PoiItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    getMarkerImage(poi.type),
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: getMarkerImage(poi.type),
+                    ),
                     const SizedBox(width: 16),
                     Text(
                       poi.name,
