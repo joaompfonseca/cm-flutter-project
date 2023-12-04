@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hw_map/util/location.dart';
+import 'package:project_x/util/location.dart';
 import 'package:latlong2/latlong.dart';
 
 class PositionCubit extends Cubit<LatLng?> {

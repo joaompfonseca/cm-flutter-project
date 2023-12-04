@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hw_map/cubit/map.dart';
-import 'package:hw_map/cubit/poi.dart';
-import 'package:hw_map/poi/poi.dart';
-import 'package:hw_map/util/assets.dart';
-import 'package:hw_map/util/message.dart';
+import 'package:project_x/cubit/map.dart';
+import 'package:project_x/cubit/poi.dart';
+import 'package:project_x/poi/poi.dart';
+import 'package:project_x/util/assets.dart';
+import 'package:project_x/util/message.dart';
 
 class PoiDetails extends StatefulWidget {
   final Poi poi;

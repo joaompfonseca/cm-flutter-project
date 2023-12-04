@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hw_map/route/route.dart';
-import 'package:hw_map/util/assets.dart';
-import 'package:hw_map/util/location.dart';
+import 'package:project_x/route/route.dart';
+import 'package:project_x/util/assets.dart';
+import 'package:project_x/util/location.dart';
 
 class RouteDetails extends StatelessWidget {
   final CustomRoute route;

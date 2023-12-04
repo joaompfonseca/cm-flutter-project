@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hw_map/Data/AWS/aws_cognito.dart';
-import 'package:hw_map/login/signup.dart';
-import 'package:hw_map/main.dart';
+import 'package:project_x/Data/AWS/aws_cognito.dart';
+import 'package:project_x/login/signup.dart';
+import 'package:project_x/main.dart';
 
 class LoginPage extends StatefulWidget {
   final AWSServices aws;

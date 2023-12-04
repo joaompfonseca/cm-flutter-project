@@ -1,4 +1,4 @@
-import 'package:hw_map/route/route.dart';
+import 'package:project_x/route/route.dart';
 
 List<CustomRoute> mockRouteList = [
   CustomRoute(

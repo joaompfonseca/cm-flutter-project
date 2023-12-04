@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "hw_map" "\0"
+            VALUE "FileDescription", "project_x" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "hw_map" "\0"
+            VALUE "InternalName", "project_x" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "hw_map.exe" "\0"
-            VALUE "ProductName", "hw_map" "\0"
+            VALUE "OriginalFilename", "project_x.exe" "\0"
+            VALUE "ProductName", "project_x" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

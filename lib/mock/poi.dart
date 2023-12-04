@@ -1,4 +1,4 @@
-import 'package:hw_map/poi/poi.dart';
+import 'package:project_x/poi/poi.dart';
 
 List<Poi> mockPoiList = [
   Poi(

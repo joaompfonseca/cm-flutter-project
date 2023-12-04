@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hw_map/cubit/profile.dart';
+import 'package:project_x/cubit/profile.dart';
 
 class ProfileDetails extends StatelessWidget {
   const ProfileDetails({super.key});

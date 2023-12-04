@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:hw_map/cubit/position.dart';
+import 'package:project_x/cubit/position.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapState {

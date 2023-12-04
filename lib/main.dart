@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:hw_map/Data/AWS/aws_cognito.dart';
-import 'package:hw_map/app.dart';
-import 'package:hw_map/cubit/geocoding.dart';
-import 'package:hw_map/cubit/graphhopper.dart';
-import 'package:hw_map/cubit/map.dart';
-import 'package:hw_map/cubit/poi.dart';
-import 'package:hw_map/cubit/position.dart';
-import 'package:hw_map/cubit/profile.dart';
-import 'package:hw_map/cubit/route.dart';
-import 'package:hw_map/login/login.dart';
-import 'package:hw_map/map/config.dart';
-import 'package:hw_map/mock/poi.dart';
-import 'package:hw_map/mock/profile.dart';
-import 'package:hw_map/mock/route.dart';
-import 'package:hw_map/profile/profile.dart';
+import 'package:project_x/Data/AWS/aws_cognito.dart';
+import 'package:project_x/app.dart';
+import 'package:project_x/cubit/geocoding.dart';
+import 'package:project_x/cubit/graphhopper.dart';
+import 'package:project_x/cubit/map.dart';
+import 'package:project_x/cubit/poi.dart';
+import 'package:project_x/cubit/position.dart';
+import 'package:project_x/cubit/profile.dart';
+import 'package:project_x/cubit/route.dart';
+import 'package:project_x/login/login.dart';
+import 'package:project_x/map/config.dart';
+import 'package:project_x/mock/poi.dart';
+import 'package:project_x/mock/profile.dart';
+import 'package:project_x/mock/route.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");

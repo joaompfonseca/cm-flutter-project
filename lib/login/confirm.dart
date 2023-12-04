@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hw_map/Data/AWS/aws_cognito.dart';
-import 'package:hw_map/login/login.dart';
-import 'package:hw_map/login/resend.dart';
+import 'package:project_x/Data/AWS/aws_cognito.dart';
+import 'package:project_x/login/login.dart';
+import 'package:project_x/login/resend.dart';
 
 class ConfirmationPage extends StatefulWidget {
   final AWSServices aws;

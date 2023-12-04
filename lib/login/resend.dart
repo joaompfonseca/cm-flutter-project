@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hw_map/Data/AWS/aws_cognito.dart';
+import 'package:project_x/Data/AWS/aws_cognito.dart';
 
 class ResendPage extends StatefulWidget {
   final AWSServices aws;

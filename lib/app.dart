@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hw_map/poi/list.dart';
-import 'package:hw_map/route/list.dart';
-import 'package:hw_map/map/map.dart';
+import 'package:project_x/poi/list.dart';
+import 'package:project_x/route/list.dart';
+import 'package:project_x/map/map.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

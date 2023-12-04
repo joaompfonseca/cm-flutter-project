@@ -1,4 +1,4 @@
-import 'package:hw_map/profile/profile.dart';
+import 'package:project_x/profile/profile.dart';
 
 Profile mockProfile = Profile(
   id: "testUser",

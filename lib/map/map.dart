@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:hw_map/cubit/geocoding.dart';
-import 'package:hw_map/cubit/graphhopper.dart';
-import 'package:hw_map/cubit/map.dart';
-import 'package:hw_map/cubit/poi.dart';
-import 'package:hw_map/cubit/position.dart';
-import 'package:hw_map/cubit/route.dart';
-import 'package:hw_map/map/config.dart';
-import 'package:hw_map/poi/create.dart';
-import 'package:hw_map/poi/details.dart';
-import 'package:hw_map/poi/poi.dart';
-import 'package:hw_map/profile/details.dart';
-import 'package:hw_map/route/create.dart';
-import 'package:hw_map/route/route.dart';
-import 'package:hw_map/route/track.dart';
-import 'package:hw_map/util/assets.dart';
+import 'package:project_x/cubit/geocoding.dart';
+import 'package:project_x/cubit/graphhopper.dart';
+import 'package:project_x/cubit/map.dart';
+import 'package:project_x/cubit/poi.dart';
+import 'package:project_x/cubit/position.dart';
+import 'package:project_x/cubit/route.dart';
+import 'package:project_x/map/config.dart';
+import 'package:project_x/poi/create.dart';
+import 'package:project_x/poi/details.dart';
+import 'package:project_x/poi/poi.dart';
+import 'package:project_x/profile/details.dart';
+import 'package:project_x/route/create.dart';
+import 'package:project_x/route/route.dart';
+import 'package:project_x/route/track.dart';
+import 'package:project_x/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 
 class Map extends StatelessWidget {

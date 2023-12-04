@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hw_map/poi/poi.dart';
+import 'package:project_x/poi/poi.dart';
 
 class PoiCubit extends Cubit<List<Poi>> {
   PoiCubit(poiList) : super(poiList);

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hw_map/cubit/map.dart';
-import 'package:hw_map/cubit/poi.dart';
-import 'package:hw_map/poi/create.dart';
-import 'package:hw_map/poi/poi.dart';
-import 'package:hw_map/poi/details.dart';
-import 'package:hw_map/util/assets.dart';
-import 'package:hw_map/util/button.dart';
-import 'package:hw_map/util/message.dart';
+import 'package:project_x/cubit/map.dart';
+import 'package:project_x/cubit/poi.dart';
+import 'package:project_x/poi/create.dart';
+import 'package:project_x/poi/poi.dart';
+import 'package:project_x/poi/details.dart';
+import 'package:project_x/util/assets.dart';
+import 'package:project_x/util/button.dart';
+import 'package:project_x/util/message.dart';
 
 class PoiList extends StatelessWidget {
   const PoiList({super.key});
