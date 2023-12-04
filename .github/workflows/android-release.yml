@@ -13,10 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Setup Java
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: "12.x"
+          
+      - name: Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.9'
@@ -27,6 +31,8 @@ jobs:
 
       - name: Build APK
       - run: flutter build apk
+
+      - name: Upload APK
       - uses: actions/upload-artifact@v1
         with:
           name: project-x-release-apk
