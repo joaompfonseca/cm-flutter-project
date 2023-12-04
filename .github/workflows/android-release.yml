@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        env:
+          COGNITO_USERPOLL_ID: ${{ vars.COGNITO_USERPOLL_ID }}
+          COGNITO_APP_CLIENT_ID: ${{ vars.COGNITO_APP_CLIENT_ID }}
+          COGNITO_REGION: ${{ vars.COGNITO_REGION }}
+          PUBLIC_KEY_HERE: ${{ vars.PUBLIC_KEY_HERE }}
+          ROUTER_URL: ${{ vars.ROUTER_URL }}
       
       - name: Setup Java
         uses: actions/setup-java@v3
