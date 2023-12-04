@@ -25,5 +25,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Start release build
-        run: flutter build appbundle
+      - name: Build APK
+      - run: flutter build apk
+      - uses: actions/upload-artifact@v1
+        with:
+          name: project-x-release-apk
+          path: build/app/outputs/apk/release/app-release.apk
