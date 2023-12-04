@@ -38,8 +38,10 @@ jobs:
       - name: Build APK
         run: flutter build apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v1
+      - name: Release APK
+        uses: softprops/action-gh-release@v1
         with:
-          name: project-x-release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+          files: |
+            build/app/outputs/apk/release/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
