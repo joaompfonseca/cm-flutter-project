@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project_x/Data/AWS/aws_cognito.dart';
 import 'package:project_x/app.dart';
 import 'package:project_x/cubit/geocoding.dart';
 import 'package:project_x/cubit/graphhopper.dart';
@@ -15,20 +14,48 @@ import 'package:project_x/map/config.dart';
 import 'package:project_x/mock/poi.dart';
 import 'package:project_x/mock/profile.dart';
 import 'package:project_x/mock/route.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'amplifyconfiguration.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
-  var aws = AWSServices();
-  runApp(MyApp(
-    loggedIn: true, // TODO change to false
-    aws: aws,
-  ));
+  await _configureAmplify();
+  //final session = await Amplify.Auth.fetchAuthSession(
+  //  options: CognitoSessionOptions(getAWSCredentials: true),
+  //);
+  //AWSCognitoUserPoolTokens awsCognitoUserPoolTokens =
+  //    (session as CognitoAuthSession).userPoolTokens!;
+  //safePrint(awsCognitoUserPoolTokens.accessToken.raw);
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  final bool loggedIn;
-  final AWSServices aws;
-  const MyApp({super.key, required this.loggedIn, required this.aws});
+Future<void> _configureAmplify() async {
+  try {
+    final auth = AmplifyAuthCognito();
+    await Amplify.addPlugins([auth]);
+    await Amplify.configure(amplifyconfig);
+    safePrint('Amplify configured successfully');
+  } catch (e) {
+    safePrint('Amplify could not be configured');
+  }
+}
+
+class MyApp extends StatefulWidget {
+  final bool isLogged = false;
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late bool isLogged;
+  @override
+  void initState() {
+    super.initState();
+    isLogged = widget.isLogged;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +160,25 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        home: loggedIn ? const App() : LoginPage(aws: aws),
+        home: FutureBuilder(
+          future: Amplify.Auth.fetchAuthSession(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.isSignedIn) {
+                  return const App();
+                } else {
+                  return const LoginPage();
+                }
+              }
+            }
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

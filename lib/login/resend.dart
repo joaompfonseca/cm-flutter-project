@@ -1,9 +1,9 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_x/Data/AWS/aws_cognito.dart';
 
 class ResendPage extends StatefulWidget {
-  final AWSServices aws;
-  const ResendPage({super.key, required this.aws});
+  const ResendPage({super.key});
 
   @override
   State<ResendPage> createState() => _ResendPageState();
@@ -61,15 +61,6 @@ class _ResendPageState extends State<ResendPage> {
   }
 
   resend(String email) async {
-    try {
-      await widget.aws.resend(email);
-      Navigator.pop(context);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
-    }
+    safePrint("HERE");
   }
 }
