@@ -309,7 +309,7 @@ class SearchLocationBar extends StatelessWidget {
         hintText: "Search Location",
         trailing: [
           GestureDetector(
-            child: Icon(Icons.clear),
+            child: const Icon(Icons.clear),
             onTap: () {
               controller.clear();
             },

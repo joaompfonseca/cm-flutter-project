@@ -27,7 +27,7 @@ Future main() async {
   //AWSCognitoUserPoolTokens awsCognitoUserPoolTokens =
   //    (session as CognitoAuthSession).userPoolTokens!;
   //safePrint(awsCognitoUserPoolTokens.accessToken.raw);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> _configureAmplify() async {

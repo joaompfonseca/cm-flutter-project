@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:project_x/Data/AWS/aws_cognito.dart';
 
 class ResendPage extends StatefulWidget {
   const ResendPage({super.key});
@@ -35,7 +34,7 @@ class _ResendPageState extends State<ResendPage> {
         child: Column(
           children: [
             const SizedBox(height: 100),
-            Icon(Icons.security, size: 120, color: Colors.orange),
+            const Icon(Icons.security, size: 120, color: Colors.orange),
             const SizedBox(height: 32),
             TextField(
               controller: emailController,

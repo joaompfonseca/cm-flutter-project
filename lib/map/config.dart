@@ -11,6 +11,8 @@ MapOptions mapOptions = const MapOptions(
   initialZoom: 14.0,
   minZoom: 3.0,
   maxZoom: 18.0,
-  interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+  interactionOptions: InteractionOptions(
+    flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+  ),
   keepAlive: true,
 );

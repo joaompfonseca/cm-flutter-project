@@ -40,7 +40,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         child: Column(
           children: [
             const SizedBox(height: 100),
-            Icon(Icons.security, size: 120, color: Colors.orange),
+            const Icon(Icons.security, size: 120, color: Colors.orange),
             const SizedBox(height: 32),
             TextField(
               controller: emailController,
@@ -75,8 +75,12 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                 const Text('Don\'t received the code? '),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ResendPage()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ResendPage(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'Resend',
@@ -98,7 +102,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     bool done = await widget.aws.confirm(email, code);
     if (done) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+      );
     } else {
       //clean email and password
       emailController.clear();

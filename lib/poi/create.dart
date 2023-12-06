@@ -307,8 +307,6 @@ class OpenCreatePoiFormButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MapCubit mapCubit = context.read<MapCubit>();
-
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
         if (mapState.userPosition != null) {

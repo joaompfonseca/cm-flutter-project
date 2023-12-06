@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:project_x/route/route.dart';
 

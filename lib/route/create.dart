@@ -6,7 +6,6 @@ import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/route.dart';
 import 'package:project_x/route/route.dart';
 import 'package:project_x/util/message.dart';
-import 'package:latlong2/latlong.dart';
 
 class CreateRouteForm extends StatefulWidget {
   const CreateRouteForm({super.key});
@@ -218,8 +217,6 @@ class CreateRouteFormButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RouteCubit routeCubit = context.read<RouteCubit>();
-
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/poi.dart';
 import 'package:project_x/poi/poi.dart';
 import 'package:project_x/util/assets.dart';
@@ -37,7 +36,6 @@ class _PoiDetailsState extends State<PoiDetails> {
 
   @override
   Widget build(BuildContext context) {
-    MapCubit mapCubit = context.read<MapCubit>();
     PoiCubit poiCubit = context.read<PoiCubit>();
 
     return Scaffold(

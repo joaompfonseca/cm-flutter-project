@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:project_x/login/confirm.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
