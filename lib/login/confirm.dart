@@ -75,10 +75,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                 const Text('Don\'t received the code? '),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResendPage(aws: widget.aws)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ResendPage()));
                   },
                   child: const Text(
                     'Resend',
@@ -99,8 +97,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   login(String email, String code) async {
     bool done = await widget.aws.confirm(email, code);
     if (done) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => LoginPage(aws: widget.aws)));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       //clean email and password
       emailController.clear();

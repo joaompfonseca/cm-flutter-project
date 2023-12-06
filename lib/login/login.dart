@@ -1,11 +1,11 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:project_x/Data/AWS/aws_cognito.dart';
+import 'package:project_x/login/resend.dart';
 import 'package:project_x/login/signup.dart';
 import 'package:project_x/main.dart';
 
 class LoginPage extends StatefulWidget {
-  final AWSServices aws;
-  const LoginPage({super.key, required this.aws});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 minimumSize: const Size(double.infinity, 48),
               ),
               onPressed: () {
-                login(emailController.text, passwordController.text);
+                signInUser(emailController.text, passwordController.text);
               },
               child: const Text('Sign In'),
             ),
@@ -76,10 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                 const Text('Don\'t have an account? '),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SignUpPage(aws: widget.aws)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()));
                   },
                   child: const Text(
                     'Register Now',
@@ -97,22 +95,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  login(String email, String password) async {
-    var done = await widget.aws.createInitialRecord(email, password);
-    if (done) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyApp(loggedIn: true, aws: widget.aws)));
-    } else {
-      //clean email and password
-      emailController.clear();
-      passwordController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login Failed'),
-        ),
+  Future<void> signInUser(String username, String password) async {
+    try {
+      final result = await Amplify.Auth.signIn(
+        username: username,
+        password: password,
       );
+      if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) {
+        final resendResult = await Amplify.Auth.resendSignUpCode(
+          username: username,
+        );
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ResendPage()));
+      } else if (result.nextStep.signInStep == AuthSignInStep.done) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MyApp()));
+      }
+    } on AuthException catch (e) {
+      safePrint('Error signing in: ${e.message}');
     }
   }
 }

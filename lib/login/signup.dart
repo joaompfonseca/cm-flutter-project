@@ -1,10 +1,9 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:project_x/Data/AWS/aws_cognito.dart';
 import 'package:project_x/login/confirm.dart';
 
 class SignUpPage extends StatefulWidget {
-  final AWSServices aws;
-  const SignUpPage({super.key, required this.aws});
+  const SignUpPage({super.key});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -107,25 +106,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   signup(
       String firstName, String lastName, String email, String password) async {
-    var done = await widget.aws.signup(firstName, lastName, email, password);
-    if (done) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ConfirmationPage(aws: widget.aws),
-        ),
-      );
-    } else {
-      //clean email and password
-      emailController.clear();
-      passwordController.clear();
-      firstNameController.clear();
-      lastNameController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Signup failed'),
-        ),
-      );
-    }
+    safePrint('Sign up failed');
   }
 }
