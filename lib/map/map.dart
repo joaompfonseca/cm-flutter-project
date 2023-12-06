@@ -420,7 +420,10 @@ class LocateUserButton extends StatelessWidget {
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(20),
             ),
-            onPressed: positionCubit.trackUserPosition,
+            onPressed: () {
+              positionCubit.trackUserPosition();
+              mapCubit.setTrackingUserPosition(true);
+            },
             child: const Icon(Icons.location_disabled_rounded),
           );
         }
