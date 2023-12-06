@@ -106,10 +106,14 @@ class _LoginPageState extends State<LoginPage> {
           username: username,
         );
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => ResendPage()));
+          context,
+          MaterialPageRoute(builder: (context) => ResendPage()),
+        );
       } else if (result.nextStep.signInStep == AuthSignInStep.done) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MyApp()));
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
       }
     } on AuthException catch (e) {
       safePrint('Error signing in: ${e.message}');

@@ -1,0 +1,57 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-flutterproject-dev-163125-authRole",
+      "UnauthRoleArn": "arn:aws:iam::558216347146:role/amplify-flutterproject-dev-163125-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::558216347146:role/amplify-flutterproject-dev-163125-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-flutterproject-dev-163125-deployment",
+      "UnauthRoleName": "amplify-flutterproject-dev-163125-unauthRole",
+      "StackName": "amplify-flutterproject-dev-163125",
+      "StackId": "arn:aws:cloudformation:eu-west-1:558216347146:stack/amplify-flutterproject-dev-163125/bd3bbc90-938b-11ee-8e6a-0a77f9133a03",
+      "AmplifyAppId": "d2zc5shzn7oj6i"
+    }
+  },
+  "auth": {
+    "flutterprojectad17f5de": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "UserPoolId": "eu-west-1_dzgYL8fPX",
+        "UserPoolName": "project-x-user-pool",
+        "AppClientID": "5g4bsfslqa95u4pd2posbn0rnu",
+        "AppClientIDWeb": "5g4bsfslqa95u4pd2posbn0rnu",
+        "HostedUIDomain": "es-project-x"
+      },
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "GIVEN_NAME",
+          "FAMILY_NAME",
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS"
+          ]
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "lastPushTimeStamp": "2023-12-05T16:44:37.846Z"
+    }
+  }
+}
