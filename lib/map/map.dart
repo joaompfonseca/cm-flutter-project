@@ -389,16 +389,31 @@ class LocateUserButton extends StatelessWidget {
     return BlocBuilder<MapCubit, MapState>(
       builder: (context, mapState) {
         if (mapState.userPosition != null) {
-          return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(20),
-            ),
-            onPressed: () {
-              mapCubit.flyToUserPosition();
-            },
-            child: const Icon(Icons.my_location),
-          );
+          if (mapState.isTrackingUserPosition) {
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(20),
+                foregroundColor: const Color(0xFFEF4444),
+              ),
+              onPressed: () {
+                mapCubit.setTrackingUserPosition(false);
+              },
+              child: const Icon(Icons.my_location_rounded),
+            );
+          } else {
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(20),
+              ),
+              onPressed: () {
+                mapCubit.flyToUserPosition();
+                mapCubit.setTrackingUserPosition(true);
+              },
+              child: const Icon(Icons.location_searching_rounded),
+            );
+          }
         } else {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
