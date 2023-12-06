@@ -1,6 +1,8 @@
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:project_x/cubit/geocoding.dart';
 import 'package:project_x/cubit/graphhopper.dart';
 import 'package:project_x/cubit/map.dart';
@@ -17,6 +19,7 @@ import 'package:project_x/route/route.dart';
 import 'package:project_x/route/track.dart';
 import 'package:project_x/util/assets.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:project_x/util/cache.dart';
 
 class Map extends StatelessWidget {
   const Map({super.key});
@@ -30,171 +33,193 @@ class Map extends StatelessWidget {
       body: Stack(
         children: [
           /* Map */
-          FlutterMap(
-            mapController: mapCubit.state.mapController,
-            options: mapCubit.state.mapOptions,
-            children: [
-              TileLayer(
-                urlTemplate: tileLayerUrl,
-              ),
-              /* POI Markers */
-              BlocBuilder<PoiCubit, List<Poi>>(
-                builder: (context, poiList) => MarkerLayer(
-                  alignment: Alignment.topCenter,
-                  markers: poiList
-                      .map((poi) => Marker(
-                            point: LatLng(poi.latitude, poi.longitude),
-                            width: 50.0,
-                            height: 50.0,
-                            child: GestureDetector(
-                              child: getMarkerImage(poi.type),
-                              onTap: () {
-                                mapCubit.flyTo(
-                                  latitude: poi.latitude,
-                                  longitude: poi.longitude,
-                                  zoom: 18.0,
-                                  offset: const Offset(0, -150),
-                                );
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return SizedBox(
-                                      height: 500,
-                                      child: PoiDetails(poi: poi),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
-              /* Displayed Route Lines */
-              BlocBuilder<RouteCubit, RouteState>(
-                builder: (context, routeState) {
-                  if (routeState.displayedRoutePoints.isNotEmpty) {
-                    return PolylineLayer(
-                      polylines: [
-                        Polyline(
-                          points: routeState.displayedRoutePoints
-                              .map((point) =>
-                                  LatLng(point.latitude, point.longitude))
-                              .toList(),
-                          strokeWidth: 5.0,
-                          color: const Color(0xFF4CAF50),
+          FutureBuilder<String>(
+              future: getCachePath(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.hasData) {
+                  return FlutterMap(
+                    mapController: mapCubit.state.mapController,
+                    options: mapCubit.state.mapOptions,
+                    children: [
+                      TileLayer(
+                        urlTemplate: tileLayerUrl,
+                        tileProvider: CachedTileProvider(
+                          maxStale: const Duration(days: 30),
+                          store: HiveCacheStore(
+                            snapshot.data,
+                            hiveBoxName: 'MapTiles',
+                          ),
                         ),
-                      ],
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-              /* Tracked Route Lines */
-              BlocBuilder<RouteCubit, RouteState>(
-                builder: (context, routeState) {
-                  if (routeState.trackedRoutePointList.isNotEmpty) {
-                    return PolylineLayer(
-                      polylines: [
-                        Polyline(
-                          points: routeState.trackedRoutePointList
-                              .map((point) =>
-                                  LatLng(point.latitude, point.longitude))
-                              .toList(),
-                          strokeWidth: 5.0,
-                          color: const Color(0xFFEF4444),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-              /* Displayed Route Markers */
-              BlocBuilder<RouteCubit, RouteState>(
-                builder: (context, routeState) {
-                  if (routeState.displayedRoute != null &&
-                      routeState.displayedRoutePoints.isNotEmpty) {
-                    if (routeState.displayedRoute!.points.length ==
-                        routeState.displayedRoutePoints.length) {
-                      // Route with tracked points, display only the start and end markers
-                      Point start = routeState.displayedRoute!.points.first;
-                      Point end = routeState.displayedRoute!.points.last;
-                      return MarkerLayer(
-                        alignment: Alignment.topCenter,
-                        markers: [
-                          Marker(
-                            point: LatLng(start.latitude, start.longitude),
-                            width: 50.0,
-                            height: 50.0,
-                            child: getMarkerImage('route-start'),
-                          ),
-                          Marker(
-                            point: LatLng(end.latitude, end.longitude),
-                            width: 50.0,
-                            height: 50.0,
-                            child: getMarkerImage('route-end'),
-                          ),
-                        ],
-                      );
-                    } else {
-                      // Route with points from Graphhopper, display only the start, intermidiate and end markers
-                      Point start = routeState.displayedRoute!.points.first;
-                      List<Point> intermediate =
-                          routeState.displayedRoute!.points.sublist(
-                        1,
-                        routeState.displayedRoute!.points.length - 1,
-                      );
-                      Point end = routeState.displayedRoute!.points.last;
-                      return MarkerLayer(
-                        alignment: Alignment.topCenter,
-                        markers: [
-                          Marker(
-                            point: LatLng(start.latitude, start.longitude),
-                            width: 50.0,
-                            height: 50.0,
-                            child: getMarkerImage('route-start'),
-                          ),
-                          ...intermediate
-                              .map((point) => Marker(
-                                    point:
-                                        LatLng(point.latitude, point.longitude),
+                      ),
+                      /* POI Markers */
+                      BlocBuilder<PoiCubit, List<Poi>>(
+                        builder: (context, poiList) => MarkerLayer(
+                          alignment: Alignment.topCenter,
+                          markers: poiList
+                              .map((poi) => Marker(
+                                    point: LatLng(poi.latitude, poi.longitude),
                                     width: 50.0,
                                     height: 50.0,
-                                    child: getMarkerImage('route-intermediate'),
+                                    child: GestureDetector(
+                                      child: getMarkerImage(poi.type),
+                                      onTap: () {
+                                        mapCubit.flyTo(
+                                          latitude: poi.latitude,
+                                          longitude: poi.longitude,
+                                          zoom: 18.0,
+                                          offset: const Offset(0, -150),
+                                        );
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SizedBox(
+                                              height: 500,
+                                              child: PoiDetails(poi: poi),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ))
                               .toList(),
-                          Marker(
-                            point: LatLng(end.latitude, end.longitude),
-                            width: 50.0,
-                            height: 50.0,
-                            child: getMarkerImage('route-end'),
-                          ),
-                        ],
-                      );
-                    }
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-              /* User Marker */
-              BlocBuilder<MapCubit, MapState>(
-                builder: (context, mapState) => MarkerLayer(
-                  alignment: Alignment.topCenter,
-                  markers: [
-                    if (mapState.userPosition != null)
-                      Marker(
-                        point: mapState.userPosition!,
-                        child: getMarkerImage('user-location'),
+                        ),
                       ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                      /* Displayed Route Lines */
+                      BlocBuilder<RouteCubit, RouteState>(
+                        builder: (context, routeState) {
+                          if (routeState.displayedRoutePoints.isNotEmpty) {
+                            return PolylineLayer(
+                              polylines: [
+                                Polyline(
+                                  points: routeState.displayedRoutePoints
+                                      .map((point) => LatLng(
+                                          point.latitude, point.longitude))
+                                      .toList(),
+                                  strokeWidth: 5.0,
+                                  color: const Color(0xFF4CAF50),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                      /* Tracked Route Lines */
+                      BlocBuilder<RouteCubit, RouteState>(
+                        builder: (context, routeState) {
+                          if (routeState.trackedRoutePointList.isNotEmpty) {
+                            return PolylineLayer(
+                              polylines: [
+                                Polyline(
+                                  points: routeState.trackedRoutePointList
+                                      .map((point) => LatLng(
+                                          point.latitude, point.longitude))
+                                      .toList(),
+                                  strokeWidth: 5.0,
+                                  color: const Color(0xFFEF4444),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                      /* Displayed Route Markers */
+                      BlocBuilder<RouteCubit, RouteState>(
+                        builder: (context, routeState) {
+                          if (routeState.displayedRoute != null &&
+                              routeState.displayedRoutePoints.isNotEmpty) {
+                            if (routeState.displayedRoute!.points.length ==
+                                routeState.displayedRoutePoints.length) {
+                              // Route with tracked points, display only the start and end markers
+                              Point start =
+                                  routeState.displayedRoute!.points.first;
+                              Point end =
+                                  routeState.displayedRoute!.points.last;
+                              return MarkerLayer(
+                                alignment: Alignment.topCenter,
+                                markers: [
+                                  Marker(
+                                    point:
+                                        LatLng(start.latitude, start.longitude),
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: getMarkerImage('route-start'),
+                                  ),
+                                  Marker(
+                                    point: LatLng(end.latitude, end.longitude),
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: getMarkerImage('route-end'),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              // Route with points from Graphhopper, display only the start, intermidiate and end markers
+                              Point start =
+                                  routeState.displayedRoute!.points.first;
+                              List<Point> intermediate =
+                                  routeState.displayedRoute!.points.sublist(
+                                1,
+                                routeState.displayedRoute!.points.length - 1,
+                              );
+                              Point end =
+                                  routeState.displayedRoute!.points.last;
+                              return MarkerLayer(
+                                alignment: Alignment.topCenter,
+                                markers: [
+                                  Marker(
+                                    point:
+                                        LatLng(start.latitude, start.longitude),
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: getMarkerImage('route-start'),
+                                  ),
+                                  ...intermediate
+                                      .map((point) => Marker(
+                                            point: LatLng(point.latitude,
+                                                point.longitude),
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: getMarkerImage(
+                                                'route-intermediate'),
+                                          ))
+                                      .toList(),
+                                  Marker(
+                                    point: LatLng(end.latitude, end.longitude),
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: getMarkerImage('route-end'),
+                                  ),
+                                ],
+                              );
+                            }
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                      /* User Marker */
+                      BlocBuilder<MapCubit, MapState>(
+                        builder: (context, mapState) => MarkerLayer(
+                          alignment: Alignment.topCenter,
+                          markers: [
+                            if (mapState.userPosition != null)
+                              Marker(
+                                point: mapState.userPosition!,
+                                child: getMarkerImage('user-location'),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
           /* Buttons */
           Container(
             padding: const EdgeInsets.fromLTRB(16, 64, 16, 64),
@@ -493,7 +518,6 @@ class InformationLocationUnavailable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PositionCubit positionCubit = context.read<PositionCubit>();
-    MapCubit mapCubit = context.read<MapCubit>();
 
     return SizedBox(
       height: 72,
