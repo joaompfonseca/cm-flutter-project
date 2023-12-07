@@ -68,7 +68,8 @@ class _MyAppState extends State<MyApp> {
     final mapCubit = MapCubit(
       MapState(mapController, mapOptions, null, false, positionCubit),
     );
-    final poiCubit = PoiCubit(mockPoiList);
+    final poiCubit = PoiCubit(
+        PoiState(mockPoiList, false, mockPoiList, TextEditingController()));
     final routeCubit = RouteCubit(
       RouteState(
         createdRouteList: mockRouteList,

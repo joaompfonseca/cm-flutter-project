@@ -21,12 +21,12 @@ class PoiList extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Points of Interest'),
       ),
-      body: BlocBuilder<PoiCubit, List<Poi>>(
-        builder: (context, poiList) {
+      body: BlocBuilder<PoiCubit, PoiState>(
+        builder: (context, poiState) {
           return ListView.builder(
-            itemCount: poiList.length,
+            itemCount: poiState.poiList.length,
             itemBuilder: (context, index) {
-              Poi poi = poiList[index];
+              Poi poi = poiState.poiList[index];
               return PoiItem(
                 poi: poi,
                 onDetails: () {

@@ -12,6 +12,7 @@ import 'package:project_x/cubit/route.dart';
 import 'package:project_x/map/config.dart';
 import 'package:project_x/poi/create.dart';
 import 'package:project_x/poi/details.dart';
+import 'package:project_x/poi/filter.dart';
 import 'package:project_x/poi/poi.dart';
 import 'package:project_x/profile/details.dart';
 import 'package:project_x/route/create.dart';
@@ -28,6 +29,7 @@ class Map extends StatelessWidget {
   Widget build(BuildContext context) {
     MapCubit mapCubit = context.read<MapCubit>();
     RouteCubit routeCubit = context.read<RouteCubit>();
+    PoiCubit poiCubit = context.read<PoiCubit>();
 
     return Scaffold(
       body: Stack(
@@ -52,10 +54,10 @@ class Map extends StatelessWidget {
                         ),
                       ),
                       /* POI Markers */
-                      BlocBuilder<PoiCubit, List<Poi>>(
-                        builder: (context, poiList) => MarkerLayer(
+                      BlocBuilder<PoiCubit, PoiState>(
+                        builder: (context, poiState) => MarkerLayer(
                           alignment: Alignment.topCenter,
-                          markers: poiList
+                          markers: poiState.poiList
                               .map((poi) => Marker(
                                     point: LatLng(poi.latitude, poi.longitude),
                                     width: 50.0,
@@ -233,14 +235,22 @@ class Map extends StatelessWidget {
                     child: const CreateRouteForm(),
                   ),
                 ),
+                BlocBuilder<PoiCubit, PoiState>(
+                  builder: (context, poiState) => Visibility(
+                    visible: poiState.filtering,
+                    child: const FilterPoi(),
+                  ),
+                ),
                 const SizedBox(height: 32),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       children: [
                         ProfileButton(),
+                        const SizedBox(height: 8),
+                        FilterPoiButton(onPressed: poiCubit.toggleFiltering),
                       ],
                     ),
                     Column(

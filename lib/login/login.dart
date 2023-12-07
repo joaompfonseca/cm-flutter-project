@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/app.dart';
 import 'package:project_x/cubit/profile.dart';
-import 'package:project_x/cubit/token.dart';
 import 'package:project_x/login/resend.dart';
 import 'package:project_x/login/signup.dart';
-import 'package:project_x/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
