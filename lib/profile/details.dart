@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/login/login.dart';
+import 'package:project_x/profile/update.dart';
 
 class ProfileDetails extends StatelessWidget {
   const ProfileDetails({super.key});
@@ -61,7 +62,13 @@ class ProfileDetails extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => UpdateProfileForm(),
+                            ),
+                          );
+                        },
                         child: const Row(children: [
                           Icon(Icons.edit),
                           SizedBox(width: 8),

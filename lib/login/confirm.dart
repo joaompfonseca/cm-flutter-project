@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:project_x/Data/AWS/aws_cognito.dart';
 import 'package:project_x/login/login.dart';
 import 'package:project_x/login/resend.dart';
 
