@@ -1,11 +1,11 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_x/Data/AWS/aws_cognito.dart';
 import 'package:project_x/login/login.dart';
 import 'package:project_x/login/resend.dart';
 
 class ConfirmationPage extends StatefulWidget {
-  final AWSServices aws;
-  const ConfirmationPage({super.key, required this.aws});
+  const ConfirmationPage({super.key});
 
   @override
   State<ConfirmationPage> createState() => _ConfirmationPageState();
@@ -64,7 +64,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                 minimumSize: const Size(double.infinity, 48),
               ),
               onPressed: () {
-                login(emailController.text, codeController.text);
+                confirmUser(emailController.text, codeController.text);
               },
               child: const Text('Submit'),
             ),
@@ -98,24 +98,42 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     );
   }
 
-  login(String email, String code) async {
-    bool done = await widget.aws.confirm(email, code);
-    if (done) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
+  Future<void> confirmUser(String username, String confirmationCode) async {
+    try {
+      final result = await Amplify.Auth.confirmSignUp(
+        username: username,
+        confirmationCode: confirmationCode,
       );
-    } else {
-      //clean email and password
-      emailController.clear();
-      codeController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Wrong email or code'),
-        ),
-      );
+      await _handleSignUpResult(result);
+    } on AuthException catch (e) {
+      safePrint('Error confirming user: ${e.message}');
     }
+  }
+
+  Future<void> _handleSignUpResult(SignUpResult result) async {
+    switch (result.nextStep.signUpStep) {
+      case AuthSignUpStep.confirmSignUp:
+        final codeDeliveryDetails = result.nextStep.codeDeliveryDetails!;
+        _handleCodeDelivery(codeDeliveryDetails);
+        break;
+      case AuthSignUpStep.done:
+        safePrint('Sign up is complete');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+        break;
+    }
+  }
+
+  void _handleCodeDelivery(AuthCodeDeliveryDetails codeDeliveryDetails) {
+    safePrint(
+      'A confirmation code has been sent to ${codeDeliveryDetails.destination}. '
+      'Please check your ${codeDeliveryDetails.deliveryMedium.name} for the code.',
+    );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ConfirmationPage()),
+    );
   }
 }

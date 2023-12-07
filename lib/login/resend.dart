@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:project_x/login/confirm.dart';
 
 class ResendPage extends StatefulWidget {
   const ResendPage({super.key});
@@ -49,7 +50,7 @@ class _ResendPageState extends State<ResendPage> {
                 minimumSize: const Size(double.infinity, 48),
               ),
               onPressed: () {
-                resend(emailController.text);
+                resendCode(emailController.text);
               },
               child: const Text('Resend Code'),
             ),
@@ -59,7 +60,15 @@ class _ResendPageState extends State<ResendPage> {
     );
   }
 
-  resend(String email) async {
-    safePrint("HERE");
+  Future<void> resendCode(String username) async {
+    try {
+      final result = await Amplify.Auth.resendSignUpCode(username: username);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ConfirmationPage()),
+      );
+    } on AuthException catch (e) {
+      safePrint('Error resending code: $e');
+    }
   }
 }

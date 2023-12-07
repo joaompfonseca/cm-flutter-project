@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/cubit/profile.dart';
+import 'package:project_x/login/login.dart';
 
 class ProfileDetails extends StatelessWidget {
   const ProfileDetails({super.key});
@@ -77,7 +78,9 @@ class ProfileDetails extends StatelessWidget {
                           backgroundColor: const Color(0xFFEF4444),
                           padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
                         ),
-                        onPressed: signOutCurrentUser,
+                        onPressed: () {
+                          signOutCurrentUser(context);
+                        },
                         child: const Row(children: [
                           Icon(Icons.logout),
                           SizedBox(width: 8),
@@ -151,10 +154,14 @@ class ProfileDetails extends StatelessWidget {
   }
 }
 
-Future<void> signOutCurrentUser() async {
+Future<void> signOutCurrentUser(BuildContext context) async {
   final result = await Amplify.Auth.signOut();
   if (result is CognitoCompleteSignOut) {
     safePrint('Sign out completed successfully');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
   } else if (result is CognitoFailedSignOut) {
     safePrint('Error signing user out: ${result.exception.message}');
   }

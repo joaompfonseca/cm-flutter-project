@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
         password: password,
       );
       if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) {
-        final resendResult = await Amplify.Auth.resendSignUpCode(
+        await Amplify.Auth.resendSignUpCode(
           username: username,
         );
         Navigator.pushReplacement(
