@@ -9,6 +9,7 @@ import 'package:project_x/cubit/poi.dart';
 import 'package:project_x/cubit/position.dart';
 import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/cubit/route.dart';
+import 'package:project_x/cubit/token.dart';
 import 'package:project_x/login/login.dart';
 import 'package:project_x/map/config.dart';
 import 'package:project_x/mock/poi.dart';
@@ -59,10 +60,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final tokenCubit = TokenCubit();
     final positionCubit = PositionCubit(null);
     final graphhopperCubit = GraphhopperCubit([]);
     final geocodingCubit = GeocodingCubit(GeocodingState(null, null));
-    final profileCubit = ProfileCubit(mockProfile);
+    final profileCubit = ProfileCubit(ProfileState(mockProfile, tokenCubit));
     final mapCubit = MapCubit(
       MapState(mapController, mapOptions, null, false, positionCubit),
     );
@@ -103,6 +105,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<RouteCubit>(
           create: (context) => routeCubit,
+        ),
+        BlocProvider<TokenCubit>(
+          create: (context) => tokenCubit,
         ),
       ],
       child: MaterialApp(
@@ -166,6 +171,7 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
                 if (snapshot.data!.isSignedIn) {
+                  profileCubit.getProfile();
                   return const App();
                 } else {
                   return const LoginPage();

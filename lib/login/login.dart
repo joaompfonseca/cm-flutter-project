@@ -1,5 +1,9 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_x/app.dart';
+import 'package:project_x/cubit/profile.dart';
+import 'package:project_x/cubit/token.dart';
 import 'package:project_x/login/resend.dart';
 import 'package:project_x/login/signup.dart';
 import 'package:project_x/main.dart';
@@ -110,9 +114,13 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => ResendPage()),
         );
       } else if (result.nextStep.signInStep == AuthSignInStep.done) {
+        // Get Profile
+        ProfileCubit profileCubit = BlocProvider.of<ProfileCubit>(context);
+        profileCubit.getProfile();
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyApp()),
+          MaterialPageRoute(builder: (context) => App()),
         );
       }
     } on AuthException catch (e) {

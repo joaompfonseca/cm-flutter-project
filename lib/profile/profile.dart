@@ -28,4 +28,19 @@ class Profile {
     required this.givenRatingsCount,
     required this.receivedRatingsCount,
   });
+
+  Profile.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        email = json['email'],
+        username = json['username'],
+        cognitoId = json['cognito_id'],
+        firstName = json['first_name'],
+        lastName = json['last_name'],
+        pictureUrl = json['image_url'],
+        createdAt = DateTime.parse(json['created_at']),
+        birthDate = DateTime.parse(json['birth_date']),
+        totalXp = json['total_xp'],
+        addedPoisCount = json['added_pois_count'],
+        givenRatingsCount = json['given_ratings_count'],
+        receivedRatingsCount = json['received_ratings_count'];
 }

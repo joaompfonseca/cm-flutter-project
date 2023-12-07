@@ -35,7 +35,8 @@ class ProfileDetails extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16.0),
                       child: FittedBox(
                         fit: BoxFit.fitHeight,
-                        child: Image.network(profileCubit.state.pictureUrl),
+                        child: Image.network(
+                            profileCubit.state.profile.pictureUrl),
                       ),
                     ),
                   ),
@@ -44,15 +45,15 @@ class ProfileDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${profileCubit.state.firstName} ${profileCubit.state.lastName}",
+                        "${profileCubit.state.profile.firstName} ${profileCubit.state.profile.lastName}",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 24),
                       ),
                       Text(
-                        profileCubit.state.username,
+                        profileCubit.state.profile.username,
                       ),
                       Text(
-                        profileCubit.state.email,
+                        profileCubit.state.profile.email,
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
@@ -104,7 +105,7 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Total XP",
-                      value: profileCubit.state.totalXp.toString(),
+                      value: profileCubit.state.profile.totalXp.toString(),
                       foregroundColor:
                           Theme.of(context).colorScheme.onSecondary,
                       backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -118,7 +119,8 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Created POIs",
-                      value: profileCubit.state.addedPoisCount.toString(),
+                      value:
+                          profileCubit.state.profile.addedPoisCount.toString(),
                       foregroundColor: Theme.of(context).colorScheme.onTertiary,
                       backgroundColor: Theme.of(context).colorScheme.tertiary,
                     ),
@@ -131,7 +133,8 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Given Ratings",
-                      value: profileCubit.state.givenRatingsCount.toString(),
+                      value: profileCubit.state.profile.givenRatingsCount
+                          .toString(),
                       foregroundColor: Theme.of(context).colorScheme.onTertiary,
                       backgroundColor:
                           Theme.of(context).colorScheme.tertiary.withAlpha(192),
@@ -145,7 +148,8 @@ class ProfileDetails extends StatelessWidget {
                   Expanded(
                     child: ProfileStatisticCard(
                       label: "Received Ratings",
-                      value: profileCubit.state.receivedRatingsCount.toString(),
+                      value: profileCubit.state.profile.receivedRatingsCount
+                          .toString(),
                       foregroundColor: Theme.of(context).colorScheme.onTertiary,
                       backgroundColor:
                           Theme.of(context).colorScheme.tertiary.withAlpha(128),
