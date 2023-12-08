@@ -43,12 +43,66 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
     return true;
   }
 
+  Future<CustomRoute> getRoute() async {
+    GeocodingCubit geocodingCubit = context.read<GeocodingCubit>();
+    List<RoutePoint> points = [];
+
+    for (final location in locations) {
+      GeocodingState? geocoding =
+          await geocodingCubit.coordinatesFromLocation(location.text);
+      if (geocoding != null) {
+        points.add(RoutePoint(
+          label: geocoding.location!,
+          latitude: geocoding.coordinates!.latitude,
+          longitude: geocoding.coordinates!.longitude,
+        ));
+      }
+    }
+
+    return CustomRoute(
+      id: "poi${DateTime.timestamp()}", // TODO: remove
+      points: points,
+    );
+  }
+
+  void onSave() async {
+    if (isFormValid()) {
+      RouteCubit routeCubit = context.read<RouteCubit>();
+      // Create the route
+      CustomRoute route = await getRoute();
+      routeCubit.saveCreatedRoute(route);
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, "Saved route");
+    }
+  }
+
+  void onSubmit() async {
+    if (isFormValid()) {
+      RouteCubit routeCubit = context.read<RouteCubit>();
+      MapCubit mapCubit = context.read<MapCubit>();
+      GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
+      // Create the route
+      CustomRoute route = await getRoute();
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, "Displaying route");
+      routeCubit.setIsCreatingRoute(false);
+      // Display the route on the map
+      routeCubit.setDisplayedRoute(route);
+      graphhopperCubit.fetchPoints(route);
+      RoutePoint start = route.points[0];
+      mapCubit.flyTo(
+        latitude: start.latitude,
+        longitude: start.longitude,
+        zoom: 14.0,
+      );
+    } else {
+      showSnackBar(context, "Please fill all the fields");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    MapCubit mapCubit = context.read<MapCubit>();
     RouteCubit routeCubit = context.read<RouteCubit>();
-    GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
-    GeocodingCubit geocodingCubit = context.read<GeocodingCubit>();
 
     return Card(
       child: Form(
@@ -57,7 +111,7 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
           child: Column(
             children: [
               SizedBox.fromSize(
-                size: const Size.fromHeight(168),
+                size: const Size.fromHeight(192),
                 child: ReorderableListView(
                   shrinkWrap: true,
                   onReorder: (int oldIndex, int newIndex) {
@@ -83,6 +137,23 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                               : null,
                         ),
                       ),
+                    Row(
+                      key: const ObjectKey("actionsInList"),
+                      children: [
+                        // Add Location
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onTertiary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.tertiary,
+                          ),
+                          onPressed: onAdd,
+                          child: const Icon(Icons.add_rounded),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -90,14 +161,7 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.onTertiary,
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    ),
-                    onPressed: onAdd,
-                    child: const Text("Add Location"),
-                  ),
+                  // Close
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor:
@@ -107,46 +171,23 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
                     onPressed: () => routeCubit.setIsCreatingRoute(false),
                     child: const Text("Close"),
                   ),
+                  // Save Route
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      foregroundColor: Theme.of(context).colorScheme.onTertiary,
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    ),
+                    onPressed: onSave,
+                    child: const Icon(Icons.save_rounded),
+                  ),
+                  // Submit
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    onPressed: () async {
-                      if (isFormValid()) {
-                        List<RoutePoint> points = [];
-                        for (final location in locations) {
-                          GeocodingState? geocoding = await geocodingCubit
-                              .coordinatesFromLocation(location.text);
-                          if (geocoding != null) {
-                            points.add(RoutePoint(
-                              label: geocoding.location!,
-                              latitude: geocoding.coordinates!.latitude,
-                              longitude: geocoding.coordinates!.longitude,
-                            ));
-                          }
-                        }
-                        CustomRoute route = CustomRoute(
-                          id: "poi${DateTime.timestamp()}", // TODO: remove
-                          points: points,
-                        );
-                        routeCubit.createCreatedRoute(route);
-                        // ignore: use_build_context_synchronously
-                        showSnackBar(context, "Created ${route.name}");
-                        routeCubit.setIsCreatingRoute(false);
-                        // Display the route on the map
-                        routeCubit.setDisplayedRoute(route);
-                        graphhopperCubit.fetchPoints(route);
-                        RoutePoint start = route.points[0];
-                        mapCubit.flyTo(
-                          latitude: start.latitude,
-                          longitude: start.longitude,
-                          zoom: 18.0,
-                        );
-                      } else {
-                        showSnackBar(context, "Please fill all the fields");
-                      }
-                    },
+                    onPressed: onSubmit,
                     child: const Text('Submit'),
                   ),
                 ],
@@ -194,8 +235,8 @@ class LocationBar extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
-                foregroundColor: Theme.of(context).colorScheme.onError,
-                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: const Color(0xFFFFFFFF),
+                backgroundColor: const Color(0xFFEF4444),
               ),
               onPressed: onDelete,
               child: const Icon(Icons.delete_rounded),

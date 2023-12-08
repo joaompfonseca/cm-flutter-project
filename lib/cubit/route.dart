@@ -47,7 +47,7 @@ class RouteCubit extends Cubit<RouteState> {
 
   // Created Route Functions
 
-  void createCreatedRoute(CustomRoute route) => emit(RouteState(
+  void saveCreatedRoute(CustomRoute route) => emit(RouteState(
         createdRouteList: [...state.createdRouteList, route],
         trackedRouteList: state.trackedRouteList,
         isCreatingRoute: state.isCreatingRoute,
