@@ -7,35 +7,12 @@ import 'package:project_x/cubit/route.dart';
 import 'package:project_x/route/route.dart';
 import 'package:project_x/util/message.dart';
 
-class CreateRouteForm extends StatefulWidget {
+class CreateRouteForm extends StatelessWidget {
   const CreateRouteForm({super.key});
 
-  @override
-  State<CreateRouteForm> createState() => _CreateRouteFormState();
-}
-
-class _CreateRouteFormState extends State<CreateRouteForm> {
-  List<TextEditingController> locations = List.from([
-    TextEditingController(),
-    TextEditingController(),
-  ]);
-
-  void onAdd() {
-    setState(() {
-      locations.insert(locations.length - 1, TextEditingController());
-    });
-  }
-
-  void onDelete(int index) {
-    setState(() {
-      if (locations.length > 2) {
-        locations.removeAt(index);
-      }
-    });
-  }
-
-  bool isFormValid() {
-    for (final location in locations) {
+  bool isFormValid(BuildContext context) {
+    RouteCubit routeCubit = context.read<RouteCubit>();
+    for (final location in routeCubit.state.createdRouteLocationList) {
       if (location.text.isEmpty) {
         return false;
       }
@@ -43,11 +20,12 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
     return true;
   }
 
-  Future<CustomRoute> getRoute() async {
+  Future<CustomRoute> getRoute(BuildContext context) async {
+    RouteCubit routeCubit = context.read<RouteCubit>();
     GeocodingCubit geocodingCubit = context.read<GeocodingCubit>();
     List<RoutePoint> points = [];
 
-    for (final location in locations) {
+    for (final location in routeCubit.state.createdRouteLocationList) {
       GeocodingState? geocoding =
           await geocodingCubit.coordinatesFromLocation(location.text);
       if (geocoding != null) {
@@ -65,24 +43,24 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
     );
   }
 
-  void onSave() async {
-    if (isFormValid()) {
+  void onSave(BuildContext context) async {
+    if (isFormValid(context)) {
       RouteCubit routeCubit = context.read<RouteCubit>();
       // Create the route
-      CustomRoute route = await getRoute();
+      CustomRoute route = await getRoute(context);
       routeCubit.saveCreatedRoute(route);
       // ignore: use_build_context_synchronously
       showSnackBar(context, "Saved route");
     }
   }
 
-  void onSubmit() async {
-    if (isFormValid()) {
+  void onSubmit(BuildContext context) async {
+    if (isFormValid(context)) {
       RouteCubit routeCubit = context.read<RouteCubit>();
       MapCubit mapCubit = context.read<MapCubit>();
       GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
       // Create the route
-      CustomRoute route = await getRoute();
+      CustomRoute route = await getRoute(context);
       // ignore: use_build_context_synchronously
       showSnackBar(context, "Displaying route");
       routeCubit.setIsCreatingRoute(false);
@@ -104,95 +82,108 @@ class _CreateRouteFormState extends State<CreateRouteForm> {
   Widget build(BuildContext context) {
     RouteCubit routeCubit = context.read<RouteCubit>();
 
-    return Card(
-      child: Form(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 0, 16),
-          child: Column(
-            children: [
-              SizedBox.fromSize(
-                size: const Size.fromHeight(192),
-                child: ReorderableListView(
-                  shrinkWrap: true,
-                  onReorder: (int oldIndex, int newIndex) {
-                    setState(() {
+    return BlocBuilder<RouteCubit, RouteState>(
+      builder: (context, routeState) => Card(
+        child: Form(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 16, 0, 16),
+            child: Column(
+              children: [
+                SizedBox.fromSize(
+                  size: const Size.fromHeight(192),
+                  child: ReorderableListView(
+                    shrinkWrap: true,
+                    onReorder: (int oldIndex, int newIndex) {
                       if (newIndex > oldIndex) {
                         newIndex -= 1;
                       }
-                      final item = locations.removeAt(oldIndex);
-                      locations.insert(newIndex, item);
-                    });
-                  },
-                  children: [
-                    for (int index = 0; index < locations.length; index += 1)
-                      ListTile(
-                        key: ObjectKey(locations[index]),
-                        leading: const Icon(Icons.drag_handle_rounded),
-                        title: LocationBar(
-                          key: Key(index.toString()),
-                          index: index,
-                          controller: locations[index],
-                          onDelete: (locations.length > 2)
-                              ? () => onDelete(index)
-                              : null,
-                        ),
-                      ),
-                    Row(
-                      key: const ObjectKey("actionsInList"),
-                      children: [
-                        // Add Location
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: const CircleBorder(),
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onTertiary,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.tertiary,
+                      final item =
+                          routeCubit.deleteCreatedRouteLocation(oldIndex)!;
+                      routeCubit.addCreatedRouteLocation(item, newIndex);
+                    },
+                    children: [
+                      for (int index = 0;
+                          index < routeState.createdRouteLocationList.length;
+                          index += 1)
+                        ListTile(
+                          key: ObjectKey(
+                              routeState.createdRouteLocationList[index]),
+                          leading: const Icon(Icons.drag_handle_rounded),
+                          title: LocationBar(
+                            key: Key(index.toString()),
+                            index: index,
+                            controller:
+                                routeState.createdRouteLocationList[index],
+                            onDelete:
+                                (routeState.createdRouteLocationList.length > 2)
+                                    ? () => routeCubit
+                                        .deleteCreatedRouteLocation(index)
+                                    : null,
                           ),
-                          onPressed: onAdd,
-                          child: const Icon(Icons.add_rounded),
                         ),
-                      ],
+                    ],
+                  ),
+                ),
+                Row(
+                  key: const ObjectKey("actionsInList"),
+                  children: [
+                    // Add Location
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onTertiary,
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      ),
+                      onPressed: () => routeCubit.addCreatedRouteLocation(
+                        TextEditingController(),
+                        (routeState.createdRouteLocationList.length / 2)
+                            .floor(),
+                      ),
+                      child: const Icon(Icons.add_rounded),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // Close
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onSecondary,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Close
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSecondary,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                      ),
+                      onPressed: () => routeCubit.setIsCreatingRoute(false),
+                      child: const Text("Close"),
                     ),
-                    onPressed: () => routeCubit.setIsCreatingRoute(false),
-                    child: const Text("Close"),
-                  ),
-                  // Save Route
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      foregroundColor: Theme.of(context).colorScheme.onTertiary,
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    // Save Route
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onTertiary,
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      ),
+                      onPressed: () => onSave(context),
+                      child: const Icon(Icons.save_rounded),
                     ),
-                    onPressed: onSave,
-                    child: const Icon(Icons.save_rounded),
-                  ),
-                  // Submit
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    // Submit
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      onPressed: () => onSubmit(context),
+                      child: const Text('Submit'),
                     ),
-                    onPressed: onSubmit,
-                    child: const Text('Submit'),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
