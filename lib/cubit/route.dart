@@ -69,9 +69,7 @@ class RouteCubit extends Cubit<RouteState> {
       );
 
   TextEditingController? deleteCreatedRouteLocation(int index) {
-    if (state.createdRouteLocationList.length > 2 &&
-        index >= 0 &&
-        index < state.createdRouteLocationList.length) {
+    if (index >= 0 && index < state.createdRouteLocationList.length) {
       TextEditingController removed = state.createdRouteLocationList[index];
       emit(
         RouteState(

@@ -1,4 +1,3 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -46,6 +45,18 @@ class CreateRouteForm extends StatelessWidget {
     );
   }
 
+  void onChange(BuildContext context) async {
+    if (isFormValid(context)) {
+      RouteCubit routeCubit = context.read<RouteCubit>();
+      GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
+      // Create the route
+      CustomRoute route = await getRoute(context);
+      // Display the route on the map
+      routeCubit.setDisplayedRoute(route);
+      graphhopperCubit.fetchPoints(route);
+    }
+  }
+
   void onSave(BuildContext context) async {
     if (isFormValid(context)) {
       RouteCubit routeCubit = context.read<RouteCubit>();
@@ -54,23 +65,18 @@ class CreateRouteForm extends StatelessWidget {
       routeCubit.saveCreatedRoute(route);
       // ignore: use_build_context_synchronously
       showSnackBar(context, "Saved route");
+    } else {
+      showSnackBar(context, "Please fill all the fields");
     }
   }
 
-  void onSubmit(BuildContext context) async {
+  void onSubmit(BuildContext context) {
     if (isFormValid(context)) {
       RouteCubit routeCubit = context.read<RouteCubit>();
       MapCubit mapCubit = context.read<MapCubit>();
-      GraphhopperCubit graphhopperCubit = context.read<GraphhopperCubit>();
-      // Create the route
-      CustomRoute route = await getRoute(context);
-      // ignore: use_build_context_synchronously
       showSnackBar(context, "Displaying route");
       routeCubit.setIsCreatingRoute(false);
-      // Display the route on the map
-      routeCubit.setDisplayedRoute(route);
-      graphhopperCubit.fetchPoints(route);
-      RoutePoint start = route.points[0];
+      Point start = routeCubit.state.displayedRoutePoints[0];
       mapCubit.flyTo(
         latitude: start.latitude,
         longitude: start.longitude,
@@ -103,6 +109,7 @@ class CreateRouteForm extends StatelessWidget {
                       final item =
                           routeCubit.deleteCreatedRouteLocation(oldIndex)!;
                       routeCubit.addCreatedRouteLocation(item, newIndex);
+                      onChange(context); // Update route on map
                     },
                     children: [
                       for (int index = 0;
@@ -117,11 +124,17 @@ class CreateRouteForm extends StatelessWidget {
                             index: index,
                             controller:
                                 routeState.createdRouteLocationList[index],
-                            onDelete:
-                                (routeState.createdRouteLocationList.length > 2)
-                                    ? () => routeCubit
-                                        .deleteCreatedRouteLocation(index)
-                                    : null,
+                            onChange: () =>
+                                onChange(context), // Update route on map
+                            onDelete: (routeState
+                                        .createdRouteLocationList.length >
+                                    2)
+                                ? () {
+                                    routeCubit
+                                        .deleteCreatedRouteLocation(index);
+                                    onChange(context); // Update route on map
+                                  }
+                                : null,
                           ),
                         ),
                     ],
@@ -197,11 +210,13 @@ class CreateRouteForm extends StatelessWidget {
 class LocationBar extends StatelessWidget {
   final int index;
   final TextEditingController controller;
+  final VoidCallback onChange;
   final VoidCallback? onDelete;
   const LocationBar(
       {super.key,
       required this.index,
       required this.controller,
+      required this.onChange,
       required this.onDelete});
 
   @override
@@ -210,57 +225,61 @@ class LocationBar extends StatelessWidget {
 
     return SearchAnchor(
       builder: (context, controller) => SearchBar(
-        controller: this.controller,
-        padding: const MaterialStatePropertyAll(
-          EdgeInsets.fromLTRB(8, 0, 0, 0),
-        ),
-        leading: SizedBox(
-          width: 48,
-          height: 48,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.location_on_rounded),
-              Text((index + 1).toString()),
-            ],
+          controller: this.controller,
+          padding: const MaterialStatePropertyAll(
+            EdgeInsets.fromLTRB(8, 0, 0, 0),
           ),
-        ),
-        hintText: "Insert Location",
-        trailing: [
-          if (onDelete != null)
+          leading: SizedBox(
+            width: 48,
+            height: 48,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.location_on_rounded),
+                Text((index + 1).toString()),
+              ],
+            ),
+          ),
+          hintText: "Insert Location",
+          trailing: [
+            if (onDelete != null)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  foregroundColor: const Color(0xFFFFFFFF),
+                  backgroundColor: const Color(0xFFEF4444),
+                ),
+                onPressed: onDelete,
+                child: const Icon(Icons.delete_rounded),
+              ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
-                foregroundColor: const Color(0xFFFFFFFF),
-                backgroundColor: const Color(0xFFEF4444),
+                foregroundColor: Theme.of(context).colorScheme.onTertiary,
+                backgroundColor: Theme.of(context).colorScheme.tertiary,
               ),
-              onPressed: onDelete,
-              child: const Icon(Icons.delete_rounded),
-            ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              foregroundColor: Theme.of(context).colorScheme.onTertiary,
-              backgroundColor: Theme.of(context).colorScheme.tertiary,
-            ),
-            onPressed: () async {
-              LatLng? position = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const PositionPicker(),
-                ),
-              );
-              if (position != null) {
-                GeocodingState? geocoding =
-                    await geocodingCubit.locationFromCoordinates(position);
-                if (geocoding != null) {
-                  controller.text = geocoding.location!;
+              onPressed: () async {
+                LatLng? position = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PositionPicker(),
+                  ),
+                );
+                if (position != null) {
+                  GeocodingState? geocoding =
+                      await geocodingCubit.locationFromCoordinates(position);
+                  if (geocoding != null) {
+                    this.controller.text = geocoding.location!;
+                  }
+                  onChange(); // Update route on map
                 }
-              }
-            },
-            child: const Icon(Icons.map),
-          ),
-        ],
-      ),
+              },
+              child: const Icon(Icons.map),
+            ),
+          ],
+          onChanged: (value) async {
+            this.controller.text = value;
+            onChange();
+          }),
       suggestionsBuilder: (context, controller) => [],
     );
   }
