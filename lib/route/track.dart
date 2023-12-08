@@ -24,16 +24,28 @@ class TrackRouteButton extends StatelessWidget {
               backgroundColor: const Color(0xFFEF4444),
               fixedSize: const Size(96, 96),
             ),
-            onPressed: () {
+            onPressed: () async {
               routeCubit.stopTrackingRoute();
               mapCubit.setTrackingUserPosition(false);
               if (routeState.trackedRoutePointList.length > 2) {
-                showSnackBar(context, "Saved route");
-                CustomRoute route = CustomRoute(
-                  id: "poi${DateTime.timestamp()}", // TODO: remove
-                  points: routeState.trackedRoutePointList,
-                );
-                routeCubit.saveTrackedRoute(route);
+                // Ask user if they want to save the route
+                bool willSaveRoute = await showDialogMessage(
+                      context,
+                      "Save route?",
+                      "Do you want to save the route you just tracked?",
+                      "No",
+                      "Yes",
+                    ) ??
+                    false;
+                if (willSaveRoute) {
+                  // ignore: use_build_context_synchronously
+                  showSnackBar(context, "Saved route");
+                  CustomRoute route = CustomRoute(
+                    id: "poi${DateTime.timestamp()}", // TODO: remove
+                    points: routeState.trackedRoutePointList,
+                  );
+                  routeCubit.saveTrackedRoute(route);
+                }
               }
               routeCubit.clearTrackedRoute();
             },
