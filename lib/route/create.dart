@@ -1,9 +1,12 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:project_x/cubit/geocoding.dart';
 import 'package:project_x/cubit/graphhopper.dart';
 import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/route.dart';
+import 'package:project_x/map/picker.dart';
 import 'package:project_x/route/route.dart';
 import 'package:project_x/util/message.dart';
 
@@ -203,6 +206,8 @@ class LocationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GeocodingCubit geocodingCubit = context.read<GeocodingCubit>();
+
     return SearchAnchor(
       builder: (context, controller) => SearchBar(
         controller: this.controller,
@@ -232,6 +237,28 @@ class LocationBar extends StatelessWidget {
               onPressed: onDelete,
               child: const Icon(Icons.delete_rounded),
             ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              foregroundColor: Theme.of(context).colorScheme.onTertiary,
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+            ),
+            onPressed: () async {
+              LatLng? position = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const PositionPicker(),
+                ),
+              );
+              if (position != null) {
+                GeocodingState? geocoding =
+                    await geocodingCubit.locationFromCoordinates(position);
+                if (geocoding != null) {
+                  controller.text = geocoding.location!;
+                }
+              }
+            },
+            child: const Icon(Icons.map),
+          ),
         ],
       ),
       suggestionsBuilder: (context, controller) => [],
