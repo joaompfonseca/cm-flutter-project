@@ -91,6 +91,25 @@ class PoiCubit extends Cubit<PoiState> {
     }
   }
 
+  Future<PoiInd> getPoi(String id) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/poi/id/$id');
+
+    final response = await get(
+      uri,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+      return PoiInd.fromJson(data);
+    } else {
+      throw Exception('Failed to load poi');
+    }
+  }
+
   void createPoi(Poi poi) => emit(PoiState(
       List.from(state.totalPoiList)..add(poi),
       state.filtering,

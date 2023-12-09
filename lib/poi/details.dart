@@ -8,7 +8,7 @@ import 'package:project_x/util/assets.dart';
 import 'package:project_x/util/message.dart';
 
 class PoiDetails extends StatefulWidget {
-  final Poi poi;
+  final PoiInd poi;
 
   const PoiDetails({
     super.key,
@@ -20,7 +20,7 @@ class PoiDetails extends StatefulWidget {
 }
 
 class _PoiDetailsState extends State<PoiDetails> {
-  late Poi poi;
+  late PoiInd poi;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _PoiDetailsState extends State<PoiDetails> {
     poi = widget.poi;
   }
 
-  void _updatePoi(Poi poi) {
+  void _updatePoi(PoiInd poi) {
     setState(() {
       this.poi = poi;
     });
@@ -79,7 +79,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                   PositiveRatingButton(
                     value: poi.ratingPositive,
                     onPressed: () {
-                      if (poiCubit.ratePoi(poi, true)) {
+                      if (poiCubit.ratePoi(poi.toPoi(), true)) {
                         showSnackBar(context, "You like this POI!");
                       } else {
                         showSnackBar(context, "You cannot do that, sorry!");
@@ -91,7 +91,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                   NegativeRatingButton(
                     value: poi.ratingNegative,
                     onPressed: () {
-                      if (poiCubit.ratePoi(poi, false)) {
+                      if (poiCubit.ratePoi(poi.toPoi(), false)) {
                         showSnackBar(context, "You disliked this POI!");
                       } else {
                         showSnackBar(context, "You cannot do that, sorry!");
@@ -111,7 +111,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                   const SizedBox(width: 8),
                   PositiveStatusButton(
                     onPressed: () {
-                      if (poiCubit.setStatus(poi, true)) {
+                      if (poiCubit.setStatus(poi.toPoi(), true)) {
                         showSnackBar(
                             context, "You marked this POI as available!");
                       } else {
@@ -123,7 +123,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                   const SizedBox(width: 8),
                   NegativeStatusButton(
                     onPressed: () {
-                      if (poiCubit.setStatus(poi, false)) {
+                      if (poiCubit.setStatus(poi.toPoi(), false)) {
                         showSnackBar(
                             context, "You marked this POI as unavailable!");
                       } else {

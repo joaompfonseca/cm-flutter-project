@@ -31,11 +31,7 @@ class PoiList extends StatelessWidget {
               return PoiItem(
                 poi: poi,
                 onDetails: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PoiDetails(poi: poi),
-                    ),
-                  );
+                  getPoi(context, poi);
                 },
                 onDelete: () {
                   showSnackBar(context, "Deleted ${poi.name}");
@@ -58,6 +54,21 @@ class PoiList extends StatelessWidget {
       floatingActionButton: const OpenCreatePoiFormButton(),
     );
   }
+}
+
+Future<void> getPoi(
+  BuildContext context,
+  Poi poi,
+) async {
+  PoiCubit poiCubit = context.read<PoiCubit>();
+
+  PoiInd newpoi = await poiCubit.getPoi(poi.id);
+
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => PoiDetails(poi: newpoi),
+    ),
+  );
 }
 
 class PoiItem extends StatelessWidget {

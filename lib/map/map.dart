@@ -93,15 +93,16 @@ class _MapState extends State<Map> {
                                           zoom: 18.0,
                                           offset: const Offset(0, -150),
                                         );
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return SizedBox(
-                                              height: 500,
-                                              child: PoiDetails(poi: poi),
-                                            );
-                                          },
-                                        );
+                                        getPoi(context, poi);
+                                        //showModalBottomSheet(
+                                        //  context: context,
+                                        //  builder: (BuildContext context) {
+                                        //    return SizedBox(
+                                        //      height: 500,
+                                        //      child: PoiDetails(poi: poi),
+                                        //    );
+                                        //  },
+                                        //);
                                       },
                                     ),
                                   ))
@@ -321,6 +322,25 @@ class _MapState extends State<Map> {
       bottomSheet: const InformationMessage(),
     );
   }
+}
+
+Future<void> getPoi(
+  BuildContext context,
+  Poi poi,
+) async {
+  PoiCubit poiCubit = context.read<PoiCubit>();
+
+  PoiInd newpoi = await poiCubit.getPoi(poi.id);
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return SizedBox(
+        height: 500,
+        child: PoiDetails(poi: newpoi),
+      );
+    },
+  );
 }
 
 class SearchLocationBar extends StatelessWidget {
