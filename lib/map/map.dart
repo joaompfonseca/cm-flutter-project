@@ -1,3 +1,4 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,9 +23,14 @@ import 'package:project_x/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_x/util/cache.dart';
 
-class Map extends StatelessWidget {
+class Map extends StatefulWidget {
   const Map({super.key});
 
+  @override
+  State<Map> createState() => _MapState();
+}
+
+class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
     MapCubit mapCubit = context.read<MapCubit>();
@@ -41,7 +47,23 @@ class Map extends StatelessWidget {
                 if (snapshot.hasData) {
                   return FlutterMap(
                     mapController: mapCubit.state.mapController,
-                    options: mapCubit.state.mapOptions,
+                    options: MapOptions(
+                      initialCenter:
+                          LatLng(40.6405, -8.6538), // Aveiro, Portugal
+                      initialZoom: 14.0,
+                      minZoom: 3.0,
+                      maxZoom: 18.0,
+                      interactionOptions: InteractionOptions(
+                        flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                      ),
+                      keepAlive: true,
+                      onPositionChanged: (position, hasGesture) {
+                        if (hasGesture) {
+                          poiCubit.setNorthEast(position.bounds!.northEast);
+                          poiCubit.setSouthWest(position.bounds!.southWest);
+                        }
+                      },
+                    ),
                     children: [
                       TileLayer(
                         urlTemplate: tileLayerUrl,

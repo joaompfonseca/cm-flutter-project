@@ -17,6 +17,7 @@ import 'package:project_x/mock/profile.dart';
 import 'package:project_x/mock/route.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:project_x/poi/poi.dart';
 import 'amplifyconfiguration.dart';
 
 Future main() async {
@@ -65,11 +66,11 @@ class _MyAppState extends State<MyApp> {
     final graphhopperCubit = GraphhopperCubit([]);
     final geocodingCubit = GeocodingCubit(GeocodingState(null, null));
     final profileCubit = ProfileCubit(ProfileState(mockProfile, tokenCubit));
-    final mapCubit = MapCubit(
-      MapState(mapController, mapOptions, null, false, positionCubit),
-    );
     final poiCubit = PoiCubit(
-        PoiState(mockPoiList, false, mockPoiList, TextEditingController()));
+        PoiState(<Poi>[], false, <Poi>[], TextEditingController(), tokenCubit));
+    final mapCubit = MapCubit(
+      MapState(mapController, mapOptions, null, false, positionCubit, poiCubit),
+    );
     final routeCubit = RouteCubit(
       RouteState(
         createdRouteList: mockRouteList,

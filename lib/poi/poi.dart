@@ -22,4 +22,16 @@ class Poi {
     required this.ratingNegative,
     required this.addedBy,
   });
+
+  Poi.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        type = json['type'],
+        description = json['description'],
+        latitude = json['latitude'],
+        longitude = json['longitude'],
+        pictureUrl = json['picture_url'],
+        ratingPositive = json['rating_positive'],
+        ratingNegative = json['rating_negative'],
+        addedBy = json['added_by'];
 }

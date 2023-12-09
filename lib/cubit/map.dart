@@ -1,6 +1,8 @@
 import 'dart:ui';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:project_x/cubit/poi.dart';
 import 'package:project_x/cubit/position.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -10,6 +12,7 @@ class MapState {
   final LatLng? userPosition;
   final bool isTrackingUserPosition;
   final PositionCubit positionCubit;
+  final PoiCubit poiCubit;
 
   MapState(
     this.mapController,
@@ -17,6 +20,7 @@ class MapState {
     this.userPosition,
     this.isTrackingUserPosition,
     this.positionCubit,
+    this.poiCubit,
   );
 }
 
@@ -28,6 +32,12 @@ class MapCubit extends Cubit<MapState> {
         flyToUserPosition();
       }
     });
+
+    state.mapController.mapEventStream.listen((event) {
+      if (event is MapEventMoveEnd) {
+        state.poiCubit.getPois();
+      }
+    });
   }
 
   void setTrackingUserPosition(bool value) {
@@ -37,6 +47,7 @@ class MapCubit extends Cubit<MapState> {
       state.userPosition,
       value,
       state.positionCubit,
+      state.poiCubit,
     ));
   }
 
@@ -47,6 +58,7 @@ class MapCubit extends Cubit<MapState> {
       position,
       state.isTrackingUserPosition,
       state.positionCubit,
+      state.poiCubit,
     ));
   }
 
