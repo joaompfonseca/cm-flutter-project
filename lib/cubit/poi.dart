@@ -138,16 +138,44 @@ class PoiCubit extends Cubit<PoiState> {
       northEast: state.northEast,
       southWest: state.southWest));
 
-  bool ratePoi(Poi poi, bool rating) {
-    poi.ratingPositive += rating ? 1 : 0;
-    poi.ratingNegative += rating ? 0 : 1;
-    state.poiList[state.poiList.indexOf(poi)] = poi;
-    emit(state);
-    return true; // TODO: Check if user can rate
+  Future<void> ratePoi(String id, bool rating) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/poi/exists');
+
+    final response = await put(uri,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+        },
+        body: jsonEncode({
+          'id': id,
+          'rating': rating,
+        }));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+    } else {
+      throw Exception('Failed to set rating');
+    }
   }
 
-  bool setStatus(Poi poi, bool status) {
-    return true; // TODO: How to do this?
+  Future<void> statusPoi(String id, bool rating) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/poi/status');
+
+    final response = await put(uri,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+        },
+        body: jsonEncode({
+          'id': id,
+          'status': rating,
+        }));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+    } else {
+      throw Exception('Failed to set rating');
+    }
   }
 
   void toggleFiltering() => emit(PoiState(state.totalPoiList, !state.filtering,

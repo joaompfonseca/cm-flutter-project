@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/cubit/poi.dart';
+import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/poi/poi.dart';
 import 'package:project_x/util/assets.dart';
 import 'package:project_x/util/message.dart';
@@ -22,10 +23,28 @@ class PoiDetails extends StatefulWidget {
 class _PoiDetailsState extends State<PoiDetails> {
   late PoiInd poi;
 
+  late bool disablePositiveRating;
+  late bool disableNegativeRating;
+  late bool disableStatus;
+
+  late ProfileCubit profileCubit;
+
   @override
   void initState() {
     super.initState();
     poi = widget.poi;
+    profileCubit = context.read<ProfileCubit>();
+    disableStatus = poi.status;
+
+    // if user created the poi, disable rating
+    if (poi.addedBy == profileCubit.state.profile.id) {
+      disablePositiveRating = true;
+      disableNegativeRating = true;
+    } else {
+      // if user already rated the poi, disable rating
+      disablePositiveRating = poi.rate == "true";
+      disableNegativeRating = poi.rate == "false";
+    }
   }
 
   void _updatePoi(PoiInd poi) {
@@ -78,25 +97,33 @@ class _PoiDetailsState extends State<PoiDetails> {
                   const SizedBox(width: 8),
                   PositiveRatingButton(
                     value: poi.ratingPositive,
+                    disabled: disablePositiveRating,
                     onPressed: () {
-                      if (poiCubit.ratePoi(poi.toPoi(), true)) {
-                        showSnackBar(context, "You like this POI!");
-                      } else {
-                        showSnackBar(context, "You cannot do that, sorry!");
-                      }
-                      _updatePoi(poi);
+                      poiCubit.ratePoi(poi.id, true);
+                      setState(() {
+                        if (disableNegativeRating == true) {
+                          poi.ratingNegative -= 1;
+                        }
+                        poi.ratingPositive += 1;
+                        disablePositiveRating = true;
+                        disableNegativeRating = false;
+                      });
                     },
                   ),
                   const SizedBox(width: 8),
                   NegativeRatingButton(
                     value: poi.ratingNegative,
+                    disabled: disableNegativeRating,
                     onPressed: () {
-                      if (poiCubit.ratePoi(poi.toPoi(), false)) {
-                        showSnackBar(context, "You disliked this POI!");
-                      } else {
-                        showSnackBar(context, "You cannot do that, sorry!");
-                      }
-                      _updatePoi(poi);
+                      poiCubit.ratePoi(poi.id, false);
+                      setState(() {
+                        if (disablePositiveRating == true) {
+                          poi.ratingPositive -= 1;
+                        }
+                        poi.ratingNegative += 1;
+                        disableNegativeRating = true;
+                        disablePositiveRating = false;
+                      });
                     },
                   ),
                 ],
@@ -110,26 +137,22 @@ class _PoiDetailsState extends State<PoiDetails> {
                   ),
                   const SizedBox(width: 8),
                   PositiveStatusButton(
+                    disabled: disableStatus,
                     onPressed: () {
-                      if (poiCubit.setStatus(poi.toPoi(), true)) {
-                        showSnackBar(
-                            context, "You marked this POI as available!");
-                      } else {
-                        showSnackBar(context, "You cannot do that, sorry!");
-                      }
-                      _updatePoi(poi);
+                      // poiCubit.statusPoi(poi.id, true); TODO: uncomment when api is ready
+                      setState(() {
+                        disableStatus = true;
+                      });
                     },
                   ),
                   const SizedBox(width: 8),
                   NegativeStatusButton(
+                    disabled: disableStatus,
                     onPressed: () {
-                      if (poiCubit.setStatus(poi.toPoi(), false)) {
-                        showSnackBar(
-                            context, "You marked this POI as unavailable!");
-                      } else {
-                        showSnackBar(context, "You cannot do that, sorry!");
-                      }
-                      _updatePoi(poi);
+                      //poiCubit.statusPoi(poi.id, false); TODO: uncomment when api is ready
+                      setState(() {
+                        disableStatus = true;
+                      });
                     },
                   ),
                 ],
@@ -189,11 +212,13 @@ class _PoiDetailsState extends State<PoiDetails> {
 class PositiveRatingButton extends StatelessWidget {
   final int value;
   final VoidCallback onPressed;
+  final bool disabled;
 
   const PositiveRatingButton({
     super.key,
     required this.value,
     required this.onPressed,
+    required this.disabled,
   });
 
   @override
@@ -204,7 +229,7 @@ class PositiveRatingButton extends StatelessWidget {
         foregroundColor: const Color(0xFFFFFFFF),
         backgroundColor: const Color(0xAA4CAF4F),
       ),
-      onPressed: onPressed,
+      onPressed: disabled ? null : onPressed,
       child: Row(
         children: [
           const Icon(Icons.thumb_up_rounded),
@@ -219,11 +244,13 @@ class PositiveRatingButton extends StatelessWidget {
 class NegativeRatingButton extends StatelessWidget {
   final int value;
   final VoidCallback onPressed;
+  final bool disabled;
 
   const NegativeRatingButton({
     super.key,
     required this.value,
     required this.onPressed,
+    required this.disabled,
   });
 
   @override
@@ -234,7 +261,7 @@ class NegativeRatingButton extends StatelessWidget {
         foregroundColor: const Color(0xFFFFFFFF),
         backgroundColor: const Color(0xAAEF4444),
       ),
-      onPressed: onPressed,
+      onPressed: disabled ? null : onPressed,
       child: Row(
         children: [
           const Icon(Icons.thumb_down_rounded),
@@ -248,10 +275,12 @@ class NegativeRatingButton extends StatelessWidget {
 
 class PositiveStatusButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool disabled;
 
   const PositiveStatusButton({
     super.key,
     required this.onPressed,
+    required this.disabled,
   });
 
   @override
@@ -260,7 +289,7 @@ class PositiveStatusButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(8),
       ),
-      onPressed: onPressed,
+      onPressed: disabled ? null : onPressed,
       child: const Row(
         children: [
           Icon(Icons.check_rounded),
@@ -275,10 +304,12 @@ class PositiveStatusButton extends StatelessWidget {
 
 class NegativeStatusButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool disabled;
 
   const NegativeStatusButton({
     super.key,
     required this.onPressed,
+    required this.disabled,
   });
 
   @override
@@ -287,7 +318,7 @@ class NegativeStatusButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(8),
       ),
-      onPressed: onPressed,
+      onPressed: disabled ? null : onPressed,
       child: const Row(
         children: [
           Icon(Icons.close_rounded),
