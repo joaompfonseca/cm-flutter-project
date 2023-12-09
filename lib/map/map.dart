@@ -349,16 +349,16 @@ class SearchLocationBar extends StatelessWidget {
         ],
         onSubmitted: (value) {
           if (value.isNotEmpty) {
-            geocodingCubit.coordinatesFromLocation(value).then((geocoding) => {
-                  if (geocoding != null)
-                    {
-                      mapCubit.flyTo(
-                        latitude: geocoding.coordinates!.latitude,
-                        longitude: geocoding.coordinates!.longitude,
-                        zoom: 18.0,
-                      ),
-                    }
-                });
+            geocodingCubit.coordinatesFromLocation(value).then((geocoding) {
+              if (geocoding != null) {
+                mapCubit.setTrackingUserPosition(false);
+                mapCubit.flyTo(
+                  latitude: geocoding.coordinates!.latitude,
+                  longitude: geocoding.coordinates!.longitude,
+                  zoom: 18.0,
+                );
+              }
+            });
           }
         },
       ),

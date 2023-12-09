@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/poi.dart';
+import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/poi/create.dart';
 import 'package:project_x/poi/poi.dart';
 import 'package:project_x/poi/details.dart';
@@ -74,6 +75,8 @@ class PoiItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ProfileCubit profileCubit = context.read<ProfileCubit>();
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: onDetails,
@@ -123,16 +126,26 @@ class PoiItem extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DeleteButton(onPressed: onDelete),
-                    const SizedBox(width: 8),
-                    MapButton(onPressed: onShow),
-                    const SizedBox(width: 8),
-                    DetailsButton(onPressed: onDetails),
-                  ],
-                ),
+                if (profileCubit.state.profile.username == poi.addedBy)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      DeleteButton(onPressed: onDelete),
+                      const SizedBox(width: 8),
+                      MapButton(onPressed: onShow),
+                      const SizedBox(width: 8),
+                      DetailsButton(onPressed: onDetails),
+                    ],
+                  )
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MapButton(onPressed: onShow),
+                      const SizedBox(width: 8),
+                      DetailsButton(onPressed: onDetails),
+                    ],
+                  ),
               ],
             ),
           ),

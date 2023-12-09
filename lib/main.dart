@@ -77,6 +77,10 @@ class _MyAppState extends State<MyApp> {
         trackedRouteList: [],
         isCreatingRoute: false,
         isTrackingRoute: false,
+        createdRouteLocationList: [
+          TextEditingController(),
+          TextEditingController(),
+        ],
         trackedRoutePointList: [],
         displayedRoute: null,
         displayedRoutePoints: [],

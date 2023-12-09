@@ -58,7 +58,7 @@ class RouteList extends StatelessWidget {
                         mapCubit.flyTo(
                           latitude: start.latitude,
                           longitude: start.longitude,
-                          zoom: 18.0,
+                          zoom: 14.0,
                         );
                       },
                     ),
