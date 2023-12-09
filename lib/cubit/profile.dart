@@ -23,7 +23,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final String apiUrl = dotenv.env['API_URL']!;
 
-  Future<void> getProfile() async {
+  Future<bool> getProfile() async {
     // Get Token
     await state.tokenCubit.getToken();
 
@@ -39,8 +39,37 @@ class ProfileCubit extends Cubit<ProfileState> {
       safePrint(data);
       final profile = Profile.fromJson(data);
       emit(ProfileState(profile, state.tokenCubit));
+      return true;
     } else {
-      throw Exception('Failed to load profile');
+      return false;
+    }
+  }
+
+  Future<void> createProfile(String email, String username, String firstName,
+      String lastName, String birthDate) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/auth/register');
+
+    final response = await post(
+      uri,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
+      },
+      body: jsonEncode({
+        'email': email,
+        'username': username,
+        'first_name': firstName,
+        'last_name': lastName,
+        'birth_date': birthDate,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+      getProfile();
+    } else {
+      throw Exception('Failed to create profile');
     }
   }
 }

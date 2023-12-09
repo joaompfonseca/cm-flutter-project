@@ -11,6 +11,7 @@ import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/cubit/route.dart';
 import 'package:project_x/cubit/token.dart';
 import 'package:project_x/login/login.dart';
+import 'package:project_x/login/signup.dart';
 import 'package:project_x/map/config.dart';
 import 'package:project_x/mock/poi.dart';
 import 'package:project_x/mock/profile.dart';
@@ -18,6 +19,7 @@ import 'package:project_x/mock/route.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:project_x/poi/poi.dart';
+import 'package:project_x/profile/create.dart';
 import 'amplifyconfiguration.dart';
 
 Future main() async {
@@ -177,8 +179,22 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
                 if (snapshot.data!.isSignedIn) {
-                  profileCubit.getProfile();
-                  return const App();
+                  return FutureBuilder(
+                      future: profileCubit.getProfile(),
+                      builder: (context, snapshot) {
+                        safePrint(snapshot.data.toString());
+                        if (snapshot.data.toString() == 'true') {
+                          return const App();
+                        } else if (snapshot.data.toString() == 'false') {
+                          return const createProfileForm();
+                        } else {
+                          return const Scaffold(
+                            body: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                      });
                 } else {
                   return const LoginPage();
                 }

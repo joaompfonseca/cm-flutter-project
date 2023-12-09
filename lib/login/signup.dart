@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:project_x/login/confirm.dart';
 import 'package:project_x/login/login.dart';
 
@@ -16,8 +15,6 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController passwordController;
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
-  late TextEditingController usernameController;
-  late TextEditingController dateController;
 
   @override
   void initState() {
@@ -25,8 +22,6 @@ class _SignUpPageState extends State<SignUpPage> {
     passwordController = TextEditingController();
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
-    usernameController = TextEditingController();
-    dateController = TextEditingController();
     super.initState();
   }
 
@@ -36,8 +31,6 @@ class _SignUpPageState extends State<SignUpPage> {
     passwordController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
-    usernameController.dispose();
-    dateController.dispose();
     super.dispose();
   }
 
@@ -77,48 +70,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: dateController, //editing controller of this TextField
-              decoration: const InputDecoration(
-                  icon: Icon(Icons.calendar_today), //icon of text field
-                  labelText: "Enter Date", //label text of field
-                  border: OutlineInputBorder()),
-              readOnly: true, // when true user cannot edit text
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(), //get today's date
-                    firstDate: DateTime(
-                        2000), //DateTime.now() - not to allow to choose before today.
-                    lastDate: DateTime(2101));
-
-                if (pickedDate != null) {
-                  print(
-                      pickedDate); //get the picked date in the format => 2022-07-04 00:00:00.000
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(
-                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-                  print(
-                      formattedDate); //formatted date output using intl package =>  2022-07-04
-                  //You can format date as per your need
-
-                  setState(() {
-                    dateController.text =
-                        formattedDate; //set foratted date to TextField value.
-                  });
-                } else {
-                  print("Date is not selected");
-                }
-              },
             ),
             const SizedBox(height: 16),
             TextField(
