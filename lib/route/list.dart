@@ -47,7 +47,7 @@ class RouteList extends StatelessWidget {
                       },
                       onDelete: () {
                         showSnackBar(context, "Deleted ${route.name}");
-                        routeCubit.deleteCreatedRoute(route);
+                        routeCubit.deleteCreatedRoute(route.id);
                       },
                       onShow: () {
                         showSnackBar(context, "Showing ${route.name}");
@@ -87,7 +87,7 @@ class RouteList extends StatelessWidget {
                       },
                       onDelete: () {
                         showSnackBar(context, "Deleted ${route.name}");
-                        routeCubit.deleteCreatedRoute(route);
+                        routeCubit.deleteRecordedRoute(route.id);
                       },
                       onShow: () {
                         showSnackBar(context, "Showing ${route.name}");

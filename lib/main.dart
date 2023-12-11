@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
     );
     final routeCubit = RouteCubit(
       RouteState(
-        createdRouteList: mockRouteList,
+        createdRouteList: [],
         trackedRouteList: [],
         isCreatingRoute: false,
         isTrackingRoute: false,
@@ -88,6 +88,8 @@ class _MyAppState extends State<MyApp> {
         displayedRoutePoints: [],
         positionCubit: positionCubit,
         graphhopperCubit: graphhopperCubit,
+        tokenCubit: tokenCubit,
+        geocodingCubit: geocodingCubit,
       ),
     );
 
@@ -184,6 +186,7 @@ class _MyAppState extends State<MyApp> {
                       builder: (context, snapshot) {
                         safePrint(snapshot.data.toString());
                         if (snapshot.data.toString() == 'true') {
+                          routeCubit.getRoutes();
                           return const App();
                         } else if (snapshot.data.toString() == 'false') {
                           return const createProfileForm();
