@@ -72,4 +72,61 @@ class ProfileCubit extends Cubit<ProfileState> {
       throw Exception('Failed to create profile');
     }
   }
+
+  Future<void> updateProfile(
+      String email,
+      String username,
+      String oldPassword,
+      String newPassword,
+      String firstName,
+      String lastName,
+      File? image) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/user/edit');
+
+    var data = {};
+
+    if (email != "") {
+      data['email'] = email;
+    }
+    if (username != "") {
+      data['username'] = username;
+    }
+    if (oldPassword != "") {
+      data['password'] = oldPassword;
+    }
+    if (newPassword != "") {
+      data['new_password'] = newPassword;
+    }
+    if (firstName != "") {
+      data['first_name'] = firstName;
+    }
+    if (lastName != "") {
+      data['last_name'] = lastName;
+    }
+    if (image != null) {
+      final imageUrl = await uploadImage(image);
+      data['image_url'] = imageUrl;
+    }
+
+    final response = await put(
+      uri,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+      getProfile();
+    } else {
+      throw Exception('Failed to update profile');
+    }
+  }
+
+  Future<String> uploadImage(File image) async {
+    return image.path.split('/').last;
+  }
 }

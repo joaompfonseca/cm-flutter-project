@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_x/cubit/profile.dart';
 import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UpdateProfileForm extends StatefulWidget {
   const UpdateProfileForm({super.key});
@@ -12,6 +14,12 @@ class UpdateProfileForm extends StatefulWidget {
 class _UpdateProfileFormState extends State<UpdateProfileForm> {
   final picker = ImagePicker();
   File? image;
+  late TextEditingController emailController;
+  late TextEditingController usernameController;
+  late TextEditingController oldPasswordController;
+  late TextEditingController newPasswordController;
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
 
   Future getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -23,7 +31,30 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    usernameController = TextEditingController();
+    oldPasswordController = TextEditingController();
+    newPasswordController = TextEditingController();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    oldPasswordController.dispose();
+    newPasswordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ProfileCubit profileCubit = context.read<ProfileCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Profile'),
@@ -40,6 +71,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Enter new email',
@@ -58,6 +90,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: usernameController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Enter new username',
@@ -76,6 +109,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: oldPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
@@ -95,6 +129,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: newPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
@@ -114,6 +149,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: firstNameController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
@@ -133,6 +169,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: lastNameController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
@@ -230,7 +267,16 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    profileCubit.updateProfile(
+                        emailController.text,
+                        usernameController.text,
+                        oldPasswordController.text,
+                        newPasswordController.text,
+                        firstNameController.text,
+                        lastNameController.text,
+                        image);
+                  },
                   child: const Text(
                     'Update',
                     style: TextStyle(fontWeight: FontWeight.bold),

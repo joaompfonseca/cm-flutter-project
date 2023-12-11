@@ -139,7 +139,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                   PositiveStatusButton(
                     disabled: disableStatus,
                     onPressed: () {
-                      // poiCubit.statusPoi(poi.id, true); TODO: uncomment when api is ready
+                      poiCubit.statusPoi(poi.id, true);
                       setState(() {
                         disableStatus = true;
                       });
@@ -149,7 +149,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                   NegativeStatusButton(
                     disabled: disableStatus,
                     onPressed: () {
-                      //poiCubit.statusPoi(poi.id, false); TODO: uncomment when api is ready
+                      poiCubit.statusPoi(poi.id, false);
                       setState(() {
                         disableStatus = true;
                       });

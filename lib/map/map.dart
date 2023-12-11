@@ -57,6 +57,13 @@ class _MapState extends State<Map> {
                         flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                       ),
                       keepAlive: true,
+                      onMapReady: () {
+                        poiCubit.setNorthEast(mapCubit.state.mapController
+                            .camera.visibleBounds.northEast);
+                        poiCubit.setSouthWest(mapCubit.state.mapController
+                            .camera.visibleBounds.southWest);
+                        poiCubit.getPois();
+                      },
                       onPositionChanged: (position, hasGesture) {
                         if (hasGesture) {
                           poiCubit.setNorthEast(position.bounds!.northEast);
