@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_x/cubit/token.dart';
 import 'package:project_x/poi/poi.dart';
+import 'package:project_x/cubit/profile.dart' as profile;
 
 class PoiState {
   final List<Poi> poiList;
@@ -110,19 +111,81 @@ class PoiCubit extends Cubit<PoiState> {
     }
   }
 
-  void createPoi(Poi poi) => emit(PoiState(
-      List.from(state.totalPoiList)..add(poi),
-      state.filtering,
-      state.totalPoiList,
-      state.name,
-      state.tokenCubin,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets,
-      northEast: state.northEast,
-      southWest: state.southWest));
+  Future<String> uploadImage(File image) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/s3/upload');
+
+    //convert image to base64 string
+    List<int> imageBytes = image.readAsBytesSync();
+    String base64Image = base64Encode(imageBytes);
+
+    //get image type
+    String temp = image.path.split('.').last;
+    String imageType = "image/$temp";
+
+    safePrint(base64Image);
+
+    final response = await post(
+      uri,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+      },
+      body: jsonEncode({
+        'base64_image': base64Image,
+        'image_type': imageType,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+      return data['image_url'];
+    } else {
+      throw Exception('Failed to upload image');
+    }
+  }
+
+  Future<void> createPoi(String name, String description, String type,
+      double latitude, double longitude, File image) async {
+    final uri = Uri.https("gw.project-x.pt", 'api/poi/create');
+
+    String image_url = await uploadImage(image);
+
+    final response = await post(uri,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+        },
+        body: jsonEncode({
+          'name': name,
+          'description': description,
+          'type': type,
+          'picture_url': image_url,
+          'latitude': latitude,
+          'longitude': longitude,
+        }));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+      // add poi to list
+      final poi = Poi.fromJson(data);
+      final newPoiList = List<Poi>.from(state.totalPoiList);
+      newPoiList.add(poi);
+      emit(PoiState(newPoiList, state.filtering, state.poiList, state.name,
+          state.tokenCubin,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+          northEast: state.northEast,
+          southWest: state.southWest));
+      filterPoi();
+    } else {
+      throw Exception('Failed to create poi');
+    }
+  }
 
   void deletePoi(Poi poi) => emit(PoiState(
       state.totalPoiList.where((element) => element.id != poi.id).toList(),

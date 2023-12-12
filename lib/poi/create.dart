@@ -269,21 +269,14 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                     ),
                     onPressed: () {
                       if (isFormValid()) {
-                        Poi poi = Poi(
-                          id: "poi${DateTime.timestamp()}", // TODO: remove
-                          name: nameController.text,
-                          type: typeController.text,
-                          description: descriptionController.text,
-                          latitude: latitude,
-                          longitude: longitude,
-                          pictureUrl:
-                              image!.path.toString(), // TODO: change to S3
-                          ratingPositive: 0, // TODO: remove
-                          ratingNegative: 0, // TODO: remove
-                          addedBy: "testUser", // TODO: change to user
-                        );
-                        poiCubit.createPoi(poi);
-                        showSnackBar(context, "Created ${poi.name}");
+                        poiCubit.createPoi(
+                            nameController.text,
+                            descriptionController.text,
+                            typeController.text,
+                            latitude,
+                            longitude,
+                            image!);
+                        showSnackBar(context, "Created ${nameController.text}");
                         onClose();
                       }
                     },
