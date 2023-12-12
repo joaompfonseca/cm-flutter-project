@@ -9,7 +9,6 @@ import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_x/cubit/token.dart';
 import 'package:project_x/poi/poi.dart';
-import 'package:project_x/cubit/profile.dart' as profile;
 
 class PoiState {
   final List<Poi> poiList;
@@ -70,9 +69,9 @@ class PoiCubit extends Cubit<PoiState> {
 
       //check if already on list
       var newPoiList = List<Poi>.from(state.totalPoiList);
-      poiList.forEach((element) {
-        if (!state.totalPoiList.contains(element)) {
-          newPoiList.add(element);
+      poiList.forEach((poi) {
+        if (!newPoiList.any((element) => element.id == poi.id)) {
+          newPoiList.add(poi);
         }
       });
 
