@@ -276,6 +276,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                         firstNameController.text,
                         lastNameController.text,
                         image);
+                    Navigator.pop(context);
                   },
                   child: const Text(
                     'Update',

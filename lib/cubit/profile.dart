@@ -127,6 +127,54 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<String> uploadImage(File image) async {
-    return image.path.split('/').last;
+    final uri = Uri.https("gw.project-x.pt", 'api/s3/upload');
+
+    //convert image to base64 string
+    List<int> imageBytes = image.readAsBytesSync();
+    String base64Image = base64Encode(imageBytes);
+
+    //get image type
+    String temp = image.path.split('.').last;
+    String imageType = "image/$temp";
+
+    safePrint(base64Image);
+
+    final response = await post(
+      uri,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
+      },
+      body: jsonEncode({
+        'base64_image': base64Image,
+        'image_type': imageType,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      safePrint(data);
+      //change image url of saved profile
+      emit(ProfileState(
+          Profile(
+            id: state.profile.id,
+            email: state.profile.email,
+            username: state.profile.username,
+            firstName: state.profile.firstName,
+            lastName: state.profile.lastName,
+            birthDate: state.profile.birthDate,
+            pictureUrl: data['image_url'],
+            cognitoId: state.profile.cognitoId,
+            createdAt: state.profile.createdAt,
+            totalXp: state.profile.totalXp,
+            addedPoisCount: state.profile.addedPoisCount,
+            givenRatingsCount: state.profile.givenRatingsCount,
+            receivedRatingsCount: state.profile.receivedRatingsCount,
+          ),
+          state.tokenCubit));
+      return data['image_url'];
+    } else {
+      throw Exception('Failed to upload image');
+    }
   }
 }
