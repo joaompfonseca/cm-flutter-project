@@ -98,32 +98,40 @@ class _PoiDetailsState extends State<PoiDetails> {
                   PositiveRatingButton(
                     value: poi.ratingPositive,
                     disabled: disablePositiveRating,
-                    onPressed: () {
-                      poiCubit.ratePoi(poi.id, true);
-                      setState(() {
-                        if (disableNegativeRating == true) {
-                          poi.ratingNegative -= 1;
-                        }
-                        poi.ratingPositive += 1;
-                        disablePositiveRating = true;
-                        disableNegativeRating = false;
-                      });
+                    onPressed: () async {
+                      String time = await poiCubit.ratePoi(poi.id, true);
+                      if (time != "0") {
+                        showSnackBar(context, "You can rate again in $time");
+                      } else {
+                        setState(() {
+                          if (disableNegativeRating == true) {
+                            poi.ratingNegative -= 1;
+                          }
+                          poi.ratingPositive += 1;
+                          disablePositiveRating = true;
+                          disableNegativeRating = false;
+                        });
+                      }
                     },
                   ),
                   const SizedBox(width: 8),
                   NegativeRatingButton(
                     value: poi.ratingNegative,
                     disabled: disableNegativeRating,
-                    onPressed: () {
-                      poiCubit.ratePoi(poi.id, false);
-                      setState(() {
-                        if (disablePositiveRating == true) {
-                          poi.ratingPositive -= 1;
-                        }
-                        poi.ratingNegative += 1;
-                        disableNegativeRating = true;
-                        disablePositiveRating = false;
-                      });
+                    onPressed: () async {
+                      String time = await poiCubit.ratePoi(poi.id, false);
+                      if (time != "0") {
+                        showSnackBar(context, "You can rate again in $time");
+                      } else {
+                        setState(() {
+                          if (disablePositiveRating == true) {
+                            poi.ratingPositive -= 1;
+                          }
+                          poi.ratingNegative += 1;
+                          disableNegativeRating = true;
+                          disablePositiveRating = false;
+                        });
+                      }
                     },
                   ),
                 ],

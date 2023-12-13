@@ -200,7 +200,7 @@ class PoiCubit extends Cubit<PoiState> {
       northEast: state.northEast,
       southWest: state.southWest));
 
-  Future<void> ratePoi(String id, bool rating) async {
+  Future<String> ratePoi(String id, bool rating) async {
     final uri = Uri.https("gw.project-x.pt", 'api/poi/exists');
 
     final response = await put(uri,
@@ -214,10 +214,43 @@ class PoiCubit extends Cubit<PoiState> {
         }));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      safePrint(data);
+      if (data['time'] == 0) {
+        return '0';
+      } else {
+        return prettyDuration(Duration(milliseconds: data['time']));
+      }
     } else {
       throw Exception('Failed to set rating');
     }
+  }
+
+  String prettyDuration(Duration duration) {
+    var components = <String>[];
+
+    var days = duration.inDays;
+    if (days != 0) {
+      components.add('${days}d');
+    }
+    var hours = duration.inHours % 24;
+    if (hours != 0) {
+      components.add('${hours}h');
+    }
+    var minutes = duration.inMinutes % 60;
+    if (minutes != 0) {
+      components.add('${minutes}m');
+    }
+
+    var seconds = duration.inSeconds % 60;
+    var centiseconds = (duration.inMilliseconds % 1000) ~/ 10;
+    if (components.isEmpty || seconds != 0 || centiseconds != 0) {
+      components.add('$seconds');
+      if (centiseconds != 0) {
+        components.add('.');
+        components.add(centiseconds.toString().padLeft(2, '0'));
+      }
+      components.add('s');
+    }
+    return components.join();
   }
 
   Future<void> statusPoi(String id, bool rating) async {
