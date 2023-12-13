@@ -169,6 +169,21 @@ class RouteCubit extends Cubit<RouteState> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      emit(RouteState(
+        createdRouteList: state.createdRouteList
+          ..removeWhere((element) => element.id == id),
+        trackedRouteList: state.trackedRouteList,
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        createdRouteLocationList: state.createdRouteLocationList,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
+        positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
+        tokenCubit: state.tokenCubit,
+        geocodingCubit: state.geocodingCubit,
+      ));
     } else {
       throw Exception('Failed to delete route');
     }
@@ -189,7 +204,21 @@ class RouteCubit extends Cubit<RouteState> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      emit(state..trackedRouteList.removeWhere((element) => element.id == id));
+      emit(RouteState(
+        createdRouteList: state.createdRouteList,
+        trackedRouteList: state.trackedRouteList
+          ..removeWhere((element) => element.id == id),
+        isCreatingRoute: state.isCreatingRoute,
+        isTrackingRoute: state.isTrackingRoute,
+        createdRouteLocationList: state.createdRouteLocationList,
+        trackedRoutePointList: state.trackedRoutePointList,
+        displayedRoute: state.displayedRoute,
+        displayedRoutePoints: state.displayedRoutePoints,
+        positionCubit: state.positionCubit,
+        graphhopperCubit: state.graphhopperCubit,
+        tokenCubit: state.tokenCubit,
+        geocodingCubit: state.geocodingCubit,
+      ));
     } else {
       throw Exception('Failed to delete route');
     }

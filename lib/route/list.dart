@@ -46,8 +46,12 @@ class RouteList extends StatelessWidget {
                         );
                       },
                       onDelete: () {
-                        showSnackBar(context, "Deleted ${route.name}");
-                        routeCubit.deleteCreatedRoute(route.id);
+                        try {
+                          routeCubit.deleteCreatedRoute(route.id);
+                          showSnackBar(context, "Deleted ${route.name}");
+                        } catch (e) {
+                          showSnackBar(context, "Error deleting ${route.name}");
+                        }
                       },
                       onShow: () {
                         showSnackBar(context, "Showing ${route.name}");
@@ -86,8 +90,12 @@ class RouteList extends StatelessWidget {
                         );
                       },
                       onDelete: () {
-                        showSnackBar(context, "Deleted ${route.name}");
-                        routeCubit.deleteRecordedRoute(route.id);
+                        try {
+                          showSnackBar(context, "Deleted ${route.name}");
+                          routeCubit.deleteRecordedRoute(route.id);
+                        } catch (e) {
+                          showSnackBar(context, "Error deleting ${route.name}");
+                        }
                       },
                       onShow: () {
                         showSnackBar(context, "Showing ${route.name}");
