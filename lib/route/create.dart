@@ -53,7 +53,7 @@ class CreateRouteForm extends StatelessWidget {
       CustomRoute route = await getRoute(context);
       // Display the route on the map
       routeCubit.setDisplayedRoute(route);
-      graphhopperCubit.fetchPoints(route);
+      graphhopperCubit.fetchRoute(route);
     }
   }
 

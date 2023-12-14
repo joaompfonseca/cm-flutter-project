@@ -65,7 +65,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final tokenCubit = TokenCubit();
     final positionCubit = PositionCubit(null);
-    final graphhopperCubit = GraphhopperCubit([]);
+    final graphhopperCubit = GraphhopperCubit(
+      GraphhopperState(
+        points: [],
+        instructions: [],
+        instructionIndex: 0,
+        distance: "",
+        time: "",
+      ),
+    );
     final geocodingCubit = GeocodingCubit(GeocodingState(null, null));
     final profileCubit = ProfileCubit(ProfileState(mockProfile, tokenCubit));
     final poiCubit = PoiCubit(

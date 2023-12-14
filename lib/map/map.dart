@@ -17,6 +17,7 @@ import 'package:project_x/poi/filter.dart';
 import 'package:project_x/poi/poi.dart';
 import 'package:project_x/profile/details.dart';
 import 'package:project_x/route/create.dart';
+import 'package:project_x/route/instruction.dart';
 import 'package:project_x/route/route.dart';
 import 'package:project_x/route/track.dart';
 import 'package:project_x/util/assets.dart';
@@ -269,6 +270,12 @@ class _MapState extends State<Map> {
                   builder: (context, poiState) => Visibility(
                     visible: poiState.filtering,
                     child: const FilterPoi(),
+                  ),
+                ),
+                BlocBuilder<GraphhopperCubit, GraphhopperState>(
+                  builder: (context, graphhopperState) => Visibility(
+                    visible: graphhopperState.instructions.isNotEmpty,
+                    child: const InstructionCard(),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -538,7 +545,7 @@ class ClearDisplayedRouteButton extends StatelessWidget {
             ),
             onPressed: () {
               routeCubit.clearDisplayedRoute();
-              graphhopperCubit.clearPoints();
+              graphhopperCubit.clearRoute();
             },
             child: const SizedBox(
               height: 24,

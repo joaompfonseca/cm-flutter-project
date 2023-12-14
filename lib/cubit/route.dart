@@ -55,8 +55,8 @@ class RouteCubit extends Cubit<RouteState> {
         ));
       }
     });
-    routeState.graphhopperCubit.stream.listen((points) {
-      setDisplayedRoutePoints(points);
+    routeState.graphhopperCubit.stream.listen((graphhopperState) {
+      setDisplayedRoutePoints(graphhopperState.points);
     });
   }
 
