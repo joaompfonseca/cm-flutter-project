@@ -56,6 +56,9 @@ class GraphhopperCubit extends Cubit<GraphhopperState> {
     var response = await get(Uri.parse(url));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      if (data['paths'].length == 0) {
+        clearRoute();
+      }
       // Points
       for (var point in data['paths'][0]['points']['coordinates']) {
         points.add(
