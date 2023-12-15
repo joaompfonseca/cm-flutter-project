@@ -34,7 +34,7 @@ class _PoiDetailsState extends State<PoiDetails> {
     super.initState();
     poi = widget.poi;
     profileCubit = context.read<ProfileCubit>();
-    disableStatus = poi.status;
+    disableStatus = !poi.status;
 
     // if user created the poi, disable rating
     if (poi.addedBy == profileCubit.state.profile.id) {
