@@ -29,7 +29,7 @@ class _ResendPageState extends State<ResendPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Resend Code',
+          "Resend Code",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -37,25 +37,76 @@ class _ResendPageState extends State<ResendPage> {
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            const SizedBox(height: 100),
-            const Icon(Icons.security, size: 120, color: Colors.orange),
-            const SizedBox(height: 32),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
+            const SizedBox(height: 48),
+            const Icon(
+              size: 128,
+              Icons.password_rounded,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              "Request a new code",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 32),
+            const Text(
+              "Give us your email to receive a new code",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Email
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Email",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your email",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Resend Code Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                minimumSize: const Size(96, 48),
+                maximumSize: const Size(96, 48),
+                padding: const EdgeInsets.all(0),
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
                 resendCode(emailController.text);
               },
-              child: const Text('Resend Code'),
+              child: const Text(
+                style: TextStyle(fontSize: 12),
+                "Resend",
+              ),
             ),
           ],
         ),

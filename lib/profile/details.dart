@@ -29,7 +29,7 @@ class ProfileDetails extends StatelessWidget {
     final level = (totalXp / baseXp).floor();
     final xpToNextLevel = baseXp * (level + 1);
     final xpForCurrentLevel = xpToNextLevel - totalXp;
-    final progress = xpForCurrentLevel / baseXp;
+    final progress = (baseXp - xpForCurrentLevel) / baseXp;
 
     return StatsXp(
       currentLevel: level,

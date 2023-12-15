@@ -39,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Sign Up',
+          "Sign Up",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -47,60 +47,169 @@ class _SignUpPageState extends State<SignUpPage> {
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            const SizedBox(height: 50),
-            const Icon(Icons.security, size: 120, color: Colors.orange),
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
+            const Icon(
+              size: 128,
+              Icons.app_registration_rounded,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              "Hi there!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "Sign up for an account to join the cool kids club",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // First Name and Last Name
             Row(
               children: [
-                // Input for First Name and Last Name
                 Expanded(
                   child: TextField(
                     controller: firstNameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'First Name',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      labelText: "First Name",
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      hintText: "Type your first name",
+                      hintStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
                     controller: lastNameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Last Name',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      labelText: "Last Name",
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      hintText: "Type your last name",
+                      hintStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            // Email
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Email",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your email",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            // Password
             TextField(
               controller: passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Password",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your password",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
+            // Sign Up Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                minimumSize: const Size(96, 48),
+                maximumSize: const Size(96, 48),
+                padding: const EdgeInsets.all(0),
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
                 signUpUser(passwordController.text, emailController.text,
                     firstNameController.text, lastNameController.text);
               },
-              child: const Text('Sign Up'),
+              child: const Text(
+                style: TextStyle(fontSize: 12),
+                "Sign Up",
+              ),
             ),
           ],
         ),

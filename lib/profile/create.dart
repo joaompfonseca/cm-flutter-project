@@ -42,58 +42,227 @@ class _createProfileFormState extends State<createProfileForm> {
   Widget build(BuildContext context) {
     ProfileCubit profileCubit = context.read<ProfileCubit>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Create your profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            const SizedBox(height: 50),
-            const Icon(Icons.security, size: 120, color: Colors.orange),
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
+            const Icon(
+              size: 128,
+              Icons.person_add_alt_1_rounded,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              "Almost there!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "Let's configure your profile",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "What's your name? How can we contact you?",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "The information you provided on sign up is only used in the authentication process, not the app itself",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // First Name and Last Name
             Row(
               children: [
-                // Input for First Name and Last Name
                 Expanded(
                   child: TextField(
                     controller: firstNameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'First Name',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      labelText: "First Name",
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      hintText: "Type your first name",
+                      hintStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
                     controller: lastNameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Last Name',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      labelText: "Last Name",
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      hintText: "Type your last name",
+                      hintStyle: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            // Email
             TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username',
+              controller: emailController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Email",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your email",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
               ),
             ),
             const SizedBox(height: 16),
+            const Text(
+              "Your username will be visible to other users",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "You can change it later",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Username
             TextField(
-              controller: dateController, //editing controller of this TextField
-              decoration: const InputDecoration(
-                  icon: Icon(Icons.calendar_today), //icon of text field
-                  labelText: "Enter Date", //label text of field
-                  border: OutlineInputBorder()),
+              controller: usernameController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Username",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your username",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "We want to know your birthday!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "Disclaimer: no cakes will be sent to you",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Birth Date
+            TextField(
+              controller: dateController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Birth Date",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Choose your birth date",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                icon: const Icon(Icons.calendar_month_rounded),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
+              ),
               readOnly: true, // when true user cannot edit text
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
@@ -122,17 +291,17 @@ class _createProfileFormState extends State<createProfileForm> {
               },
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
-              ),
-            ),
-            const SizedBox(height: 32),
+            // Create Profile Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                minimumSize: const Size(96, 48),
+                maximumSize: const Size(96, 48),
+                padding: const EdgeInsets.all(0),
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
                 profileCubit.createProfile(
@@ -143,7 +312,10 @@ class _createProfileFormState extends State<createProfileForm> {
                   dateController.text,
                 );
               },
-              child: const Text('Create Profile'),
+              child: const Text(
+                style: TextStyle(fontSize: 12),
+                "Create Profile",
+              ),
             ),
           ],
         ),

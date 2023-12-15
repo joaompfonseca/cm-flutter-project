@@ -33,7 +33,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Confirm',
+          "Confirm Account",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -41,40 +41,141 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            const SizedBox(height: 100),
-            const Icon(Icons.security, size: 120, color: Colors.orange),
-            const SizedBox(height: 32),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
+            const SizedBox(height: 48),
+            const Icon(
+              size: 128,
+              Icons.mark_email_read_rounded,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              "Check your email!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "We sent you a confirmation code",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
               ),
             ),
             const SizedBox(height: 16),
+            // Email
             TextField(
-              controller: codeController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Code',
+              controller: emailController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Email",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your email",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
+            const Text(
+              "Your code should be comprised of 6 digits",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "It may take a few minutes to arrive",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Code
+            TextField(
+              controller: codeController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                labelText: "Code",
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: "Type your code",
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onBackground,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Submit Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                minimumSize: const Size(96, 48),
+                maximumSize: const Size(96, 48),
+                padding: const EdgeInsets.all(0),
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
                 confirmUser(emailController.text, codeController.text);
               },
-              child: const Text('Submit'),
+              child: const Text(
+                style: TextStyle(fontSize: 12),
+                "Confirm",
+              ),
             ),
             const SizedBox(height: 16),
+            const Text(
+              "Didn't receive the code?",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Don\'t received the code? '),
+                const Text(
+                  "Skill issue.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -84,10 +185,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                       ),
                     );
                   },
-                  child: const Text(
-                    'Resend',
+                  child: Text(
+                    "Resend Code",
                     style: TextStyle(
-                      color: Colors.orange,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
