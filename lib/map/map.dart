@@ -254,7 +254,7 @@ class _MapState extends State<Map> {
               }),
           /* Buttons */
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 64, 16, 64),
+            padding: const EdgeInsets.fromLTRB(16, 48, 16, 64),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -269,7 +269,6 @@ class _MapState extends State<Map> {
                         : null,
                   ),
                 ),
-                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,25 +282,33 @@ class _MapState extends State<Map> {
                             switchOutCurve: Curves.easeIn,
                             duration: const Duration(milliseconds: 500),
                             child: !routeState.isCreatingRoute
-                                ? const ProfileButton()
+                                ? Column(
+                                    children: [
+                                      const SizedBox(height: 8),
+                                      ProfileButton(),
+                                    ],
+                                  )
                                 : const SizedBox.shrink(),
                           ),
                         ),
-                        const SizedBox(height: 8),
                         BlocBuilder<PoiCubit, PoiState>(
                           builder: (context, poiState) => AnimatedSwitcher(
-                            switchInCurve: Curves.easeIn,
-                            switchOutCurve: Curves.easeIn,
-                            duration: const Duration(milliseconds: 500),
-                            child: poiState.filtering
-                                ? const SizedBox(
-                                    width: 192,
-                                    child: FilterPoi(),
-                                  )
-                                : FilterPoiButton(
-                                    onPressed: poiCubit.toggleFiltering,
-                                  ),
-                          ),
+                              switchInCurve: Curves.easeIn,
+                              switchOutCurve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 500),
+                              child: poiState.filtering
+                                  ? const SizedBox(
+                                      width: 192,
+                                      child: FilterPoi(),
+                                    )
+                                  : Column(
+                                      children: [
+                                        const SizedBox(height: 8),
+                                        FilterPoiButton(
+                                          onPressed: poiCubit.toggleFiltering,
+                                        ),
+                                      ],
+                                    )),
                         ),
                       ],
                     ),

@@ -175,7 +175,13 @@ class _PoiDetailsState extends State<PoiDetails> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 8),
-                  Text(poi.type),
+                  Expanded(
+                    child: Text(
+                      poi.type,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -192,21 +198,10 @@ class _PoiDetailsState extends State<PoiDetails> {
                   Expanded(
                     child: Text(
                       poi.description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 5,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  const Icon(Icons.person_rounded, size: 32),
-                  const SizedBox(width: 16),
-                  const Text(
-                    "Added by:",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(poi.addedBy),
                 ],
               ),
             ],
