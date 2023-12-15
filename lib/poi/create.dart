@@ -74,32 +74,82 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Creating a POI"),
+        title: const Text(
+          "Creating a POI",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(32),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Name",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                const SizedBox(height: 48),
+                const Icon(
+                  size: 128,
+                  Icons.location_on_rounded,
                 ),
                 const SizedBox(height: 8),
+                const Text(
+                  "Let's create a POI!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "Follow the steps to create a POI",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "What's the name of the POI?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "Give it meaningful name, like \"city park toilets\"",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Name
                 TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    labelText: "Name",
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
+                    ),
                     hintText: "Write a name for the POI",
                     hintStyle: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.5),
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -110,21 +160,46 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "Description",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "How can you describe the POI?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "Provide useful information, like \"the toilets are located in the back of the park\"",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 const SizedBox(height: 8),
+                // Description
                 TextFormField(
                   controller: descriptionController,
                   decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    labelText: "Description",
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
+                    ),
                     hintText: "Write a description for the POI",
                     hintStyle: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.5),
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -135,10 +210,22 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "Type",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "What's the type of the POI?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "From the previous examples, the type would be \"toilets\"",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 const SizedBox(height: 8),
+                // Type
                 DropdownButtonFormField(
                   items: poiTypes
                       .map((poiType) => DropdownMenuItem(
@@ -154,14 +241,27 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                           ))
                       .toList(),
                   decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    labelText: "Type",
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
+                    ),
                     hintText: "Choose a type for the POI",
                     hintStyle: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.5),
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.normal,
                     ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
                   ),
                   onChanged: (value) {
                     typeController.text = value.toString();
@@ -174,10 +274,19 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                   },
                 ),
                 const SizedBox(height: 16),
-                const Center(
-                  child: Text(
-                    "Picture",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                const Text(
+                  "How does the POI look like?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  "Take a picture of the POI that can help other users to find it",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -189,10 +298,11 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                               style: ElevatedButton.styleFrom(
                                 shape: const RoundedRectangleBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(16)),
+                                      BorderRadius.all(Radius.circular(8)),
                                 ),
-                                padding:
-                                    const EdgeInsets.fromLTRB(16, 20, 16, 20),
+                                minimumSize: const Size(128, 48),
+                                maximumSize: const Size(128, 48),
+                                padding: const EdgeInsets.all(0),
                                 foregroundColor:
                                     Theme.of(context).colorScheme.onTertiary,
                                 backgroundColor:
@@ -202,9 +312,15 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.camera_alt_rounded),
-                                  SizedBox(width: 8),
-                                  Text("Take a picture"),
+                                  Icon(
+                                    Icons.camera_alt_rounded,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    style: TextStyle(fontSize: 12),
+                                    "Take a picture",
+                                  ),
                                 ],
                               ),
                             ),
@@ -231,10 +347,11 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                                   style: ElevatedButton.styleFrom(
                                     shape: const RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(16)),
+                                          BorderRadius.all(Radius.circular(8)),
                                     ),
-                                    padding: const EdgeInsets.fromLTRB(
-                                        32, 20, 32, 20),
+                                    minimumSize: const Size(128, 48),
+                                    maximumSize: const Size(128, 48),
+                                    padding: const EdgeInsets.all(0),
                                     foregroundColor: Theme.of(context)
                                         .colorScheme
                                         .onTertiary,
@@ -245,9 +362,15 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.camera_alt_rounded),
-                                      SizedBox(width: 8),
-                                      Text("Change picture"),
+                                      Icon(
+                                        Icons.camera_alt_rounded,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        style: TextStyle(fontSize: 12),
+                                        "Change picture",
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -257,33 +380,34 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                         ),
                 ),
                 const SizedBox(height: 16),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                // Create POI Button
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    onPressed: () {
-                      if (isFormValid()) {
-                        poiCubit.createPoi(
-                            nameController.text,
-                            descriptionController.text,
-                            typeController.text,
-                            latitude,
-                            longitude,
-                            image!);
-                        showSnackBar(context, "Created ${nameController.text}");
-                        onClose();
-                      }
-                    },
-                    child: const Text(
-                      'Create',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    minimumSize: const Size(96, 48),
+                    maximumSize: const Size(96, 48),
+                    padding: const EdgeInsets.all(0),
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    if (isFormValid()) {
+                      poiCubit.createPoi(
+                          nameController.text,
+                          descriptionController.text,
+                          typeController.text,
+                          latitude,
+                          longitude,
+                          image!);
+                      showSnackBar(context, "Created ${nameController.text}");
+                      onClose();
+                    }
+                  },
+                  child: const Text(
+                    style: TextStyle(fontSize: 12),
+                    "Create POI",
                   ),
                 ),
               ],

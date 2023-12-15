@@ -304,12 +304,13 @@ class _createProfileFormState extends State<createProfileForm> {
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
-                profileCubit.createProfile(
+                createProfile(
                   emailController.text,
                   usernameController.text,
                   firstNameController.text,
                   lastNameController.text,
                   dateController.text,
+                  context,
                 );
               },
               child: const Text(
@@ -324,8 +325,14 @@ class _createProfileFormState extends State<createProfileForm> {
   }
 }
 
-Future<void> createProfile(String email, String username, String firstName,
-    String lastName, String birthDate, BuildContext context) async {
+Future<void> createProfile(
+  String email,
+  String username,
+  String firstName,
+  String lastName,
+  String birthDate,
+  BuildContext context,
+) async {
   ProfileCubit profileCubit = context.read<ProfileCubit>();
   // Create Profile
   await profileCubit.createProfile(
@@ -337,6 +344,7 @@ Future<void> createProfile(String email, String username, String firstName,
   );
 
   // Go to App
+  // ignore: use_build_context_synchronously
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(

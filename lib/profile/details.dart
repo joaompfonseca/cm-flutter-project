@@ -44,7 +44,7 @@ class ProfileDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Profile Details",
+          "My Profile",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -165,6 +165,23 @@ class ProfileDetails extends StatelessWidget {
                       ),
                     ],
                   ),
+                  SizedBox(height: 16),
+                  const Text(
+                    "This is your current level and XP",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    "You gain XP for being active in the community",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   ProfileXpCard(
                     currentLevel: statsXp.currentLevel,
                     totalXp: profileState.profile.totalXp,
@@ -174,6 +191,23 @@ class ProfileDetails extends StatelessWidget {
                     foregroundColor: Theme.of(context).colorScheme.onSecondary,
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
+                  SizedBox(height: 16),
+                  const Text(
+                    "These are your statistics",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    "You can see how many POIs you have added and how many ratings you have received and given",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   ProfileStatisticCard(
                     label: "Total Added POIs",
                     value: profileState.profile.addedPoisCount.toString(),

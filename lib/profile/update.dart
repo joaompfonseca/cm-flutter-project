@@ -48,30 +48,60 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Username',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              const SizedBox(height: 48),
+              const Icon(
+                size: 128,
+                Icons.person_rounded,
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'Enter new username',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5),
-                  ),
+              const Text(
+                "Update your profile",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                "You can change your username and picture here",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
               const SizedBox(height: 16),
+              TextFormField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  labelText: "Username",
+                  labelStyle: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  hintText: "Enter a new username",
+                  hintStyle: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              const SizedBox(height: 8),
               const Center(
                 child: Text(
                   "Picture",
@@ -87,10 +117,11 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                             style: ElevatedButton.styleFrom(
                               shape: const RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
+                                    BorderRadius.all(Radius.circular(8)),
                               ),
-                              padding:
-                                  const EdgeInsets.fromLTRB(16, 20, 16, 20),
+                              minimumSize: const Size(128, 48),
+                              maximumSize: const Size(128, 48),
+                              padding: const EdgeInsets.all(0),
                               foregroundColor:
                                   Theme.of(context).colorScheme.onTertiary,
                               backgroundColor:
@@ -100,9 +131,15 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.camera_alt_rounded),
-                                SizedBox(width: 8),
-                                Text("Take a picture"),
+                                Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  style: TextStyle(fontSize: 12),
+                                  "Take a picture",
+                                ),
                               ],
                             ),
                           ),
@@ -121,10 +158,11 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                                 style: ElevatedButton.styleFrom(
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
+                                        BorderRadius.all(Radius.circular(8)),
                                   ),
-                                  padding:
-                                      const EdgeInsets.fromLTRB(32, 20, 32, 20),
+                                  minimumSize: const Size(128, 48),
+                                  maximumSize: const Size(128, 48),
+                                  padding: const EdgeInsets.all(0),
                                   foregroundColor:
                                       Theme.of(context).colorScheme.onTertiary,
                                   backgroundColor:
@@ -134,9 +172,15 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.camera_alt_rounded),
-                                    SizedBox(width: 8),
-                                    Text("Change picture"),
+                                    Icon(
+                                      Icons.camera_alt_rounded,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      style: TextStyle(fontSize: 12),
+                                      "Change picture",
+                                    ),
                                   ],
                                 ),
                               ),
@@ -146,24 +190,25 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                       ),
               ),
               const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                    ),
-                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
+              // Update Profile Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  onPressed: () {
-                    profileCubit.updateProfile(usernameController.text, image);
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Update',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  minimumSize: const Size(96, 48),
+                  maximumSize: const Size(96, 48),
+                  padding: const EdgeInsets.all(0),
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                onPressed: () {
+                  profileCubit.updateProfile(usernameController.text, image);
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  style: TextStyle(fontSize: 12),
+                  "Update Profile",
                 ),
               ),
             ],
