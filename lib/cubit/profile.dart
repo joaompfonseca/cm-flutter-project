@@ -35,7 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       final profile = Profile.fromJson(data);
       emit(ProfileState(profile, state.tokenCubit));
@@ -65,7 +65,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       getProfile();
     } else {
@@ -96,7 +96,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       getProfile();
     } else {
@@ -130,7 +130,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       //change image url of saved profile
       emit(ProfileState(

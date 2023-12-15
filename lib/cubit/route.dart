@@ -77,7 +77,7 @@ class RouteCubit extends Cubit<RouteState> {
     var recorded = <CustomRoute>[];
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       print(data);
       var ctemp = data["created"];
       var rtemp = data["recorded"];
@@ -168,7 +168,7 @@ class RouteCubit extends Cubit<RouteState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       emit(RouteState(
         createdRouteList: state.createdRouteList
           ..removeWhere((element) => element.id == id),
@@ -203,7 +203,7 @@ class RouteCubit extends Cubit<RouteState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       emit(RouteState(
         createdRouteList: state.createdRouteList,
         trackedRouteList: state.trackedRouteList
@@ -300,7 +300,7 @@ class RouteCubit extends Cubit<RouteState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       emit(state
         ..createdRouteList
             .add(CustomRoute(id: data["id"], points: route.points)));
@@ -431,7 +431,7 @@ class RouteCubit extends Cubit<RouteState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       emit(state
         ..trackedRouteList
             .add(CustomRoute(id: data["id"], points: route.points)));

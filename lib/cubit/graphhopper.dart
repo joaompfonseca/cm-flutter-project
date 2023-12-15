@@ -55,7 +55,7 @@ class GraphhopperCubit extends Cubit<GraphhopperState> {
 
     var response = await get(Uri.parse(url));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       if (data['paths'].length == 0) {
         clearRoute();
       }

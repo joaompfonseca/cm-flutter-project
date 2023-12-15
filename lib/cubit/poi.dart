@@ -63,7 +63,7 @@ class PoiCubit extends Cubit<PoiState> {
       },
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       final poiList = List<Poi>.from(
           data.map((model) => Poi.fromJson(model)).toList().cast<Poi>());
 
@@ -102,7 +102,7 @@ class PoiCubit extends Cubit<PoiState> {
       },
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       return PoiInd.fromJson(data);
     } else {
@@ -136,7 +136,7 @@ class PoiCubit extends Cubit<PoiState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       return data['image_url'];
     } else {
@@ -165,7 +165,7 @@ class PoiCubit extends Cubit<PoiState> {
         }));
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       // add poi to list
       final poi = Poi.fromJson(data);
@@ -213,7 +213,7 @@ class PoiCubit extends Cubit<PoiState> {
           'rating': rating,
         }));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       if (data['time'] == 0) {
         return '0';
       } else {
@@ -266,7 +266,7 @@ class PoiCubit extends Cubit<PoiState> {
           'status': rating,
         }));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
     } else {
       throw Exception('Failed to set rating');

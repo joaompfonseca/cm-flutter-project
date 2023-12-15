@@ -26,7 +26,7 @@ class GeocodingCubit extends Cubit<GeocodingState> {
   Future<GeocodingState?> coordinatesFromLocation(String location) async {
     var response = await get(Uri.parse("$geocodingUrl&q=$location"));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       location = data['items'][0]['address']['label'];
       final coordinates = LatLng(
         data['items'][0]['position']['lat'],
@@ -44,7 +44,7 @@ class GeocodingCubit extends Cubit<GeocodingState> {
     var response = await get(Uri.parse(
         "$revGeocodingUrl&at=${coordinates.latitude},${coordinates.longitude}"));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       final location = data['items'][0]['address']['label'];
       final newState = GeocodingState(location, coordinates);
       emit(newState);
