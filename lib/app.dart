@@ -10,12 +10,13 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const DefaultTabController(
       length: 3,
+      initialIndex: 1,
       child: Scaffold(
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            Map(),
             PoiList(),
+            Map(),
             RouteList(),
           ],
         ),
@@ -24,18 +25,18 @@ class App extends StatelessWidget {
             Tab(
               icon: Icon(
                 size: 24,
-                Icons.map_rounded,
-              ),
-              iconMargin: EdgeInsets.zero,
-              text: "Map",
-            ),
-            Tab(
-              icon: Icon(
-                size: 24,
                 Icons.location_on_rounded,
               ),
               iconMargin: EdgeInsets.zero,
               text: "POIs",
+            ),
+            Tab(
+              icon: Icon(
+                size: 24,
+                Icons.map_rounded,
+              ),
+              iconMargin: EdgeInsets.zero,
+              text: "Map",
             ),
             Tab(
               icon: Icon(

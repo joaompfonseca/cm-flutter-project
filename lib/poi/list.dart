@@ -41,7 +41,7 @@ class PoiList extends StatelessWidget {
                   },
                   onShow: () {
                     showSnackBar(context, "Showing ${poi.name}");
-                    DefaultTabController.of(context).animateTo(0);
+                    DefaultTabController.of(context).animateTo(1);
                     mapCubit.flyTo(
                       latitude: poi.latitude,
                       longitude: poi.longitude,

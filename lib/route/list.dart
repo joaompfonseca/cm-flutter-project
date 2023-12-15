@@ -61,14 +61,14 @@ class RouteList extends StatelessWidget {
                         routeCubit.setIsCreatingRoute(false);
                         routeCubit.setDisplayedRoute(route);
                         graphhopperCubit.fetchRoute(route);
-                        DefaultTabController.of(context).animateTo(0);
+                        DefaultTabController.of(context).animateTo(1);
                         RoutePoint start = route.points[0];
                         mapCubit.flyTo(
                           latitude: start.latitude,
                           longitude: start.longitude,
                           zoom: 14.0,
                         );
-                        showSnackBar(context, "Starting navigation");
+                        showSnackBar(context, "Displaying ${route.name}");
                       },
                     ),
                   )
@@ -104,16 +104,18 @@ class RouteList extends StatelessWidget {
                         }
                       },
                       onShow: () {
+                        routeCubit.setIsCreatingRoute(false);
                         routeCubit.setDisplayedRoute(route);
                         routeCubit.setDisplayedRoutePoints(route.points);
-                        DefaultTabController.of(context).animateTo(0);
+                        graphhopperCubit.clearRoute();
+                        DefaultTabController.of(context).animateTo(1);
                         RoutePoint start = route.points[0];
                         mapCubit.flyTo(
                           latitude: start.latitude,
                           longitude: start.longitude,
-                          zoom: 18.0,
+                          zoom: 14.0,
                         );
-                        showSnackBar(context, "Starting navigation");
+                        showSnackBar(context, "Displaying ${route.name}");
                       },
                     ),
                   )
@@ -125,7 +127,7 @@ class RouteList extends StatelessWidget {
       ),
       floatingActionButton: CreateRouteFormButton(
         onPressed: () {
-          DefaultTabController.of(context).animateTo(0);
+          DefaultTabController.of(context).animateTo(1);
           routeCubit.setIsCreatingRoute(true);
         },
       ),
