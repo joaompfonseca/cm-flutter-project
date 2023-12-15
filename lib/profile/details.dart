@@ -177,18 +177,21 @@ class ProfileDetails extends StatelessWidget {
                   ProfileStatisticCard(
                     label: "Total Added POIs",
                     value: profileState.profile.addedPoisCount.toString(),
+                    icon: const Icon(Icons.location_on_rounded),
                     foregroundColor: Theme.of(context).colorScheme.onTertiary,
                     backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                   ProfileStatisticCard(
                     label: "Total Received Ratings",
                     value: profileState.profile.receivedRatingsCount.toString(),
+                    icon: const Icon(Icons.star_rounded),
                     foregroundColor: Theme.of(context).colorScheme.onTertiary,
                     backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                   ProfileStatisticCard(
                     label: "Total Given Ratings",
                     value: profileState.profile.givenRatingsCount.toString(),
+                    icon: const Icon(Icons.auto_awesome_rounded),
                     foregroundColor: Theme.of(context).colorScheme.onTertiary,
                     backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
@@ -268,7 +271,7 @@ class ProfileXpCard extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(
                 foregroundColor,
               ),
-              backgroundColor: backgroundColor,
+              backgroundColor: foregroundColor.withOpacity(0.25),
             ),
             Text(
               "$xpForCurrentLevel XP to next level",
@@ -286,6 +289,7 @@ class ProfileXpCard extends StatelessWidget {
 class ProfileStatisticCard extends StatelessWidget {
   final String label;
   final String value;
+  final Icon icon;
   final Color foregroundColor;
   final Color backgroundColor;
 
@@ -293,6 +297,7 @@ class ProfileStatisticCard extends StatelessWidget {
       {super.key,
       required this.label,
       required this.value,
+      required this.icon,
       required this.foregroundColor,
       required this.backgroundColor});
 
@@ -307,12 +312,21 @@ class ProfileStatisticCard extends StatelessWidget {
           width: 192,
           child: Column(
             children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: foregroundColor,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon.icon,
+                    color: foregroundColor,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: foregroundColor,
+                    ),
+                  ),
+                ],
               ),
               Text(
                 value,
