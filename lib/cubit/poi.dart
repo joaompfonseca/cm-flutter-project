@@ -314,13 +314,20 @@ class PoiCubit extends Cubit<PoiState> {
               types.contains(element.type))
           .toList();
     }
-    emit(PoiState(state.totalPoiList, state.filtering, filteredPoiList,
-        state.name, state.tokenCubin,
+    emit(
+      PoiState(
+        state.totalPoiList,
+        state.filtering,
+        filteredPoiList,
+        state.name,
+        state.tokenCubin,
         bench: state.bench,
         bikeParking: state.bikeParking,
         bikeShop: state.bikeShop,
         drinkingWater: state.drinkingWater,
-        toilets: state.toilets));
+        toilets: state.toilets,
+      ),
+    );
   }
 
   void changeBench() => emit(PoiState(state.totalPoiList, state.filtering,

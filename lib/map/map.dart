@@ -1,4 +1,3 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -266,18 +265,13 @@ class _MapState extends State<Map> {
                     child: const CreateRouteForm(),
                   ),
                 ),
-                BlocBuilder<PoiCubit, PoiState>(
-                  builder: (context, poiState) => Visibility(
-                    visible: poiState.filtering,
-                    child: const FilterPoi(),
-                  ),
-                ),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         BlocBuilder<RouteCubit, RouteState>(
                           builder: (context, routeState) => Visibility(
@@ -286,7 +280,21 @@ class _MapState extends State<Map> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        FilterPoiButton(onPressed: poiCubit.toggleFiltering),
+                        BlocBuilder<PoiCubit, PoiState>(
+                          builder: (context, poiState) => AnimatedSwitcher(
+                            switchInCurve: Curves.easeIn,
+                            switchOutCurve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 250),
+                            child: poiState.filtering
+                                ? const SizedBox(
+                                    width: 192,
+                                    child: FilterPoi(),
+                                  )
+                                : FilterPoiButton(
+                                    onPressed: poiCubit.toggleFiltering,
+                                  ),
+                          ),
+                        ),
                       ],
                     ),
                     const Column(

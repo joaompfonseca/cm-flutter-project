@@ -1,134 +1,166 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_x/cubit/poi.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FilterPoi extends StatefulWidget {
+class FilterPoi extends StatelessWidget {
   const FilterPoi({super.key});
 
   @override
-  State<FilterPoi> createState() => _FilterPoiState();
-}
-
-class _FilterPoiState extends State<FilterPoi> {
-  @override
   Widget build(BuildContext context) {
     PoiCubit poiCubit = BlocProvider.of<PoiCubit>(context);
-    return Card(
-      child: BlocBuilder<PoiCubit, PoiState>(
-        builder: (context, state) => Padding(
-          padding: const EdgeInsets.all(16),
+    return BlocBuilder<PoiCubit, PoiState>(
+      builder: (context, poiState) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(4),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  controller: state.name,
+                  contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  labelText: "Name",
+                  labelStyle: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  hintText: "Type name to filter",
+                  hintStyle: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.normal,
+                ),
+                controller: poiState.name,
+                onChanged: (String value) {
+                  poiCubit.filterPoi();
+                },
               ),
-              SizedBox(height: 16),
+              // Filters
               Row(
                 children: [
                   Checkbox(
-                    value: state.bench,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity,
+                    ),
+                    value: poiState.bench,
                     onChanged: (bool? value) {
-                      setState(() {
-                        poiCubit.changeBench();
-                      });
+                      poiCubit.changeBench();
+                      poiCubit.filterPoi();
                     },
                   ),
-                  const Text(
-                    'Bench',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('Bench'),
                 ],
               ),
               Row(
                 children: [
                   Checkbox(
-                    value: state.bikeParking,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity,
+                    ),
+                    value: poiState.bikeParking,
                     onChanged: (bool? value) {
-                      setState(() {
-                        poiCubit.changeBikeParking();
-                      });
+                      poiCubit.changeBikeParking();
+                      poiCubit.filterPoi();
                     },
                   ),
-                  const Text(
-                    'Bicycle parking',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('Bicycle Parking'),
                 ],
               ),
               Row(
                 children: [
                   Checkbox(
-                    value: state.bikeShop,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity,
+                    ),
+                    value: poiState.bikeShop,
                     onChanged: (bool? value) {
-                      setState(() {
-                        poiCubit.changeBikeShop();
-                      });
+                      poiCubit.changeBikeShop();
+                      poiCubit.filterPoi();
                     },
                   ),
-                  const Text(
-                    'Bicycle shop',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('Bicycle Shop'),
                 ],
               ),
               Row(
                 children: [
                   Checkbox(
-                    value: state.drinkingWater,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity,
+                    ),
+                    value: poiState.drinkingWater,
                     onChanged: (bool? value) {
-                      setState(() {
-                        poiCubit.changeDrinkingWater();
-                      });
+                      poiCubit.changeDrinkingWater();
+                      poiCubit.filterPoi();
                     },
                   ),
-                  const Text(
-                    'Drinking Water',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('Drinking Water'),
                 ],
               ),
               Row(
                 children: [
                   Checkbox(
-                    value: state.toilets,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity,
+                    ),
+                    value: poiState.toilets,
                     onChanged: (bool? value) {
-                      setState(() {
-                        poiCubit.changeToilets();
-                      });
+                      poiCubit.changeToilets();
+                      poiCubit.filterPoi();
                     },
                   ),
-                  const Text(
-                    'Toilets',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 159),
+                  const Text('Toilets'),
+                ],
+              ),
+              // Bottom
+              Row(
+                children: [
+                  const SizedBox(width: 4),
+                  // Hide
                   ElevatedButton(
-                    onPressed: () {
-                      filterPoi();
-                    },
-                    child: const Text('Filter'),
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      minimumSize: const Size(48, 32),
+                      maximumSize: const Size(48, 32),
+                      padding: const EdgeInsets.all(0),
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onPressed: poiCubit.toggleFiltering,
+                    child: const Text(
+                      style: TextStyle(fontSize: 12),
+                      "Hide",
+                    ),
                   ),
                 ],
               ),
@@ -137,11 +169,6 @@ class _FilterPoiState extends State<FilterPoi> {
         ),
       ),
     );
-  }
-
-  filterPoi() {
-    PoiCubit poiCubit = BlocProvider.of<PoiCubit>(context);
-    poiCubit.filterPoi();
   }
 }
 
