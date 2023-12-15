@@ -73,35 +73,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateProfile(
-      String email,
-      String username,
-      String oldPassword,
-      String newPassword,
-      String firstName,
-      String lastName,
-      File? image) async {
+  Future<void> updateProfile(String username, File? image) async {
     final uri = Uri.https("gw.project-x.pt", 'api/user/edit');
 
     var data = {};
 
-    if (email != "") {
-      data['email'] = email;
-    }
     if (username != "") {
       data['username'] = username;
-    }
-    if (oldPassword != "") {
-      data['password'] = oldPassword;
-    }
-    if (newPassword != "") {
-      data['new_password'] = newPassword;
-    }
-    if (firstName != "") {
-      data['first_name'] = firstName;
-    }
-    if (lastName != "") {
-      data['last_name'] = lastName;
     }
     if (image != null) {
       final imageUrl = await uploadImage(image);

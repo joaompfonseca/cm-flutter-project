@@ -14,12 +14,7 @@ class UpdateProfileForm extends StatefulWidget {
 class _UpdateProfileFormState extends State<UpdateProfileForm> {
   final picker = ImagePicker();
   File? image;
-  late TextEditingController emailController;
   late TextEditingController usernameController;
-  late TextEditingController oldPasswordController;
-  late TextEditingController newPasswordController;
-  late TextEditingController firstNameController;
-  late TextEditingController lastNameController;
 
   Future getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
@@ -33,22 +28,12 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
     usernameController = TextEditingController();
-    oldPasswordController = TextEditingController();
-    newPasswordController = TextEditingController();
-    firstNameController = TextEditingController();
-    lastNameController = TextEditingController();
   }
 
   @override
   void dispose() {
-    emailController.dispose();
     usernameController.dispose();
-    oldPasswordController.dispose();
-    newPasswordController.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
     super.dispose();
   }
 
@@ -69,25 +54,6 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Email',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'Enter new email',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
                 'Username',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -97,86 +63,6 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText: 'Enter new username',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Old Password',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: oldPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'Enter old password',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'New Password',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: newPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'Enter new password',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'First Name',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: firstNameController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'Enter new first name',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Last Name',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: lastNameController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'Enter new last name',
                   hintStyle: TextStyle(
                     color: Theme.of(context)
                         .colorScheme
@@ -271,14 +157,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
-                    profileCubit.updateProfile(
-                        emailController.text,
-                        usernameController.text,
-                        oldPasswordController.text,
-                        newPasswordController.text,
-                        firstNameController.text,
-                        lastNameController.text,
-                        image);
+                    profileCubit.updateProfile(usernameController.text, image);
                     Navigator.pop(context);
                   },
                   child: const Text(
