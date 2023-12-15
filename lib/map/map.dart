@@ -8,6 +8,7 @@ import 'package:project_x/cubit/graphhopper.dart';
 import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/poi.dart';
 import 'package:project_x/cubit/position.dart';
+import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/cubit/route.dart';
 import 'package:project_x/map/config.dart';
 import 'package:project_x/poi/create.dart';
@@ -513,6 +514,7 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ProfileCubit profileCubit = context.read<ProfileCubit>();
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(
@@ -522,7 +524,8 @@ class ProfileButton extends StatelessWidget {
         maximumSize: const Size(96, 48),
         padding: const EdgeInsets.all(0),
       ),
-      onPressed: () {
+      onPressed: () async {
+        await profileCubit.getProfile();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const ProfileDetails(),
