@@ -356,6 +356,35 @@ class LocationBar extends StatelessWidget {
           ),
         ),
         trailing: [
+          BlocBuilder<MapCubit, MapState>(
+            builder: (context, mapState) => ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                minimumSize: const Size(32, 32),
+                maximumSize: const Size(32, 32),
+                padding: const EdgeInsets.all(0),
+                foregroundColor: const Color(0xFFFFFFFF),
+                backgroundColor: const Color(0xFFEF4444),
+              ),
+              onPressed: () async {
+                LatLng? position = mapState.userPosition;
+                if (position != null) {
+                  GeocodingState? geocoding =
+                      await geocodingCubit.locationFromCoordinates(position);
+                  if (geocoding != null) {
+                    this.controller.text = geocoding.location!;
+                  }
+                  onChange(); // Update route on map
+                } else {
+                  showSnackBar(context, "Please enable location services");
+                }
+              },
+              child: const Icon(
+                size: 16,
+                Icons.person_rounded,
+              ),
+            ),
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
