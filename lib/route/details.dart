@@ -32,9 +32,13 @@ class RouteDetails extends StatelessWidget {
                 children: [
                   getMarkerImage("route-start"),
                   const SizedBox(width: 16),
-                  Text(
-                    route.points.first.label,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      route.points.first.label,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   const Text("(Origin)"),
@@ -60,9 +64,14 @@ class RouteDetails extends StatelessWidget {
                         children: [
                           getMarkerImage("route-intermediate"),
                           const SizedBox(width: 16),
-                          Text(
-                            route.points[i].label,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          Expanded(
+                            child: Text(
+                              route.points[i].label,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
                           ),
                         ],
                       ),
@@ -84,9 +93,13 @@ class RouteDetails extends StatelessWidget {
                 children: [
                   getMarkerImage("route-end"),
                   const SizedBox(width: 16),
-                  Text(
-                    route.points.last.label,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      route.points.last.label,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   const Text("(Destination)"),
