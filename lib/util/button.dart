@@ -12,12 +12,30 @@ class DeleteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(8),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        minimumSize: const Size(96, 32),
+        maximumSize: const Size(96, 32),
+        padding: const EdgeInsets.all(0),
         foregroundColor: const Color(0xFFFFFFFF),
         backgroundColor: const Color(0xFFEF4444),
       ),
       onPressed: onPressed,
-      child: const Icon(Icons.delete_rounded),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            size: 16,
+            Icons.delete_rounded,
+          ),
+          SizedBox(width: 4),
+          Text(
+            style: TextStyle(fontSize: 12),
+            "Delete",
+          ),
+        ],
+      ),
     );
   }
 }
@@ -34,12 +52,30 @@ class MapButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(8),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        minimumSize: const Size(128, 32),
+        maximumSize: const Size(128, 32),
+        padding: const EdgeInsets.all(0),
         foregroundColor: Theme.of(context).colorScheme.onTertiary,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
       onPressed: onPressed,
-      child: const Icon(Icons.map_rounded),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            size: 16,
+            Icons.map_rounded,
+          ),
+          SizedBox(width: 4),
+          Text(
+            style: TextStyle(fontSize: 12),
+            "Show on Map",
+          ),
+        ],
+      ),
     );
   }
 }
@@ -56,12 +92,30 @@ class DetailsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(8),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        minimumSize: const Size(96, 32),
+        maximumSize: const Size(96, 32),
+        padding: const EdgeInsets.all(0),
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       onPressed: onPressed,
-      child: const Icon(Icons.info_outline_rounded),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            size: 16,
+            Icons.info_outline_rounded,
+          ),
+          SizedBox(width: 4),
+          Text(
+            style: TextStyle(fontSize: 12),
+            "Details",
+          ),
+        ],
+      ),
     );
   }
 }

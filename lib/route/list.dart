@@ -20,7 +20,10 @@ class RouteList extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Routes'),
+        title: const Text(
+          "Routes",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: BlocBuilder<RouteCubit, RouteState>(
         builder: (context, routeState) => ListView(
@@ -30,6 +33,7 @@ class RouteList extends StatelessWidget {
               subtitle: const Text(
                   'Routes that you created by specifying the points on the map'),
               initiallyExpanded: true,
+              shape: const RoundedRectangleBorder(),
               children: routeState.createdRouteList
                   .map(
                     (route) => RouteItem(
@@ -75,6 +79,7 @@ class RouteList extends StatelessWidget {
               subtitle: const Text(
                   'Routes that you tracked using your device position'),
               initiallyExpanded: true,
+              shape: const RoundedRectangleBorder(),
               children: routeState.trackedRouteList
                   .map(
                     (route) => RouteItem(
@@ -114,6 +119,7 @@ class RouteList extends StatelessWidget {
                   )
                   .toList(),
             ),
+            const SizedBox(height: 48),
           ],
         ),
       ),
@@ -148,7 +154,7 @@ class RouteItem extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: onDetails,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        padding: const EdgeInsets.all(4),
         child: Container(
           decoration: BoxDecoration(
             border: Border(
@@ -161,23 +167,25 @@ class RouteItem extends StatelessWidget {
               bottom:
                   BorderSide(color: Theme.of(context).colorScheme.onBackground),
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 Row(
                   children: [
                     const Icon(Icons.directions_rounded),
-                    const SizedBox(width: 16),
-                    Text(
-                      route.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        route.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
@@ -190,7 +198,7 @@ class RouteItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

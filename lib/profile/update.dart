@@ -57,7 +57,10 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     ProfileCubit profileCubit = context.read<ProfileCubit>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Profile'),
+        title: const Text(
+          'Update Profile',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

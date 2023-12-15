@@ -6,13 +6,41 @@ import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/login/login.dart';
 import 'package:project_x/profile/update.dart';
 
+class StatsXp {
+  final int currentLevel;
+  final int xpToNextLevel;
+  final int xpForCurrentLevel;
+  final double progressPercentage;
+
+  StatsXp({
+    required this.currentLevel,
+    required this.xpToNextLevel,
+    required this.xpForCurrentLevel,
+    required this.progressPercentage,
+  });
+}
+
 class ProfileDetails extends StatelessWidget {
   const ProfileDetails({super.key});
 
+  StatsXp getStatsXp(int totalXp) {
+    const baseXp = 500;
+
+    final level = (totalXp / baseXp).floor();
+    final xpToNextLevel = baseXp * (level + 1);
+    final xpForCurrentLevel = xpToNextLevel - totalXp;
+    final progress = xpForCurrentLevel / baseXp;
+
+    return StatsXp(
+      currentLevel: level,
+      xpToNextLevel: xpToNextLevel,
+      xpForCurrentLevel: xpForCurrentLevel,
+      progressPercentage: progress,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    ProfileCubit profileCubit = context.read<ProfileCubit>();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -20,146 +48,155 @@ class ProfileDetails extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, profileState) {
+          final statsXp = getStatsXp(profileState.profile.totalXp);
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 256,
-                    width: 192,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: FittedBox(
-                        fit: BoxFit.fitHeight,
-                        child: Image.network(
-                            profileCubit.state.profile.pictureUrl),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        "${profileCubit.state.profile.firstName} ${profileCubit.state.profile.lastName}",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 24),
-                      ),
-                      Text(
-                        profileCubit.state.profile.username,
-                      ),
-                      Text(
-                        profileCubit.state.profile.email,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                      SizedBox(
+                        height: 256,
+                        width: 192,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0),
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child:
+                                Image.network(profileState.profile.pictureUrl),
                           ),
-                          padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => UpdateProfileForm(),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${profileState.profile.firstName} ${profileState.profile.lastName}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          );
-                        },
-                        child: const Row(children: [
-                          Icon(Icons.edit),
-                          SizedBox(width: 8),
-                          Text("Edit Profile"),
-                        ]),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                          ),
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor: const Color(0xFFEF4444),
-                          padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+                            Text(
+                              profileState.profile.username,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              profileState.profile.email,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                minimumSize: const Size(96, 32),
+                                maximumSize: const Size(96, 32),
+                                padding: const EdgeInsets.all(0),
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UpdateProfileForm(),
+                                  ),
+                                );
+                              },
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    size: 16,
+                                    Icons.edit,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    style: TextStyle(fontSize: 12),
+                                    "Edit Profile",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                minimumSize: const Size(96, 32),
+                                maximumSize: const Size(96, 32),
+                                padding: const EdgeInsets.all(0),
+                                foregroundColor: const Color(0xFFFFFFFF),
+                                backgroundColor: const Color(0xFFEF4444),
+                              ),
+                              onPressed: () {
+                                signOutCurrentUser(context);
+                              },
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    size: 16,
+                                    Icons.logout_rounded,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    style: TextStyle(fontSize: 12),
+                                    "Logout",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        onPressed: () {
-                          signOutCurrentUser(context);
-                        },
-                        child: const Row(children: [
-                          Icon(Icons.logout),
-                          SizedBox(width: 8),
-                          Text("Logout"),
-                        ]),
                       ),
                     ],
-                  )
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ProfileStatisticCard(
-                      label: "Total XP",
-                      value: profileCubit.state.profile.totalXp.toString(),
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onSecondary,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                    ),
+                  ),
+                  ProfileXpCard(
+                    currentLevel: statsXp.currentLevel,
+                    totalXp: profileState.profile.totalXp,
+                    xpForCurrentLevel: statsXp.xpForCurrentLevel,
+                    xpToNextLevel: statsXp.xpToNextLevel,
+                    progressPercentage: statsXp.progressPercentage,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  ProfileStatisticCard(
+                    label: "Total Added POIs",
+                    value: profileState.profile.addedPoisCount.toString(),
+                    foregroundColor: Theme.of(context).colorScheme.onTertiary,
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                  ),
+                  ProfileStatisticCard(
+                    label: "Total Received Ratings",
+                    value: profileState.profile.receivedRatingsCount.toString(),
+                    foregroundColor: Theme.of(context).colorScheme.onTertiary,
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                  ),
+                  ProfileStatisticCard(
+                    label: "Total Given Ratings",
+                    value: profileState.profile.givenRatingsCount.toString(),
+                    foregroundColor: Theme.of(context).colorScheme.onTertiary,
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ProfileStatisticCard(
-                      label: "Created POIs",
-                      value:
-                          profileCubit.state.profile.addedPoisCount.toString(),
-                      foregroundColor: Theme.of(context).colorScheme.onTertiary,
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ProfileStatisticCard(
-                      label: "Given Ratings",
-                      value: profileCubit.state.profile.givenRatingsCount
-                          .toString(),
-                      foregroundColor: Theme.of(context).colorScheme.onTertiary,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.tertiary.withAlpha(192),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ProfileStatisticCard(
-                      label: "Received Ratings",
-                      value: profileCubit.state.profile.receivedRatingsCount
-                          .toString(),
-                      foregroundColor: Theme.of(context).colorScheme.onTertiary,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.tertiary.withAlpha(128),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -169,12 +206,80 @@ Future<void> signOutCurrentUser(BuildContext context) async {
   final result = await Amplify.Auth.signOut();
   if (result is CognitoCompleteSignOut) {
     safePrint('Sign out completed successfully');
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      ),
     );
   } else if (result is CognitoFailedSignOut) {
     safePrint('Error signing user out: ${result.exception.message}');
+  }
+}
+
+class ProfileXpCard extends StatelessWidget {
+  final int currentLevel;
+  final int totalXp;
+  final int xpForCurrentLevel;
+  final int xpToNextLevel;
+  final double progressPercentage;
+  final Color foregroundColor;
+  final Color backgroundColor;
+
+  const ProfileXpCard({
+    super.key,
+    required this.currentLevel,
+    required this.totalXp,
+    required this.xpForCurrentLevel,
+    required this.xpToNextLevel,
+    required this.progressPercentage,
+    required this.foregroundColor,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: backgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(
+          children: [
+            Text(
+              "Level $currentLevel",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: foregroundColor,
+              ),
+            ),
+            Text(
+              "$totalXp/$xpToNextLevel XP",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: foregroundColor,
+                fontSize: 24,
+              ),
+            ),
+            LinearProgressIndicator(
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(8),
+              value: progressPercentage,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                foregroundColor,
+              ),
+              backgroundColor: backgroundColor,
+            ),
+            Text(
+              "$xpForCurrentLevel XP to next level",
+              style: TextStyle(
+                color: foregroundColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -196,26 +301,29 @@ class ProfileStatisticCard extends StatelessWidget {
     return Card(
       color: backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: foregroundColor,
+        padding: const EdgeInsets.all(4),
+        child: SizedBox(
+          height: 64,
+          width: 192,
+          child: Column(
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: foregroundColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              value,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: foregroundColor,
-                fontSize: 24,
+              Text(
+                value,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: foregroundColor,
+                  fontSize: 24,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

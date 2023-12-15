@@ -20,34 +20,38 @@ class PoiList extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Points of Interest'),
+        title: const Text(
+          "Points of Interest",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: BlocBuilder<PoiCubit, PoiState>(
         builder: (context, poiState) {
-          return ListView.builder(
-            itemCount: poiState.poiList.length,
-            itemBuilder: (context, index) {
-              Poi poi = poiState.poiList[index];
-              return PoiItem(
-                poi: poi,
-                onDetails: () {
-                  getPoi(context, poi);
-                },
-                onDelete: () {
-                  showSnackBar(context, "Deleted ${poi.name}");
-                  poiCubit.deletePoi(poi);
-                },
-                onShow: () {
-                  showSnackBar(context, "Showing ${poi.name}");
-                  DefaultTabController.of(context).animateTo(0);
-                  mapCubit.flyTo(
-                    latitude: poi.latitude,
-                    longitude: poi.longitude,
-                    zoom: 18.0,
-                  );
-                },
-              );
-            },
+          return ListView(
+            children: [
+              ...poiState.poiList.map(
+                (poi) => PoiItem(
+                  poi: poi,
+                  onDetails: () {
+                    getPoi(context, poi);
+                  },
+                  onDelete: () {
+                    showSnackBar(context, "Deleted ${poi.name}");
+                    poiCubit.deletePoi(poi);
+                  },
+                  onShow: () {
+                    showSnackBar(context, "Showing ${poi.name}");
+                    DefaultTabController.of(context).animateTo(0);
+                    mapCubit.flyTo(
+                      latitude: poi.latitude,
+                      longitude: poi.longitude,
+                      zoom: 18.0,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 48),
+            ],
           );
         },
       ),
@@ -92,7 +96,7 @@ class PoiItem extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: onDetails,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.all(4),
         child: Container(
           decoration: BoxDecoration(
             border: Border(
@@ -105,10 +109,10 @@ class PoiItem extends StatelessWidget {
               bottom:
                   BorderSide(color: Theme.of(context).colorScheme.onBackground),
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 Row(
@@ -118,14 +122,17 @@ class PoiItem extends StatelessWidget {
                       height: 24,
                       child: getMarkerImage(poi.type),
                     ),
-                    const SizedBox(width: 16),
-                    Text(
-                      poi.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        poi.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 4),
                 Row(
                   children: [
                     Expanded(
@@ -136,7 +143,7 @@ class PoiItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 4),
                 if (profileCubit.state.profile.username == poi.addedBy)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

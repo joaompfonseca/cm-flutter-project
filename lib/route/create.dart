@@ -40,7 +40,7 @@ class CreateRouteForm extends StatelessWidget {
     }
 
     return CustomRoute(
-      id: "poi${DateTime.timestamp()}", // TODO: remove
+      id: "route-${DateTime.timestamp()}", // Gets a unique ID by the API
       points: points,
     );
   }
