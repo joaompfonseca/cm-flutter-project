@@ -54,7 +54,6 @@ class RouteList extends StatelessWidget {
                         }
                       },
                       onShow: () {
-                        showSnackBar(context, "Showing ${route.name}");
                         routeCubit.setDisplayedRoute(route);
                         graphhopperCubit.fetchRoute(route);
                         DefaultTabController.of(context).animateTo(0);
@@ -64,6 +63,7 @@ class RouteList extends StatelessWidget {
                           longitude: start.longitude,
                           zoom: 14.0,
                         );
+                        showSnackBar(context, "Starting navigation");
                       },
                     ),
                   )
@@ -98,7 +98,6 @@ class RouteList extends StatelessWidget {
                         }
                       },
                       onShow: () {
-                        showSnackBar(context, "Showing ${route.name}");
                         routeCubit.setDisplayedRoute(route);
                         routeCubit.setDisplayedRoutePoints(route.points);
                         DefaultTabController.of(context).animateTo(0);
@@ -108,6 +107,7 @@ class RouteList extends StatelessWidget {
                           longitude: start.longitude,
                           zoom: 18.0,
                         );
+                        showSnackBar(context, "Starting navigation");
                       },
                     ),
                   )

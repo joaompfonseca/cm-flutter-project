@@ -273,9 +273,13 @@ class _MapState extends State<Map> {
                   ),
                 ),
                 BlocBuilder<GraphhopperCubit, GraphhopperState>(
-                  builder: (context, graphhopperState) => Visibility(
-                    visible: graphhopperState.instructions.isNotEmpty,
-                    child: const InstructionCard(),
+                  builder: (context, graphhopperState) =>
+                      BlocBuilder<RouteCubit, RouteState>(
+                    builder: (context, routeState) => Visibility(
+                      visible: graphhopperState.instructions.isNotEmpty &&
+                          !routeState.isCreatingRoute,
+                      child: const InstructionCard(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -324,8 +328,13 @@ class _MapState extends State<Map> {
                       TrackRouteButton(),
                     ],
                   ),
-                  CreateRouteFormButton(
-                    onPressed: routeCubit.toggleIsCreatingRoute,
+                  BlocBuilder<RouteCubit, RouteState>(
+                    builder: (context, routeState) => Visibility(
+                      visible: !routeState.isCreatingRoute,
+                      child: CreateRouteFormButton(
+                        onPressed: () => routeCubit.setIsCreatingRoute(true),
+                      ),
+                    ),
                   ),
                 ],
               ),

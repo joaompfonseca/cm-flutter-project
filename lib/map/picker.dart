@@ -10,11 +10,25 @@ import 'package:project_x/util/assets.dart';
 import 'package:project_x/util/cache.dart';
 
 class PositionPicker extends StatelessWidget {
-  const PositionPicker({super.key});
+  final LatLng initialPosition;
+
+  const PositionPicker({
+    super.key,
+    required this.initialPosition,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final MapController mapController = MapController();
+    final MapController pickerMapController = MapController();
+    final MapOptions pickerMapOptions = MapOptions(
+      initialCenter: initialPosition,
+      initialZoom: 14.0,
+      minZoom: 3.0,
+      maxZoom: 18.0,
+      interactionOptions: const InteractionOptions(
+        flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -30,8 +44,8 @@ class PositionPicker extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 return FlutterMap(
-                  mapController: mapController,
-                  options: mapOptions,
+                  mapController: pickerMapController,
+                  options: pickerMapOptions,
                   children: [
                     TileLayer(
                       urlTemplate: tileLayerUrl,
@@ -56,20 +70,23 @@ class PositionPicker extends StatelessWidget {
                         ],
                       ),
                     ),
+                    /* Marker in the middle of the map */
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: getMarkerImage('route-end'),
+                        ),
+                      ),
+                    ),
                   ],
                 );
               } else {
                 return const SizedBox.shrink();
               }
             },
-          ),
-          /* Marker in the middle of the screen */
-          Center(
-            child: SizedBox(
-              width: 50.0,
-              height: 50.0,
-              child: getMarkerImage('route-end'),
-            ),
           ),
           Center(
             child: Container(
@@ -80,14 +97,32 @@ class PositionPicker extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      minimumSize: const Size(96, 48),
+                      maximumSize: const Size(96, 48),
+                      padding: const EdgeInsets.all(0),
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: () {
-                      LatLng position = mapController.camera.center;
+                      LatLng position = pickerMapController.camera.center;
                       Navigator.pop(context, position);
                     },
-                    child: const Text('Pick'),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          size: 16,
+                          Icons.pin_drop_rounded,
+                        ),
+                        Text(
+                          style: TextStyle(fontSize: 12),
+                          "Pick",
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
