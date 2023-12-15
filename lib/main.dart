@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       child: MaterialApp(
-        title: 'Project X App',
+        title: "BiX App",
         theme: ThemeData(
           // Daisy UI Light
           colorScheme: const ColorScheme(
