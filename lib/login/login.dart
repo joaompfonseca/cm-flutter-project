@@ -5,6 +5,7 @@ import 'package:project_x/app.dart';
 import 'package:project_x/cubit/profile.dart';
 import 'package:project_x/login/resend.dart';
 import 'package:project_x/login/signup.dart';
+import 'package:project_x/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -115,13 +116,9 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => ResendPage()),
         );
       } else if (result.nextStep.signInStep == AuthSignInStep.done) {
-        // Get Profile
-        ProfileCubit profileCubit = BlocProvider.of<ProfileCubit>(context);
-        profileCubit.getProfile();
-
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => App()),
+          MaterialPageRoute(builder: (context) => MyApp()),
         );
       }
     } on AuthException catch (e) {
