@@ -28,7 +28,10 @@ class _ResendPageState extends State<ResendPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Project X'),
+        title: const Text(
+          'Resend Code',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -69,6 +72,17 @@ class _ResendPageState extends State<ResendPage> {
       );
     } on AuthException catch (e) {
       safePrint('Error resending code: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.message,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onError,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
   }
 }

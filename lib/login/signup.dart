@@ -38,7 +38,10 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Project X'),
+        title: const Text(
+          'Sign Up',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -122,10 +125,16 @@ class _SignUpPageState extends State<SignUpPage> {
       await _handleSignUpResult(result);
     } on AuthException catch (e) {
       safePrint('Error signing up user: ${e.message}');
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Error signing up user"),
-          backgroundColor: Colors.red,
+          content: Text(
+            e.message,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onError,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     }

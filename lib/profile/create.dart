@@ -43,7 +43,10 @@ class _createProfileFormState extends State<createProfileForm> {
     ProfileCubit profileCubit = context.read<ProfileCubit>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Project X'),
+        title: const Text(
+          'Create your profile',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),

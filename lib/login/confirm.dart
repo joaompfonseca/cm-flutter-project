@@ -32,7 +32,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Project X'),
+        title: const Text(
+          'Confirm',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -106,6 +109,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       await _handleSignUpResult(result);
     } on AuthException catch (e) {
       safePrint('Error confirming user: ${e.message}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.message,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onError,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
   }
 

@@ -36,7 +36,10 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Project X'),
+        title: const Text(
+          'Login',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -123,6 +126,18 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on AuthException catch (e) {
       safePrint('Error signing in: ${e.message}');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.message,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onError,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
   }
 }
