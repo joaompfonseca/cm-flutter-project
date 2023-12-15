@@ -260,9 +260,13 @@ class _MapState extends State<Map> {
               children: [
                 const SearchLocationBar(),
                 BlocBuilder<RouteCubit, RouteState>(
-                  builder: (context, routeState) => Visibility(
-                    visible: routeState.isCreatingRoute,
-                    child: const CreateRouteForm(),
+                  builder: (context, routeState) => AnimatedSwitcher(
+                    switchInCurve: Curves.easeIn,
+                    switchOutCurve: Curves.easeIn,
+                    duration: const Duration(milliseconds: 500),
+                    child: routeState.isCreatingRoute
+                        ? const CreateRouteForm()
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -274,9 +278,13 @@ class _MapState extends State<Map> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         BlocBuilder<RouteCubit, RouteState>(
-                          builder: (context, routeState) => Visibility(
-                            visible: !routeState.isCreatingRoute,
-                            child: const ProfileButton(),
+                          builder: (context, routeState) => AnimatedSwitcher(
+                            switchInCurve: Curves.easeIn,
+                            switchOutCurve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 500),
+                            child: !routeState.isCreatingRoute
+                                ? const ProfileButton()
+                                : const SizedBox.shrink(),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -284,7 +292,7 @@ class _MapState extends State<Map> {
                           builder: (context, poiState) => AnimatedSwitcher(
                             switchInCurve: Curves.easeIn,
                             switchOutCurve: Curves.easeIn,
-                            duration: const Duration(milliseconds: 250),
+                            duration: const Duration(milliseconds: 500),
                             child: poiState.filtering
                                 ? const SizedBox(
                                     width: 192,
@@ -314,65 +322,76 @@ class _MapState extends State<Map> {
       ),
       floatingActionButton: BlocBuilder<MapCubit, MapState>(
         builder: (context, mapState) => BlocBuilder<RouteCubit, RouteState>(
-          builder: (context, routeState) => Visibility(
-            visible: !routeState.isCreatingRoute,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                0,
-                0,
-                0,
-                (mapState.userPosition == null) ? 72 : 0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // Buttons
-                  Row(
-                    children: [
-                      const SizedBox(width: 32),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+          builder: (context, routeState) => AnimatedSwitcher(
+            switchInCurve: Curves.easeIn,
+            switchOutCurve: Curves.easeIn,
+            duration: const Duration(milliseconds: 500),
+            child: !routeState.isCreatingRoute
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      0,
+                      0,
+                      0,
+                      (mapState.userPosition == null) ? 72 : 0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Buttons
+                        Row(
                           children: [
-                            const OpenCreatePoiFormButton(),
-                            const TrackRouteButton(),
-                            Column(
-                              children: [
-                                CreateRouteFormButton(
-                                  onPressed: () =>
-                                      routeCubit.setIsCreatingRoute(true),
-                                ),
-                                const ClearDisplayedRouteButton(),
-                              ],
+                            const SizedBox(width: 32),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const OpenCreatePoiFormButton(),
+                                  const TrackRouteButton(),
+                                  Column(
+                                    children: [
+                                      CreateRouteFormButton(
+                                        onPressed: () =>
+                                            routeCubit.setIsCreatingRoute(true),
+                                      ),
+                                      const ClearDisplayedRouteButton(),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  // Instructions
-                  Row(
-                    children: [
-                      const SizedBox(width: 32),
-                      Expanded(
-                        child: BlocBuilder<GraphhopperCubit, GraphhopperState>(
-                          builder: (context, graphhopperState) =>
-                              BlocBuilder<RouteCubit, RouteState>(
-                            builder: (context, routeState) => Visibility(
-                              visible:
-                                  graphhopperState.instructions.isNotEmpty &&
-                                      !routeState.isCreatingRoute,
-                              child: const InstructionCard(),
+                        // Instructions
+                        Row(
+                          children: [
+                            const SizedBox(width: 32),
+                            Expanded(
+                              child: BlocBuilder<GraphhopperCubit,
+                                  GraphhopperState>(
+                                builder: (context, graphhopperState) =>
+                                    BlocBuilder<RouteCubit, RouteState>(
+                                  builder: (context, routeState) =>
+                                      AnimatedSwitcher(
+                                    switchInCurve: Curves.easeIn,
+                                    switchOutCurve: Curves.easeIn,
+                                    duration: const Duration(milliseconds: 500),
+                                    child: (graphhopperState
+                                                .instructions.isNotEmpty &&
+                                            !routeState.isCreatingRoute)
+                                        ? const InstructionCard()
+                                        : const SizedBox.shrink(),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                      ],
+                    ),
+                  )
+                : null,
           ),
         ),
       ),
