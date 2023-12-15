@@ -404,17 +404,53 @@ class SearchLocationBar extends StatelessWidget {
     return SearchAnchor(
       builder: (context, controller) => SearchBar(
         controller: controller,
-        padding: const MaterialStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 16),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
         ),
-        leading: const Icon(Icons.search),
-        hintText: "Search Location",
+        padding: MaterialStateProperty.all(
+          const EdgeInsets.all(0),
+        ),
+        constraints: const BoxConstraints(
+          minHeight: 48,
+          maxHeight: 48,
+        ),
+        leading: const SizedBox(
+          width: 32,
+          height: 32,
+          child: Icon(
+            size: 16,
+            Icons.search,
+          ),
+        ),
+        hintText: "Search location...",
+        hintStyle: MaterialStateProperty.all(
+          TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onBackground,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        textStyle: MaterialStateProperty.all(
+          TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onBackground,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
         trailing: [
-          GestureDetector(
-            child: const Icon(Icons.clear),
-            onTap: () {
-              controller.clear();
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 16, 0),
+            child: GestureDetector(
+              child: const Icon(
+                size: 16,
+                Icons.clear,
+              ),
+              onTap: () {
+                controller.clear();
+              },
+            ),
           ),
         ],
         onSubmitted: (value) {

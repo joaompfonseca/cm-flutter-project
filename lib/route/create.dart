@@ -404,6 +404,18 @@ class LocationBar extends StatelessWidget {
                 Icons.delete_rounded,
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 16, 0),
+            child: GestureDetector(
+              child: const Icon(
+                size: 16,
+                Icons.clear,
+              ),
+              onTap: () {
+                this.controller.clear();
+              },
+            ),
+          ),
         ],
         onChanged: (value) async {
           this.controller.text = value;
