@@ -50,11 +50,11 @@ class _MapState extends State<Map> {
                     mapController: mapCubit.state.mapController,
                     options: MapOptions(
                       initialCenter:
-                          LatLng(40.6405, -8.6538), // Aveiro, Portugal
+                          const LatLng(40.6405, -8.6538), // Aveiro, Portugal
                       initialZoom: 14.0,
                       minZoom: 3.0,
                       maxZoom: 18.0,
-                      interactionOptions: InteractionOptions(
+                      interactionOptions: const InteractionOptions(
                         flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                       ),
                       keepAlive: true,
@@ -272,33 +272,28 @@ class _MapState extends State<Map> {
                     child: const FilterPoi(),
                   ),
                 ),
-                BlocBuilder<GraphhopperCubit, GraphhopperState>(
-                  builder: (context, graphhopperState) =>
-                      BlocBuilder<RouteCubit, RouteState>(
-                    builder: (context, routeState) => Visibility(
-                      visible: graphhopperState.instructions.isNotEmpty &&
-                          !routeState.isCreatingRoute,
-                      child: const InstructionCard(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       children: [
-                        ProfileButton(),
+                        BlocBuilder<RouteCubit, RouteState>(
+                          builder: (context, routeState) => Visibility(
+                            visible: !routeState.isCreatingRoute,
+                            child: const ProfileButton(),
+                          ),
+                        ),
                         const SizedBox(height: 8),
                         FilterPoiButton(onPressed: poiCubit.toggleFiltering),
                       ],
                     ),
-                    Column(
+                    const Column(
                       children: [
                         ZoomInButton(),
                         ZoomOutButton(),
-                        SizedBox(height: 32),
+                        SizedBox(height: 16),
                         LocateUserButton(),
                       ],
                     ),
@@ -309,37 +304,68 @@ class _MapState extends State<Map> {
           ),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
-        child: Row(
-          children: [
-            const SizedBox(width: 32),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+      floatingActionButton: BlocBuilder<MapCubit, MapState>(
+        builder: (context, mapState) => BlocBuilder<RouteCubit, RouteState>(
+          builder: (context, routeState) => Visibility(
+            visible: !routeState.isCreatingRoute,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                0,
+                0,
+                0,
+                (mapState.userPosition == null) ? 72 : 0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const OpenCreatePoiFormButton(),
-                  const Column(
-                    mainAxisSize: MainAxisSize.min,
+                  // Buttons
+                  Row(
                     children: [
-                      ClearDisplayedRouteButton(),
-                      SizedBox(height: 16),
-                      TrackRouteButton(),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const OpenCreatePoiFormButton(),
+                            const TrackRouteButton(),
+                            Column(
+                              children: [
+                                CreateRouteFormButton(
+                                  onPressed: () =>
+                                      routeCubit.setIsCreatingRoute(true),
+                                ),
+                                const ClearDisplayedRouteButton(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  BlocBuilder<RouteCubit, RouteState>(
-                    builder: (context, routeState) => Visibility(
-                      visible: !routeState.isCreatingRoute,
-                      child: CreateRouteFormButton(
-                        onPressed: () => routeCubit.setIsCreatingRoute(true),
+                  // Instructions
+                  Row(
+                    children: [
+                      const SizedBox(width: 32),
+                      Expanded(
+                        child: BlocBuilder<GraphhopperCubit, GraphhopperState>(
+                          builder: (context, graphhopperState) =>
+                              BlocBuilder<RouteCubit, RouteState>(
+                            builder: (context, routeState) => Visibility(
+                              visible:
+                                  graphhopperState.instructions.isNotEmpty &&
+                                      !routeState.isCreatingRoute,
+                              child: const InstructionCard(),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
       bottomSheet: const InformationMessage(),
@@ -355,6 +381,7 @@ Future<void> getPoi(
 
   PoiInd newpoi = await poiCubit.getPoi(poi.id);
 
+  // ignore: use_build_context_synchronously
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -418,11 +445,11 @@ class ProfileButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        minimumSize: const Size(96, 48),
+        maximumSize: const Size(96, 48),
+        padding: const EdgeInsets.all(0),
       ),
       onPressed: () {
         Navigator.of(context).push(
@@ -431,7 +458,19 @@ class ProfileButton extends StatelessWidget {
           ),
         );
       },
-      child: const Icon(Icons.person),
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            size: 16,
+            Icons.person_rounded,
+          ),
+          Text(
+            style: TextStyle(fontSize: 12),
+            "Profile",
+          ),
+        ],
+      ),
     );
   }
 }
@@ -452,7 +491,10 @@ class ZoomInButton extends StatelessWidget {
       onPressed: () {
         mapCubit.zoomIn();
       },
-      child: const Icon(Icons.add),
+      child: const Icon(
+        size: 24,
+        Icons.add,
+      ),
     );
   }
 }
@@ -473,7 +515,10 @@ class ZoomOutButton extends StatelessWidget {
       onPressed: () {
         mapCubit.zoomOut();
       },
-      child: const Icon(Icons.remove),
+      child: const Icon(
+        size: 24,
+        Icons.remove,
+      ),
     );
   }
 }
@@ -546,9 +591,11 @@ class ClearDisplayedRouteButton extends StatelessWidget {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+              minimumSize: const Size(96, 32),
+              maximumSize: const Size(96, 32),
+              padding: const EdgeInsets.all(0),
               foregroundColor: const Color(0xFFFFFFFF),
               backgroundColor: const Color(0xFFEF4444),
             ),
@@ -556,11 +603,9 @@ class ClearDisplayedRouteButton extends StatelessWidget {
               routeCubit.clearDisplayedRoute();
               graphhopperCubit.clearRoute();
             },
-            child: const SizedBox(
-              height: 24,
-              child: Center(
-                child: Text("Clear Displayed Route"),
-              ),
+            child: const Text(
+              style: TextStyle(fontSize: 12),
+              "Clear Route",
             ),
           );
         } else {

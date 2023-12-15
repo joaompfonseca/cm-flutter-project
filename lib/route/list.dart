@@ -54,6 +54,7 @@ class RouteList extends StatelessWidget {
                         }
                       },
                       onShow: () {
+                        routeCubit.setIsCreatingRoute(false);
                         routeCubit.setDisplayedRoute(route);
                         graphhopperCubit.fetchRoute(route);
                         DefaultTabController.of(context).animateTo(0);

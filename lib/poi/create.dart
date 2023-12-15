@@ -306,11 +306,11 @@ class OpenCreatePoiFormButton extends StatelessWidget {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-              foregroundColor: Theme.of(context).colorScheme.onSecondary,
-              backgroundColor: Theme.of(context).colorScheme.secondary,
+              minimumSize: const Size(96, 48),
+              maximumSize: const Size(96, 48),
+              padding: const EdgeInsets.all(0),
             ),
             onPressed: () {
               Navigator.of(context).push(
@@ -325,17 +325,29 @@ class OpenCreatePoiFormButton extends StatelessWidget {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  size: 16,
+                  Icons.add,
+                ),
+                Text(
+                  style: TextStyle(fontSize: 12),
+                  "Create POI",
+                ),
+              ],
+            ),
           );
         } else {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-              foregroundColor: Theme.of(context).colorScheme.onSecondary,
-              backgroundColor: Theme.of(context).colorScheme.secondary,
+              minimumSize: const Size(96, 48),
+              maximumSize: const Size(96, 48),
+              padding: const EdgeInsets.all(0),
             ),
             onPressed: () {
               showSnackBar(
@@ -343,7 +355,19 @@ class OpenCreatePoiFormButton extends StatelessWidget {
                 "Cannot create POI without location enabled",
               );
             },
-            child: const Icon(Icons.add),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  size: 16,
+                  Icons.add,
+                ),
+                Text(
+                  style: TextStyle(fontSize: 12),
+                  "Create POI",
+                ),
+              ],
+            ),
           );
         }
       },

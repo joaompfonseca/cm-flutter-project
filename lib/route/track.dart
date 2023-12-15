@@ -19,10 +19,11 @@ class TrackRouteButton extends StatelessWidget {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+              minimumSize: const Size(96, 96),
+              maximumSize: const Size(96, 96),
+              padding: const EdgeInsets.all(0),
               foregroundColor: const Color(0xFFFFFFFF),
               backgroundColor: const Color(0xFFEF4444),
-              fixedSize: const Size(96, 96),
             ),
             onPressed: () async {
               routeCubit.stopTrackingRoute();
@@ -52,8 +53,14 @@ class TrackRouteButton extends StatelessWidget {
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.directions_bike_rounded),
-                Text('Stop'),
+                Icon(
+                  size: 16,
+                  Icons.directions_bike_rounded,
+                ),
+                Text(
+                  style: TextStyle(fontSize: 12),
+                  "Stop",
+                ),
               ],
             ),
           );
@@ -61,10 +68,11 @@ class TrackRouteButton extends StatelessWidget {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+              minimumSize: const Size(96, 96),
+              maximumSize: const Size(96, 96),
+              padding: const EdgeInsets.all(0),
               foregroundColor: const Color(0xFFFFFFFF),
               backgroundColor: const Color(0xFF4CAF50),
-              fixedSize: const Size(96, 96),
             ),
             onPressed: () {
               mapCubit.flyToUserPosition();
@@ -74,8 +82,14 @@ class TrackRouteButton extends StatelessWidget {
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.directions_bike_rounded),
-                Text('Track me!'),
+                Icon(
+                  size: 16,
+                  Icons.directions_bike_rounded,
+                ),
+                Text(
+                  style: TextStyle(fontSize: 12),
+                  "Track Route",
+                ),
               ],
             ),
           );

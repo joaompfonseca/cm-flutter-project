@@ -443,7 +443,9 @@ class CreateRouteFormButton extends StatelessWidget {
             Icons.directions,
           ),
           Text(
-            style: TextStyle(fontSize: 12),
+            style: TextStyle(
+              fontSize: 12,
+            ),
             "Create Route",
           ),
         ],

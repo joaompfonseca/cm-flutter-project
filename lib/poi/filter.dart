@@ -158,14 +158,26 @@ class FilterPoiButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-        foregroundColor: Theme.of(context).colorScheme.onTertiary,
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        minimumSize: const Size(96, 48),
+        maximumSize: const Size(96, 48),
+        padding: const EdgeInsets.all(0),
       ),
       onPressed: onPressed,
-      child: const Icon(Icons.filter_alt_outlined),
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            size: 16,
+            Icons.filter_alt_outlined,
+          ),
+          Text(
+            style: TextStyle(fontSize: 12),
+            "Filter POIs",
+          ),
+        ],
+      ),
     );
   }
 }
