@@ -8,10 +8,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return const DefaultTabController(
       length: 3,
       child: Scaffold(
-        body: const TabBarView(
+        body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
             Map(),
@@ -20,25 +20,30 @@ class App extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: TabBar(
-          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
           tabs: [
             Tab(
               icon: Icon(
-                Icons.map,
-                color: Theme.of(context).iconTheme.color,
+                size: 24,
+                Icons.map_rounded,
               ),
+              iconMargin: EdgeInsets.zero,
+              text: "Map",
             ),
             Tab(
               icon: Icon(
-                Icons.location_on,
-                color: Theme.of(context).iconTheme.color,
+                size: 24,
+                Icons.location_on_rounded,
               ),
+              iconMargin: EdgeInsets.zero,
+              text: "POIs",
             ),
             Tab(
               icon: Icon(
-                Icons.directions_bike,
-                color: Theme.of(context).iconTheme.color,
+                size: 24,
+                Icons.route_rounded,
               ),
+              iconMargin: EdgeInsets.zero,
+              text: "Routes",
             ),
           ],
         ),
