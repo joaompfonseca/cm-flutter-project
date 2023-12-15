@@ -42,7 +42,7 @@ class TrackRouteButton extends StatelessWidget {
                   // ignore: use_build_context_synchronously
                   showSnackBar(context, "Saved route");
                   CustomRoute route = CustomRoute(
-                    id: "poi${DateTime.timestamp()}", // TODO: remove
+                    id: "route-${DateTime.timestamp()}", // Gets a unique ID by the API
                     points: routeState.trackedRoutePointList,
                   );
                   routeCubit.saveTrackedRoute(route);

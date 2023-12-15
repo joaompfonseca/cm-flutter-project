@@ -293,22 +293,23 @@ class _MapState extends State<Map> {
                         ),
                         BlocBuilder<PoiCubit, PoiState>(
                           builder: (context, poiState) => AnimatedSwitcher(
-                              switchInCurve: Curves.easeIn,
-                              switchOutCurve: Curves.easeIn,
-                              duration: const Duration(milliseconds: 500),
-                              child: poiState.filtering
-                                  ? const SizedBox(
-                                      width: 192,
-                                      child: FilterPoi(),
-                                    )
-                                  : Column(
-                                      children: [
-                                        const SizedBox(height: 8),
-                                        FilterPoiButton(
-                                          onPressed: poiCubit.toggleFiltering,
-                                        ),
-                                      ],
-                                    )),
+                            switchInCurve: Curves.easeIn,
+                            switchOutCurve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 500),
+                            child: poiState.filtering
+                                ? const SizedBox(
+                                    width: 192,
+                                    child: FilterPoi(),
+                                  )
+                                : Column(
+                                    children: [
+                                      const SizedBox(height: 8),
+                                      FilterPoiButton(
+                                        onPressed: poiCubit.toggleFiltering,
+                                      ),
+                                    ],
+                                  ),
+                          ),
                         ),
                       ],
                     ),

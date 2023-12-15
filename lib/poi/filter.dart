@@ -17,10 +17,10 @@ class FilterPoi extends StatelessWidget {
             children: [
               TextField(
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                   labelText: "Name",
                   labelStyle: TextStyle(
                     fontSize: 12,

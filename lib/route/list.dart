@@ -49,12 +49,25 @@ class RouteList extends StatelessWidget {
                           ),
                         );
                       },
-                      onDelete: () {
+                      onDelete: () async {
                         try {
-                          routeCubit.deleteCreatedRoute(route.id);
-                          showSnackBar(context, "Deleted ${route.name}");
+                          // Ask user if they want to delete the route
+                          bool willDeleteRoute = await showDialogMessage(
+                                context,
+                                "Delete route?",
+                                "Are you sure you want to delete this route?",
+                                "No",
+                                "Yes",
+                              ) ??
+                              false;
+                          if (willDeleteRoute) {
+                            routeCubit.deleteCreatedRoute(route.id);
+                            // ignore: use_build_context_synchronously
+                            showSnackBar(context, "Deleted route");
+                          }
                         } catch (e) {
-                          showSnackBar(context, "Error deleting ${route.name}");
+                          // ignore: use_build_context_synchronously
+                          showSnackBar(context, "Error deleting route");
                         }
                       },
                       onShow: () {
@@ -95,12 +108,25 @@ class RouteList extends StatelessWidget {
                           ),
                         );
                       },
-                      onDelete: () {
+                      onDelete: () async {
                         try {
-                          showSnackBar(context, "Deleted ${route.name}");
-                          routeCubit.deleteRecordedRoute(route.id);
+                          // Ask user if they want to delete the route
+                          bool willDeleteRoute = await showDialogMessage(
+                                context,
+                                "Delete route?",
+                                "Are you sure you want to delete this route?",
+                                "No",
+                                "Yes",
+                              ) ??
+                              false;
+                          if (willDeleteRoute) {
+                            routeCubit.deleteRecordedRoute(route.id);
+                            // ignore: use_build_context_synchronously
+                            showSnackBar(context, "Deleted route");
+                          }
                         } catch (e) {
-                          showSnackBar(context, "Error deleting ${route.name}");
+                          // ignore: use_build_context_synchronously
+                          showSnackBar(context, "Error deleting route");
                         }
                       },
                       onShow: () {
