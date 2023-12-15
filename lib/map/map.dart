@@ -23,6 +23,7 @@ import 'package:project_x/route/track.dart';
 import 'package:project_x/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_x/util/cache.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -102,15 +103,6 @@ class _MapState extends State<Map> {
                                           offset: const Offset(0, -150),
                                         );
                                         getPoi(context, poi);
-                                        //showModalBottomSheet(
-                                        //  context: context,
-                                        //  builder: (BuildContext context) {
-                                        //    return SizedBox(
-                                        //      height: 500,
-                                        //      child: PoiDetails(poi: poi),
-                                        //    );
-                                        //  },
-                                        //);
                                       },
                                     ),
                                   ))
@@ -259,7 +251,35 @@ class _MapState extends State<Map> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SearchLocationBar(),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        final Uri url = Uri.parse(
+                          'https://es-project-x.github.io/documentation/',
+                        );
+                        if (!await launchUrl(url)) {
+                          throw Exception('Could not launch $url');
+                        }
+                      },
+                      child: SizedBox(
+                        height: 48,
+                        width: 48,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0),
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: getIconImage("logo-lettering"),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: SearchLocationBar(),
+                    ),
+                  ],
+                ),
                 BlocBuilder<RouteCubit, RouteState>(
                   builder: (context, routeState) => AnimatedSwitcher(
                     switchInCurve: Curves.easeIn,
@@ -283,9 +303,9 @@ class _MapState extends State<Map> {
                             switchOutCurve: Curves.easeIn,
                             duration: const Duration(milliseconds: 500),
                             child: !routeState.isCreatingRoute
-                                ? Column(
+                                ? const Column(
                                     children: [
-                                      const SizedBox(height: 8),
+                                      SizedBox(height: 8),
                                       ProfileButton(),
                                     ],
                                   )

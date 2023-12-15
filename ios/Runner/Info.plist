@@ -14,6 +14,12 @@
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow access to photo library</string>
 
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>sms</string>
+      <string>tel</string>
+    </array>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

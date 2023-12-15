@@ -25,3 +25,15 @@ Image getMarkerImage(String type) {
       return Image.asset('$markerPath/m_default.png');
   }
 }
+
+Image getIconImage(String type) {
+  const iconPath = 'assets/icons';
+  switch (type) {
+    case 'logo':
+      return Image.asset('$iconPath/i_logo.png');
+    case 'logo-lettering':
+      return Image.asset('$iconPath/i_logo_lettering.png');
+    default:
+      return Image.asset('$iconPath/i_logo.png'); // Is this a good default?
+  }
+}
