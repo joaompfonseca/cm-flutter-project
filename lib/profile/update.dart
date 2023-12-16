@@ -25,6 +25,15 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     });
   }
 
+  Future getImageFromGalery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -143,6 +152,37 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                               ],
                             ),
                           ),
+                          const SizedBox(height: 8),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              minimumSize: const Size(128, 48),
+                              maximumSize: const Size(128, 48),
+                              padding: const EdgeInsets.all(0),
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onTertiary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                            ),
+                            onPressed: getImageFromGalery,
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.photo_library_rounded,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  style: TextStyle(fontSize: 12),
+                                  "Pick on gallery",
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       )
                     : Stack(
@@ -153,37 +193,73 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
                           ),
                           Positioned.fromRelativeRect(
                             rect: RelativeRect.fill,
-                            child: Center(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8)),
+                                    ),
+                                    minimumSize: const Size(128, 48),
+                                    maximumSize: const Size(128, 48),
+                                    padding: const EdgeInsets.all(0),
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.tertiary,
                                   ),
-                                  minimumSize: const Size(128, 48),
-                                  maximumSize: const Size(128, 48),
-                                  padding: const EdgeInsets.all(0),
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onTertiary,
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.tertiary,
+                                  onPressed: getImageFromCamera,
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.camera_alt_rounded,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        style: TextStyle(fontSize: 12),
+                                        "Take another",
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                onPressed: getImageFromCamera,
-                                child: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.camera_alt_rounded,
-                                      size: 16,
+                                const SizedBox(height: 8),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8)),
                                     ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      style: TextStyle(fontSize: 12),
-                                      "Change picture",
-                                    ),
-                                  ],
+                                    minimumSize: const Size(128, 48),
+                                    maximumSize: const Size(128, 48),
+                                    padding: const EdgeInsets.all(0),
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.tertiary,
+                                  ),
+                                  onPressed: getImageFromGalery,
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.photo_library_rounded,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        style: TextStyle(fontSize: 12),
+                                        "Pick another",
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ],
