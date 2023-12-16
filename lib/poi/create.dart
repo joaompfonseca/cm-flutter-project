@@ -85,7 +85,6 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 48),
                 const Icon(
                   size: 128,
                   Icons.location_on_rounded,
