@@ -2,6 +2,7 @@
 
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
@@ -25,6 +26,7 @@ import 'package:project_x/route/track.dart';
 import 'package:project_x/util/assets.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_x/util/cache.dart';
+import 'package:project_x/util/message.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Map extends StatefulWidget {
@@ -649,7 +651,15 @@ class LocateUserButton extends StatelessWidget {
               ),
               onPressed: () {
                 mapCubit.flyToUserPosition();
+              },
+              onLongPress: () {
+                HapticFeedback.vibrate();
+                mapCubit.flyToUserPosition();
                 mapCubit.setTrackingUserPosition(true);
+                showSnackBar(
+                  context,
+                  "Tracking your position. Tap again to stop.",
+                );
               },
               child: const Icon(Icons.location_searching_rounded),
             );
@@ -662,7 +672,15 @@ class LocateUserButton extends StatelessWidget {
             ),
             onPressed: () {
               positionCubit.trackUserPosition();
+            },
+            onLongPress: () {
+              HapticFeedback.vibrate();
+              positionCubit.trackUserPosition();
               mapCubit.setTrackingUserPosition(true);
+              showSnackBar(
+                context,
+                "Tracking your position. Tap again to stop.",
+              );
             },
             child: const Icon(Icons.location_disabled_rounded),
           );
