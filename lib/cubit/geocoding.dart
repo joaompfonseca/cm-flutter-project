@@ -9,10 +9,10 @@ class GeocodingState {
   final String? location;
   final LatLng? coordinates;
 
-  GeocodingState(
-    this.location,
-    this.coordinates,
-  );
+  GeocodingState({
+    required this.location,
+    required this.coordinates,
+  });
 }
 
 class GeocodingCubit extends Cubit<GeocodingState> {
@@ -32,7 +32,10 @@ class GeocodingCubit extends Cubit<GeocodingState> {
         data['items'][0]['position']['lat'],
         data['items'][0]['position']['lng'],
       );
-      final newState = GeocodingState(location, coordinates);
+      final newState = GeocodingState(
+        location: location,
+        coordinates: coordinates,
+      );
       emit(newState);
       return newState;
     } else {
@@ -46,7 +49,10 @@ class GeocodingCubit extends Cubit<GeocodingState> {
     if (response.statusCode == 200) {
       final data = jsonDecode(utf8.decode(response.bodyBytes));
       final location = data['items'][0]['address']['label'];
-      final newState = GeocodingState(location, coordinates);
+      final newState = GeocodingState(
+        location: location,
+        coordinates: coordinates,
+      );
       emit(newState);
       return newState;
     } else {

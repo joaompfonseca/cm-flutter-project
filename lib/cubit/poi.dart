@@ -22,23 +22,28 @@ class PoiState {
   final TextEditingController name;
   final LatLng northEast;
   final LatLng southWest;
-  final TokenCubit tokenCubin;
+  final TokenCubit tokenCubit;
 
-  PoiState(this.totalPoiList, this.filtering, this.poiList, this.name,
-      this.tokenCubin,
-      {this.bench = true,
-      this.bikeParking = true,
-      this.bikeShop = true,
-      this.drinkingWater = true,
-      this.toilets = true,
-      this.northEast = const LatLng(0, 0),
-      this.southWest = const LatLng(0, 0)});
+  PoiState({
+    required this.totalPoiList,
+    required this.filtering,
+    required this.poiList,
+    required this.name,
+    required this.tokenCubit,
+    this.bench = true,
+    this.bikeParking = true,
+    this.bikeShop = true,
+    this.drinkingWater = true,
+    this.toilets = true,
+    this.northEast = const LatLng(0, 0),
+    this.southWest = const LatLng(0, 0),
+  });
 }
 
 class PoiCubit extends Cubit<PoiState> {
-  PoiCubit(poiList) : super(poiList);
+  final String gwDomain = dotenv.env['GW_DOMAIN']!;
 
-  final String apiUrl = dotenv.env['API_URL']!;
+  PoiCubit(poiList) : super(poiList);
 
   Future<void> getPois() async {
     safePrint(state.northEast.toString());
@@ -48,7 +53,7 @@ class PoiCubit extends Cubit<PoiState> {
       return;
     }
 
-    final uri = Uri.https("gw.project-x.pt", 'api/poi/cluster', {
+    final uri = Uri.https(gwDomain, 'api/poi/cluster', {
       'max_lat': state.northEast.latitude.toString(),
       'max_lng': state.northEast.longitude.toString(),
       'min_lat': state.southWest.latitude.toString(),
@@ -59,7 +64,7 @@ class PoiCubit extends Cubit<PoiState> {
       uri,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
       },
     );
     if (response.statusCode == 200) {
@@ -69,21 +74,28 @@ class PoiCubit extends Cubit<PoiState> {
 
       //check if already on list
       var newPoiList = List<Poi>.from(state.totalPoiList);
-      poiList.forEach((poi) {
+      for (var poi in poiList) {
         if (!newPoiList.any((element) => element.id == poi.id)) {
           newPoiList.add(poi);
         }
-      });
+      }
 
-      emit(PoiState(
-          newPoiList, state.filtering, newPoiList, state.name, state.tokenCubin,
+      emit(
+        PoiState(
+          totalPoiList: newPoiList,
+          filtering: state.filtering,
+          poiList: newPoiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
           bench: state.bench,
           bikeParking: state.bikeParking,
           bikeShop: state.bikeShop,
           drinkingWater: state.drinkingWater,
           toilets: state.toilets,
           northEast: state.northEast,
-          southWest: state.southWest));
+          southWest: state.southWest,
+        ),
+      );
 
       filterPoi();
     } else {
@@ -92,13 +104,13 @@ class PoiCubit extends Cubit<PoiState> {
   }
 
   Future<PoiInd> getPoi(String id) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/poi/id/$id');
+    final uri = Uri.https(gwDomain, 'api/poi/id/$id');
 
     final response = await get(
       uri,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
       },
     );
     if (response.statusCode == 200) {
@@ -111,7 +123,7 @@ class PoiCubit extends Cubit<PoiState> {
   }
 
   Future<String> uploadImage(File image) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/s3/upload');
+    final uri = Uri.https(gwDomain, 'api/s3/upload');
 
     //convert image to base64 string
     List<int> imageBytes = image.readAsBytesSync();
@@ -127,7 +139,7 @@ class PoiCubit extends Cubit<PoiState> {
       uri,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+        HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
       },
       body: jsonEncode({
         'base64_image': base64Image,
@@ -146,20 +158,20 @@ class PoiCubit extends Cubit<PoiState> {
 
   Future<void> createPoi(String name, String description, String type,
       double latitude, double longitude, File image) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/poi/create');
+    final uri = Uri.https(gwDomain, 'api/poi/create');
 
-    String image_url = await uploadImage(image);
+    String imageUrl = await uploadImage(image);
 
     final response = await post(uri,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
         },
         body: jsonEncode({
           'name': name,
           'description': description,
           'type': type,
-          'picture_url': image_url,
+          'picture_url': imageUrl,
           'latitude': latitude,
           'longitude': longitude,
         }));
@@ -171,15 +183,22 @@ class PoiCubit extends Cubit<PoiState> {
       final poi = Poi.fromJson(data);
       final newPoiList = List<Poi>.from(state.totalPoiList);
       newPoiList.add(poi);
-      emit(PoiState(newPoiList, state.filtering, state.poiList, state.name,
-          state.tokenCubin,
+      emit(
+        PoiState(
+          totalPoiList: newPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
           bench: state.bench,
           bikeParking: state.bikeParking,
           bikeShop: state.bikeShop,
           drinkingWater: state.drinkingWater,
           toilets: state.toilets,
           northEast: state.northEast,
-          southWest: state.southWest));
+          southWest: state.southWest,
+        ),
+      );
       filterPoi();
     } else {
       throw Exception('Failed to create poi');
@@ -187,11 +206,12 @@ class PoiCubit extends Cubit<PoiState> {
   }
 
   void deletePoi(Poi poi) => emit(PoiState(
-      state.totalPoiList.where((element) => element.id != poi.id).toList(),
-      state.filtering,
-      state.totalPoiList,
-      state.name,
-      state.tokenCubin,
+      totalPoiList:
+          state.totalPoiList.where((element) => element.id != poi.id).toList(),
+      filtering: state.filtering,
+      poiList: state.totalPoiList,
+      name: state.name,
+      tokenCubit: state.tokenCubit,
       bench: state.bench,
       bikeParking: state.bikeParking,
       bikeShop: state.bikeShop,
@@ -201,12 +221,12 @@ class PoiCubit extends Cubit<PoiState> {
       southWest: state.southWest));
 
   Future<String> ratePoi(String id, bool rating) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/poi/exists');
+    final uri = Uri.https(gwDomain, 'api/poi/exists');
 
     final response = await put(uri,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
         },
         body: jsonEncode({
           'id': id,
@@ -254,12 +274,12 @@ class PoiCubit extends Cubit<PoiState> {
   }
 
   Future<void> statusPoi(String id, bool rating) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/poi/status');
+    final uri = Uri.https(gwDomain, 'api/poi/status');
 
     final response = await put(uri,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubin.state}',
+          HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
         },
         body: jsonEncode({
           'id': id,
@@ -273,13 +293,20 @@ class PoiCubit extends Cubit<PoiState> {
     }
   }
 
-  void toggleFiltering() => emit(PoiState(state.totalPoiList, !state.filtering,
-      state.poiList, state.name, state.tokenCubin,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets));
+  void toggleFiltering() => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: !state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+        ),
+      );
 
   void filterPoi() {
     List<Poi> filteredPoiList = [];
@@ -316,11 +343,11 @@ class PoiCubit extends Cubit<PoiState> {
     }
     emit(
       PoiState(
-        state.totalPoiList,
-        state.filtering,
-        filteredPoiList,
-        state.name,
-        state.tokenCubin,
+        totalPoiList: state.totalPoiList,
+        filtering: state.filtering,
+        poiList: filteredPoiList,
+        name: state.name,
+        tokenCubit: state.tokenCubit,
         bench: state.bench,
         bikeParking: state.bikeParking,
         bikeShop: state.bikeShop,
@@ -330,63 +357,112 @@ class PoiCubit extends Cubit<PoiState> {
     );
   }
 
-  void changeBench() => emit(PoiState(state.totalPoiList, state.filtering,
-      state.poiList, state.name, state.tokenCubin,
-      bench: !state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets));
+  void changeBench() => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          bench: !state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+        ),
+      );
 
-  void changeBikeParking() => emit(PoiState(state.totalPoiList, state.filtering,
-      state.poiList, state.name, state.tokenCubin,
-      bikeParking: !state.bikeParking,
-      bench: state.bench,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets));
+  void changeBikeParking() => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          bikeParking: !state.bikeParking,
+          bench: state.bench,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+        ),
+      );
 
-  void changeBikeShop() => emit(PoiState(state.totalPoiList, state.filtering,
-      state.poiList, state.name, state.tokenCubin,
-      bikeShop: !state.bikeShop,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets));
+  void changeBikeShop() => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          bikeShop: !state.bikeShop,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+        ),
+      );
 
-  void changeDrinkingWater() => emit(PoiState(state.totalPoiList,
-      state.filtering, state.poiList, state.name, state.tokenCubin,
-      drinkingWater: !state.drinkingWater,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      toilets: state.toilets));
+  void changeDrinkingWater() => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          drinkingWater: !state.drinkingWater,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          toilets: state.toilets,
+        ),
+      );
 
-  void changeToilets() => emit(PoiState(state.totalPoiList, state.filtering,
-      state.poiList, state.name, state.tokenCubin,
-      toilets: !state.toilets,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater));
+  void changeToilets() => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          toilets: !state.toilets,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+        ),
+      );
 
-  void setNorthEast(LatLng northEast) => emit(PoiState(state.totalPoiList,
-      state.filtering, state.poiList, state.name, state.tokenCubin,
-      northEast: northEast,
-      southWest: state.southWest,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets));
+  void setNorthEast(LatLng northEast) => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          northEast: northEast,
+          southWest: state.southWest,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+        ),
+      );
 
-  void setSouthWest(LatLng southWest) => emit(PoiState(state.totalPoiList,
-      state.filtering, state.poiList, state.name, state.tokenCubin,
-      northEast: state.northEast,
-      southWest: southWest,
-      bench: state.bench,
-      bikeParking: state.bikeParking,
-      bikeShop: state.bikeShop,
-      drinkingWater: state.drinkingWater,
-      toilets: state.toilets));
+  void setSouthWest(LatLng southWest) => emit(
+        PoiState(
+          totalPoiList: state.totalPoiList,
+          filtering: state.filtering,
+          poiList: state.poiList,
+          name: state.name,
+          tokenCubit: state.tokenCubit,
+          northEast: state.northEast,
+          southWest: southWest,
+          bench: state.bench,
+          bikeParking: state.bikeParking,
+          bikeShop: state.bikeShop,
+          drinkingWater: state.drinkingWater,
+          toilets: state.toilets,
+        ),
+      );
 }

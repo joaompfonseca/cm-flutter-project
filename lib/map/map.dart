@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -437,7 +439,6 @@ Future<void> getPoi(
 
   PoiInd newpoi = await poiCubit.getPoi(poi.id);
 
-  // ignore: use_build_context_synchronously
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/poi.dart';
-import 'package:project_x/poi/poi.dart';
 import 'package:project_x/util/assets.dart';
 import 'package:project_x/util/message.dart';
 import 'package:image_picker/image_picker.dart';
@@ -395,12 +394,13 @@ class _CreatePoiFormState extends State<CreatePoiForm> {
                   onPressed: () {
                     if (isFormValid()) {
                       poiCubit.createPoi(
-                          nameController.text,
-                          descriptionController.text,
-                          typeController.text,
-                          latitude,
-                          longitude,
-                          image!);
+                        nameController.text,
+                        descriptionController.text,
+                        typeController.text,
+                        latitude,
+                        longitude,
+                        image!,
+                      );
                       showSnackBar(context, "Created ${nameController.text}");
                       onClose();
                     }

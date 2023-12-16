@@ -1,17 +1,18 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project_x/app.dart';
 import 'package:project_x/cubit/profile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class createProfileForm extends StatefulWidget {
-  const createProfileForm({super.key});
+class CreateProfileForm extends StatefulWidget {
+  const CreateProfileForm({super.key});
 
   @override
-  State<createProfileForm> createState() => _createProfileFormState();
+  State<CreateProfileForm> createState() => _CreateProfileFormState();
 }
 
-class _createProfileFormState extends State<createProfileForm> {
+class _CreateProfileFormState extends State<CreateProfileForm> {
   late TextEditingController emailController;
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
@@ -40,7 +41,6 @@ class _createProfileFormState extends State<createProfileForm> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileCubit profileCubit = context.read<ProfileCubit>();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -273,11 +273,11 @@ class _createProfileFormState extends State<createProfileForm> {
                     lastDate: DateTime(2101));
 
                 if (pickedDate != null) {
-                  print(
+                  safePrint(
                       pickedDate); //get the picked date in the format => 2022-07-04 00:00:00.000
                   String formattedDate = DateFormat('yyyy-MM-dd').format(
                       pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-                  print(
+                  safePrint(
                       formattedDate); //formatted date output using intl package =>  2022-07-04
                   //You can format date as per your need
 
@@ -286,7 +286,7 @@ class _createProfileFormState extends State<createProfileForm> {
                         formattedDate; //set foratted date to TextField value.
                   });
                 } else {
-                  print("Date is not selected");
+                  safePrint("Date is not selected");
                 }
               },
             ),

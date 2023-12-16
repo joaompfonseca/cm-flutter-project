@@ -1,4 +1,3 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project_x/route/route.dart';
@@ -38,11 +37,14 @@ class GraphhopperState {
 class GraphhopperCubit extends Cubit<GraphhopperState> {
   GraphhopperCubit(graphhopperState) : super(graphhopperState);
 
-  final String routerUrl = dotenv.env['ROUTER_URL']!;
+  final String gwDomain = dotenv.env['GW_DOMAIN']!;
 
   void fetchRoute(CustomRoute route) async {
     // Build URL
-    String url = routerUrl;
+    String url = Uri.https(
+      gwDomain,
+      "router/route?points_encoded=false&profile=custom_bike",
+    ).toString();
     for (var point in route.points) {
       url += "&point=${point.latitude},${point.longitude}";
     }

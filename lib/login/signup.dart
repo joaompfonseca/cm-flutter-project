@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_x/login/confirm.dart';
@@ -234,7 +236,6 @@ class _SignUpPageState extends State<SignUpPage> {
       await _handleSignUpResult(result);
     } on AuthException catch (e) {
       safePrint('Error signing up user: ${e.message}');
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -259,7 +260,7 @@ class _SignUpPageState extends State<SignUpPage> {
         safePrint('Sign up is complete');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
         break;
     }
@@ -272,7 +273,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ConfirmationPage()),
+      MaterialPageRoute(builder: (context) => const ConfirmationPage()),
     );
   }
 }

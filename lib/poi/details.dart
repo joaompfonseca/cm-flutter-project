@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -47,12 +49,6 @@ class _PoiDetailsState extends State<PoiDetails> {
     }
   }
 
-  void _updatePoi(PoiInd poi) {
-    setState(() {
-      this.poi = poi;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     PoiCubit poiCubit = context.read<PoiCubit>();
@@ -82,7 +78,7 @@ class _PoiDetailsState extends State<PoiDetails> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.0),
                   child: poi.pictureUrl.startsWith(
-                          "/data") // TODO: maybe it's not the best way to check if picture is offline
+                          "/data") // Maybe it's not the best way to check if picture is offline
                       ? Image.file(File(poi.pictureUrl))
                       : Image.network(poi.pictureUrl),
                 ),

@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:project_x/cubit/poi.dart';
@@ -14,14 +13,14 @@ class MapState {
   final PositionCubit positionCubit;
   final PoiCubit poiCubit;
 
-  MapState(
-    this.mapController,
-    this.mapOptions,
-    this.userPosition,
-    this.isTrackingUserPosition,
-    this.positionCubit,
-    this.poiCubit,
-  );
+  MapState({
+    required this.mapController,
+    required this.mapOptions,
+    required this.userPosition,
+    required this.isTrackingUserPosition,
+    required this.positionCubit,
+    required this.poiCubit,
+  });
 }
 
 class MapCubit extends Cubit<MapState> {
@@ -42,23 +41,23 @@ class MapCubit extends Cubit<MapState> {
 
   void setTrackingUserPosition(bool value) {
     emit(MapState(
-      state.mapController,
-      state.mapOptions,
-      state.userPosition,
-      value,
-      state.positionCubit,
-      state.poiCubit,
+      mapController: state.mapController,
+      mapOptions: state.mapOptions,
+      userPosition: state.userPosition,
+      isTrackingUserPosition: value,
+      positionCubit: state.positionCubit,
+      poiCubit: state.poiCubit,
     ));
   }
 
   void updateUserPosition(LatLng? position) {
     emit(MapState(
-      state.mapController,
-      state.mapOptions,
-      position,
-      state.isTrackingUserPosition,
-      state.positionCubit,
-      state.poiCubit,
+      mapController: state.mapController,
+      mapOptions: state.mapOptions,
+      userPosition: position,
+      isTrackingUserPosition: state.isTrackingUserPosition,
+      positionCubit: state.positionCubit,
+      poiCubit: state.poiCubit,
     ));
   }
 

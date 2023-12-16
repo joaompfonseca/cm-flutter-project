@@ -12,11 +12,11 @@ import 'package:project_x/cubit/route.dart';
 import 'package:project_x/cubit/token.dart';
 import 'package:project_x/login/login.dart';
 import 'package:project_x/map/config.dart';
-import 'package:project_x/mock/profile.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:project_x/poi/poi.dart';
 import 'package:project_x/profile/create.dart';
+import 'package:project_x/profile/profile.dart';
 import 'amplifyconfiguration.dart';
 
 Future main() async {
@@ -71,12 +71,48 @@ class _MyAppState extends State<MyApp> {
         time: "",
       ),
     );
-    final geocodingCubit = GeocodingCubit(GeocodingState(null, null));
-    final profileCubit = ProfileCubit(ProfileState(mockProfile, tokenCubit));
+    final geocodingCubit = GeocodingCubit(GeocodingState(
+      location: null,
+      coordinates: null,
+    ));
+    final profileCubit = ProfileCubit(
+      ProfileState(
+        profile: Profile(
+          id: "",
+          email: "",
+          username: "",
+          cognitoId: "",
+          firstName: "",
+          lastName: "",
+          pictureUrl: "",
+          createdAt: DateTime.now(),
+          birthDate: DateTime.now(),
+          totalXp: 0,
+          addedPoisCount: 0,
+          givenRatingsCount: 0,
+          receivedRatingsCount: 0,
+        ),
+        tokenCubit: tokenCubit,
+      ),
+    );
     final poiCubit = PoiCubit(
-        PoiState(<Poi>[], false, <Poi>[], TextEditingController(), tokenCubit));
+      PoiState(
+        totalPoiList: <Poi>[],
+        filtering: false,
+        poiList: <Poi>[],
+        name: TextEditingController(),
+        tokenCubit: tokenCubit,
+      ),
+    );
     final mapCubit = MapCubit(
-      MapState(mapController, mapOptions, null, false, positionCubit, poiCubit),
+      MapState(
+        mapController: mapController,
+        mapOptions: mapOptions,
+        userPosition: null,
+        isTrackingUserPosition: false,
+        positionCubit: positionCubit,
+        poiCubit: poiCubit,
+      ),
     );
     final routeCubit = RouteCubit(
       RouteState(
@@ -194,7 +230,7 @@ class _MyAppState extends State<MyApp> {
                           routeCubit.getRoutes();
                           return const App();
                         } else if (snapshot.data.toString() == 'false') {
-                          return const createProfileForm();
+                          return const CreateProfileForm();
                         } else {
                           return const Scaffold(
                             body: Center(

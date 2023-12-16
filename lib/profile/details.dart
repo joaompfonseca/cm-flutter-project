@@ -165,7 +165,7 @@ class ProfileDetails extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     "This is your current level and XP",
                     textAlign: TextAlign.center,
@@ -191,7 +191,7 @@ class ProfileDetails extends StatelessWidget {
                     foregroundColor: Theme.of(context).colorScheme.onSecondary,
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     "These are your statistics",
                     textAlign: TextAlign.center,

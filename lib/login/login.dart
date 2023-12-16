@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_x/login/resend.dart';
@@ -210,7 +212,6 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on AuthException catch (e) {
       safePrint('Error signing in: ${e.message}');
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

@@ -6,7 +6,7 @@ String tileLayerUrl =
 
 MapController mapController = MapController();
 
-MapOptions mapOptions = MapOptions(
+MapOptions mapOptions = const MapOptions(
   initialCenter: LatLng(40.6405, -8.6538), // Aveiro, Portugal
   initialZoom: 14.0,
   minZoom: 3.0,

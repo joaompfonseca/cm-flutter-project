@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_x/cubit/geocoding.dart';
 import 'package:project_x/cubit/graphhopper.dart';
@@ -45,6 +47,8 @@ class RouteState {
 }
 
 class RouteCubit extends Cubit<RouteState> {
+  final String gwDomain = dotenv.env['GW_DOMAIN']!;
+
   RouteCubit(routeState) : super(routeState) {
     routeState.positionCubit.stream.listen((position) {
       if (state.isTrackingRoute && position != null) {
@@ -63,7 +67,7 @@ class RouteCubit extends Cubit<RouteState> {
   // Get Routes
 
   Future<void> getRoutes() async {
-    final uri = Uri.https("gw.project-x.pt", 'api/route/get');
+    final uri = Uri.https(gwDomain, 'api/route/get');
 
     final response = await get(
       uri,
@@ -78,7 +82,7 @@ class RouteCubit extends Cubit<RouteState> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(utf8.decode(response.bodyBytes));
-      print(data);
+      safePrint(data);
       var ctemp = data["created"];
       var rtemp = data["recorded"];
 
@@ -128,7 +132,7 @@ class RouteCubit extends Cubit<RouteState> {
             ));
           }
         }
-        print(points[0].label);
+        safePrint(points[0].label);
         recorded.add(CustomRoute(
           id: rtemp[i]["id"],
           points: points,
@@ -155,9 +159,9 @@ class RouteCubit extends Cubit<RouteState> {
   }
 
   Future<void> deleteCreatedRoute(String id) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/route/delete/$id');
+    final uri = Uri.https(gwDomain, 'api/route/delete/$id');
 
-    print(id);
+    safePrint(id);
 
     final response = await delete(
       uri,
@@ -168,7 +172,7 @@ class RouteCubit extends Cubit<RouteState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(utf8.decode(response.bodyBytes));
+      // final data = jsonDecode(utf8.decode(response.bodyBytes));
       emit(RouteState(
         createdRouteList: state.createdRouteList
           ..removeWhere((element) => element.id == id),
@@ -190,9 +194,9 @@ class RouteCubit extends Cubit<RouteState> {
   }
 
   Future<void> deleteRecordedRoute(String id) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/route/delete/$id');
+    final uri = Uri.https(gwDomain, 'api/route/delete/$id');
 
-    print(id);
+    safePrint(id);
 
     final response = await delete(
       uri,
@@ -203,7 +207,7 @@ class RouteCubit extends Cubit<RouteState> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(utf8.decode(response.bodyBytes));
+      // final data = jsonDecode(utf8.decode(response.bodyBytes));
       emit(RouteState(
         createdRouteList: state.createdRouteList,
         trackedRouteList: state.trackedRouteList
@@ -271,7 +275,7 @@ class RouteCubit extends Cubit<RouteState> {
   }
 
   Future<void> saveCreatedRoute(CustomRoute route) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/route/create');
+    final uri = Uri.https(gwDomain, 'api/route/create');
 
     var name = "";
     var points = [];
@@ -387,7 +391,7 @@ class RouteCubit extends Cubit<RouteState> {
       ));
 
   Future<void> saveTrackedRoute(CustomRoute route) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/route/create');
+    final uri = Uri.https(gwDomain, 'api/route/create');
 
     var name = "";
     var points = [];

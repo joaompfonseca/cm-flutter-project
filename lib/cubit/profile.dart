@@ -12,23 +12,26 @@ class ProfileState {
   final Profile profile;
   final TokenCubit tokenCubit;
 
-  ProfileState(
-    this.profile,
-    this.tokenCubit,
-  );
+  ProfileState({
+    required this.profile,
+    required this.tokenCubit,
+  });
 }
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit(profile) : super(profile);
+  final String gwDomain = dotenv.env['GW_DOMAIN']!;
 
-  final String apiUrl = dotenv.env['API_URL']!;
+  ProfileCubit(profile) : super(profile);
 
   Future<bool> getProfile() async {
     // Get Token
     await state.tokenCubit.getToken();
 
     final response = await get(
-      Uri.parse(apiUrl + '/user'),
+      Uri.https(
+        gwDomain,
+        "api/user",
+      ),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer ${state.tokenCubit.state}',
@@ -38,7 +41,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       final data = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint(data);
       final profile = Profile.fromJson(data);
-      emit(ProfileState(profile, state.tokenCubit));
+      emit(ProfileState(
+        profile: profile,
+        tokenCubit: state.tokenCubit,
+      ));
       return true;
     } else {
       return false;
@@ -47,7 +53,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> createProfile(String email, String username, String firstName,
       String lastName, String birthDate) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/auth/register');
+    final uri = Uri.https(gwDomain, 'api/auth/register');
 
     final response = await post(
       uri,
@@ -74,7 +80,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> updateProfile(String username, File? image) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/user/edit');
+    final uri = Uri.https(gwDomain, 'api/user/edit');
 
     var data = {};
 
@@ -105,7 +111,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<String> uploadImage(File image) async {
-    final uri = Uri.https("gw.project-x.pt", 'api/s3/upload');
+    final uri = Uri.https(gwDomain, 'api/s3/upload');
 
     //convert image to base64 string
     List<int> imageBytes = image.readAsBytesSync();
@@ -134,7 +140,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       safePrint(data);
       //change image url of saved profile
       emit(ProfileState(
-          Profile(
+          profile: Profile(
             id: state.profile.id,
             email: state.profile.email,
             username: state.profile.username,
@@ -149,7 +155,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             givenRatingsCount: state.profile.givenRatingsCount,
             receivedRatingsCount: state.profile.receivedRatingsCount,
           ),
-          state.tokenCubit));
+          tokenCubit: state.tokenCubit));
       return data['image_url'];
     } else {
       throw Exception('Failed to upload image');
