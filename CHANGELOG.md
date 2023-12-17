@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Total distance and time upon route creation.
 - Remaining distance and time while navigating.
+- Clustering of POIs
 
 
 ## 0.0.2 - 2023-12-16
