@@ -8,8 +8,8 @@ import 'package:project_x/util/converter.dart';
 
 class Instruction {
   final String text;
-  final String distance;
-  final String time;
+  final double distance;
+  final int time;
 
   Instruction({
     required this.text,
@@ -22,8 +22,8 @@ class GraphhopperState {
   final List<Point> points;
   final List<Instruction> instructions;
   final int instructionIndex;
-  final String? distance;
-  final String? time;
+  final double distance;
+  final int time;
 
   GraphhopperState({
     required this.points,
@@ -75,15 +75,15 @@ class GraphhopperCubit extends Cubit<GraphhopperState> {
         instructions.add(
           Instruction(
             text: instruction['text'],
-            distance: getDistanceString(instruction['distance']),
-            time: getTimeString(instruction['time']),
+            distance: instruction['distance'],
+            time: instruction['time'],
           ),
         );
       }
       // Distance
-      distance = getDistanceString(data['paths'][0]['distance']);
+      double distance = data['paths'][0]['distance'];
       // Time
-      time = getTimeString(data['paths'][0]['time']);
+      int time = data['paths'][0]['time'];
       emit(GraphhopperState(
         points: points,
         instructions: instructions,
@@ -92,6 +92,22 @@ class GraphhopperCubit extends Cubit<GraphhopperState> {
         time: time,
       ));
     }
+  }
+
+  int getRemainingTime(int index) {
+    int remainingTime = 0;
+    for (int i = index; i < state.instructions.length; i++) {
+      remainingTime += state.instructions[i].time;
+    }
+    return remainingTime;
+  }
+
+  double getRemainingDistance(int index) {
+    double remainingDistance = 0.0;
+    for (int i = index; i < state.instructions.length; i++) {
+      remainingDistance += state.instructions[i].distance;
+    }
+    return remainingDistance;
   }
 
   void nextInstruction() {
@@ -128,8 +144,8 @@ class GraphhopperCubit extends Cubit<GraphhopperState> {
         points: [],
         instructions: [],
         instructionIndex: 0,
-        distance: null,
-        time: null,
+        distance: 0.0,
+        time: 0,
       ),
     );
   }

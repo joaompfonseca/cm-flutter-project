@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_x/cubit/graphhopper.dart';
 import 'package:project_x/cubit/map.dart';
+import 'package:project_x/util/converter.dart';
 
 class InstructionCard extends StatefulWidget {
   const InstructionCard({super.key});
@@ -22,6 +23,60 @@ class _InstructionCardState extends State<InstructionCard> {
           padding: const EdgeInsets.all(4),
           child: Column(
             children: [
+              // Total Remaining Stats
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Card(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.route_rounded,
+                            color: Theme.of(context).colorScheme.onTertiary,
+                          ),
+                          Text(
+                            getDistanceString(
+                                graphhopperCubit.getRemainingDistance(
+                                    graphhopperState.instructionIndex)),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onTertiary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.watch_later_outlined,
+                            color: Theme.of(context).colorScheme.onTertiary,
+                          ),
+                          Text(
+                            getTimeString(graphhopperCubit.getRemainingTime(
+                                graphhopperState.instructionIndex)),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onTertiary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Instruction Text
               Row(
                 children: [
                   Expanded(
@@ -64,26 +119,28 @@ class _InstructionCardState extends State<InstructionCard> {
                   ),
                 ],
               ),
+              // Instruction Stats
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Card(
-                    color: Theme.of(context).colorScheme.tertiary,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
                           Icon(
                             Icons.route_rounded,
-                            color: Theme.of(context).colorScheme.onTertiary,
+                            color: Theme.of(context).colorScheme.onSecondary,
                           ),
                           Text(
-                            graphhopperState
+                            getDistanceString(graphhopperState
                                 .instructions[graphhopperState.instructionIndex]
-                                .distance,
+                                .distance),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onTertiary,
+                              color: Theme.of(context).colorScheme.onSecondary,
                             ),
                           ),
                         ],
@@ -91,23 +148,23 @@ class _InstructionCardState extends State<InstructionCard> {
                     ),
                   ),
                   Card(
-                    color: Theme.of(context).colorScheme.tertiary,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
                           Icon(
                             Icons.watch_later_outlined,
-                            color: Theme.of(context).colorScheme.onTertiary,
+                            color: Theme.of(context).colorScheme.onSecondary,
                           ),
                           Text(
-                            graphhopperState
+                            getTimeString(graphhopperState
                                 .instructions[graphhopperState.instructionIndex]
-                                .time,
+                                .time),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onTertiary,
+                              color: Theme.of(context).colorScheme.onSecondary,
                             ),
                           ),
                         ],
@@ -116,6 +173,7 @@ class _InstructionCardState extends State<InstructionCard> {
                   ),
                 ],
               ),
+              // Buttons
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
                 child: Row(

@@ -67,8 +67,8 @@ class _MyAppState extends State<MyApp> {
         points: [],
         instructions: [],
         instructionIndex: 0,
-        distance: "",
-        time: "",
+        distance: 0.0,
+        time: 0,
       ),
     );
     final geocodingCubit = GeocodingCubit(GeocodingState(

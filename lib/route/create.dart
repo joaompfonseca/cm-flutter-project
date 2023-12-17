@@ -7,6 +7,7 @@ import 'package:project_x/cubit/map.dart';
 import 'package:project_x/cubit/route.dart';
 import 'package:project_x/map/picker.dart';
 import 'package:project_x/route/route.dart';
+import 'package:project_x/util/converter.dart';
 import 'package:project_x/util/message.dart';
 
 class CreateRouteForm extends StatelessWidget {
@@ -163,6 +164,59 @@ class CreateRouteForm extends StatelessWidget {
                                 : null,
                           ),
                         ),
+                    ],
+                  ),
+                ),
+                BlocBuilder<GraphhopperCubit, GraphhopperState>(
+                  builder: (context, graphhopperState) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Card(
+                        color: Theme.of(context).colorScheme.tertiary,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.route_rounded,
+                                color: Theme.of(context).colorScheme.onTertiary,
+                              ),
+                              Text(
+                                getDistanceString(graphhopperState.distance),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.onTertiary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color: Theme.of(context).colorScheme.tertiary,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.watch_later_outlined,
+                                color: Theme.of(context).colorScheme.onTertiary,
+                              ),
+                              Text(
+                                getTimeString(graphhopperState.time),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.onTertiary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
