@@ -98,7 +98,7 @@ class _MapState extends State<Map> {
                             spiderfyCircleRadius: 80,
                             spiderfySpiralDistanceMultiplier: 2,
                             circleSpiralSwitchover: 12,
-                            maxClusterRadius: 20,
+                            maxClusterRadius: 120,
                             size: const Size(40, 40),
                             padding: const EdgeInsets.all(50),
                             maxZoom: 18.0,
