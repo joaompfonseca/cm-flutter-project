@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:project_x/cubit/geocoding.dart';
 import 'package:project_x/cubit/graphhopper.dart';
 import 'package:project_x/cubit/map.dart';
@@ -90,10 +91,21 @@ class _MapState extends State<Map> {
                       ),
                       /* POI Markers */
                       BlocBuilder<PoiCubit, PoiState>(
-                        builder: (context, poiState) => MarkerLayer(
-                          alignment: Alignment.topCenter,
-                          markers: poiState.poiList
-                              .map((poi) => Marker(
+                        builder: (context, poiState) =>
+                            MarkerClusterLayerWidget(
+                          options: MarkerClusterLayerOptions(
+                            alignment: Alignment.center,
+                            spiderfyCircleRadius: 80,
+                            spiderfySpiralDistanceMultiplier: 2,
+                            circleSpiralSwitchover: 12,
+                            maxClusterRadius: 120,
+                            rotate: true,
+                            size: const Size(40, 40),
+                            padding: const EdgeInsets.all(50),
+                            maxZoom: 15,
+                            markers: poiState.poiList
+                                .map(
+                                  (poi) => Marker(
                                     point: LatLng(poi.latitude, poi.longitude),
                                     width: 50.0,
                                     height: 50.0,
@@ -109,8 +121,24 @@ class _MapState extends State<Map> {
                                         getPoi(context, poi);
                                       },
                                     ),
-                                  ))
-                              .toList(),
+                                  ),
+                                )
+                                .toList(),
+                            builder:
+                                (BuildContext context, List<Marker> markers) =>
+                                    Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.blue,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  markers.length.toString(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       /* Displayed Route Lines */
