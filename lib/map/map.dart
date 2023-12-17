@@ -98,11 +98,10 @@ class _MapState extends State<Map> {
                             spiderfyCircleRadius: 80,
                             spiderfySpiralDistanceMultiplier: 2,
                             circleSpiralSwitchover: 12,
-                            maxClusterRadius: 120,
-                            rotate: true,
+                            maxClusterRadius: 20,
                             size: const Size(40, 40),
                             padding: const EdgeInsets.all(50),
-                            maxZoom: 15,
+                            maxZoom: 18.0,
                             markers: poiState.poiList
                                 .map(
                                   (poi) => Marker(
