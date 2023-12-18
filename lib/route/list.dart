@@ -130,10 +130,10 @@ class RouteList extends StatelessWidget {
                         }
                       },
                       onShow: () {
+                        graphhopperCubit.clearRoute();
                         routeCubit.setIsCreatingRoute(false);
                         routeCubit.setDisplayedRoute(route);
                         routeCubit.setDisplayedRoutePoints(route.points);
-                        graphhopperCubit.clearRoute();
                         DefaultTabController.of(context).animateTo(1);
                         RoutePoint start = route.points[0];
                         mapCubit.flyTo(

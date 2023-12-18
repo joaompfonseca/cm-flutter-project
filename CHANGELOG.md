@@ -1,13 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.0.4 - ...
+
+### Fixed
+- Tracked route being cleared on display.
 
 ## 0.0.3 - 2023-12-17
 
 ### Added
 - Total distance and time upon route creation.
 - Remaining distance and time while navigating.
-- Clustering of POIs
+- Clustering of POIs.
 
 
 ## 0.0.2 - 2023-12-16
