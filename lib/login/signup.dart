@@ -233,6 +233,7 @@ class _SignUpPageState extends State<SignUpPage> {
           userAttributes: userAttributes,
         ),
       );
+      print(result);
       await _handleSignUpResult(result);
     } on AuthException catch (e) {
       safePrint('Error signing up user: ${e.message}');

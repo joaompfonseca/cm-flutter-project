@@ -1,6 +1,6 @@
 {
   "auth": {
-    "flutterprojectad17f5de": {
+    "cmflutterproject3cb694d4": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -9,35 +9,35 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_flutterprojectad17f5de_nativeClientId": {
+    "AMPLIFY_auth_cmflutterproject3cb694d4_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "flutterprojectad17f5de"
+          "resourceName": "cmflutterproject3cb694d4"
         }
       ]
     },
-    "AMPLIFY_auth_flutterprojectad17f5de_userPoolId": {
+    "AMPLIFY_auth_cmflutterproject3cb694d4_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "flutterprojectad17f5de"
+          "resourceName": "cmflutterproject3cb694d4"
         }
       ]
     },
-    "AMPLIFY_auth_flutterprojectad17f5de_userPoolName": {
+    "AMPLIFY_auth_cmflutterproject3cb694d4_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "flutterprojectad17f5de"
+          "resourceName": "cmflutterproject3cb694d4"
         }
       ]
     },
-    "AMPLIFY_auth_flutterprojectad17f5de_webClientId": {
+    "AMPLIFY_auth_cmflutterproject3cb694d4_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "flutterprojectad17f5de"
+          "resourceName": "cmflutterproject3cb694d4"
         }
       ]
     }
